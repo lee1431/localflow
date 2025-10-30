@@ -233,24 +233,31 @@ function makeSizeScaler(items){
   return c => 14 + ((c - min)/span) * (28-14); // 14~28px
 }
 
-function spawn(item, sizeScale){
+function spawn(arg1, arg2) {
   const el = document.createElement('div');
   el.className = 'word';
+
+  let item = typeof arg1 === 'object' ? arg1 : { food: arg1, count: 1 };
+  const sizeScale = typeof arg2 === 'function' ? arg2 : null;
+  // -----------------
+
   el.textContent = item.food;
   el.title = `${item.food} • ${item.count}`;
-  const fs = sizeScale ? sizeScale(item.count) : 18;
-  const x = Math.max(8, Math.random()*(cloudWidth-80));
-  const dur = 9 + (28 - fs) * 0.4;
 
-  el.style.left = x+'px';
+  const fs = sizeScale ? sizeScale(item.count) : 14 + Math.random() * 14;
+  const x = Math.max(8, Math.random() * (cloudWidth - 80));
+  const dur = 9 + Math.random() * 8;
+
+  el.style.left = x + 'px';
   el.style.bottom = '-20px';
-  el.style.fontSize = fs+'px';
-  el.style.animationDuration = dur+'s';
+  el.style.fontSize = fs + 'px';
+  el.style.animationDuration = dur + 's';
   if(item.rank === 1){ el.style.fontWeight = '800'; }
 
   cloud.appendChild(el);
-  setTimeout(()=> el.remove(), dur*1000);
+  setTimeout(() => el.remove(), dur * 1000);
 }
+
 
 async function loadWords(){
   const K_DATA="lf_words_v2", K_DATE="lf_date";
