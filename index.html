@@ -57,17 +57,19 @@
     .cloud{
       position:relative; height:240px; margin-top:26px; border:1px dashed var(--line); border-radius:16px; background:var(--pill); overflow:hidden;
     }
+    
     .word{
       position:absolute; font-weight:700; white-space:nowrap; pointer-events:none;
       filter:drop-shadow(0 1px 0 rgba(0,0,0,.06));
-      animation: float linear forwards;
+      animation: floatUp linear forwards;
+      will-change: transform, opacity;
     }
     
-    @keyframes float{
-      0%   { transform: translateY(20px); opacity: 0; }
-      15%  { opacity: 1; }
-      85%  { opacity: 1; }
-      100% { transform: translateY(-260px); opacity: 0; }
+    @keyframes floatUp{
+      0%   { transform: translate3d(var(--dx,0), 20px, 0) scale(1); opacity: 0; }
+      12%  { opacity: 1; }
+      70%  { transform: translate3d(calc(var(--dx,0) * -1), -180px, 0) scale(1.02); opacity: 1; }
+      100% { transform: translate3d(0, -260px, 0) scale(1.02); opacity: 0; }
     }
 
     /* Sections */
