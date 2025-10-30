@@ -17,7 +17,7 @@
   <meta property="og:url" content="https://localflow.info/" />
   <meta property="og:image" content="https://localflow.info/og-cover.png" />
 
-  <!-- Favicon (원하면 교체) -->
+  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
 
   <style>
@@ -217,10 +217,8 @@ const cloud = document.getElementById('cloud');
 const input = document.getElementById('foodInput');
 let cloudWidth = cloud.clientWidth;
 
-// ✅ JSON 데이터 URL (갤8 서버에서 제공 중)
-const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
+const DATA_URL = "https://mrdindoin.ddns.net/event/latest-counts.json";
 
-// --- 단어 스폰 함수 ---
 function spawn(word){
   const el = document.createElement('div');
   el.className = 'word';
@@ -236,7 +234,6 @@ function spawn(word){
   setTimeout(() => el.remove(), dur * 1000);
 }
 
-// --- 서버 데이터 로드 ---
 async function loadWords(){
   try {
     const res = await fetch(DATA_URL, { cache: 'no-store' });
@@ -252,7 +249,6 @@ async function loadWords(){
   return ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"];
 }
 
-// --- 루프 시작 ---
 async function seedLoop(){
   const words = await loadWords();
   const pick = words[Math.floor(Math.random() * words.length)];
@@ -261,7 +257,6 @@ async function seedLoop(){
 }
 seedLoop();
 
-// --- 폼 입력 처리 ---
 function addWord(e){
   e.preventDefault();
   const v = (input.value || "").trim();
@@ -269,12 +264,10 @@ function addWord(e){
   spawn(v);
   input.value = "";
   input.focus();
-  // 실제 서버로 전송
   fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
   return false;
 }
 
-// --- 리사이즈 대응 ---
 addEventListener('resize', () => { cloudWidth = cloud.clientWidth; });
 </script>
 
