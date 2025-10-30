@@ -221,13 +221,28 @@
   function todayKey(){ return new Date().toISOString().slice(0,10); }
 
   function makeSizeScaler(items){
-    const counts = items.map(i=>i.count);
-    const min = Math.min(...counts), max = Math.max(...counts);
-    const span = Math.max(1, max-min);
-    return c => 14 + ((c - min)/span) * (28-14); // 14~28px
+    const counts = items.map(i => Number(i.count) || 1);
+    const min = Math.min(...counts);
+    const max = Math.max(...counts);
+    const span = max - min;
+  
+    const rankMap = new Map(items.map((it, i) => [it.food, i + 1])); // 1위 = 1
+    const N = items.length || 1;
+  
+    return (count, food) => {
+      if (span >= 1) {
+        const t = (count - min) / span;     // 0~1
+        return 14 + t * (28 - 14);
+      } else {
+        const r = rankMap.get(food) || N;
+        const rt = (N - r) / Math.max(1, N - 1); // 0~1 (1위=1)
+        const jitter = 0.9 + Math.random()*0.2;  // 0.9~1.1
+        return (16 + rt * (30 - 16)) * jitter;
+      }
+    };
   }
 
-  // 호환 spawn: (item, sizeScale) 또는 ('치킨🍗') 모두 OK
+
   function spawn(arg1, arg2){
     let item = (typeof arg1 === 'object') ? arg1 : { food: String(arg1), count: 1, rank: 99 };
     const scale = (typeof arg2 === 'function') ? arg2 : null;
@@ -237,16 +252,14 @@
     el.textContent = item.food;
     el.title = `${item.food} • ${item.count}`;
 
-    // 기본 랜덤(감성)
     const baseFs = 14 + Math.random()*14;
     const baseDur = 9 + Math.random()*8;
 
-    // 데이터 기반 보정(있으면 사용)
-    const fs = scale ? scale(item.count) : baseFs;
+    const fs = scale ? scale(item.count, item.food) : baseFs;
     const dur = scale ? (9 + (28 - fs) * 0.4) : baseDur;
 
     const x = Math.max(8, Math.random()*(cloudWidth-80));
-    const dx = (Math.random()*40 - 20) + "px"; // 좌우 곡선
+    const dx = (Math.random()*40 - 20) + "px";
     el.style.left = x+'px';
     el.style.bottom = '-20px';
     el.style.fontSize = fs+'px';
