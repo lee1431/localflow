@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>LocalFlow — Circulation for 충주</title>
+  <title>LocalFlow — 로컬이 흘러야, 도시가 살아난다</title>
 
   <!-- SEO -->
   <meta name="description" content="LocalFlow는 ‘뭐 먹고 싶니?’라는 한마디로 지역의 식욕 데이터를 모아 주간 순환 소비를 실행하는 시민 참여형 프로젝트입니다. LocalFlow by Stance." />
-  <meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 먹먹냐, 뭐뭐냐, 시민참여" />
+  <meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 단양, 제천, 먹고싶니, 지역분권, 시민참여" />
   <meta name="theme-color" content="#61D6C2" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="LocalFlow — Circulation for 충주" />
+  <meta property="og:title" content="LocalFlow — 로컬이 흘러야, 도시가 살아난다" />
   <meta property="og:description" content="‘뭐 먹고 싶니?’ 한마디가 지역을 움직입니다. LocalFlow by Stance." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://localflow.info/" />
   <meta property="og:image" content="https://localflow.info/og-cover.png" />
 
-  <!-- Favicon -->
+  <!-- Favicon (원하면 교체) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
 
   <style>
@@ -57,19 +57,14 @@
     .cloud{
       position:relative; height:240px; margin-top:26px; border:1px dashed var(--line); border-radius:16px; background:var(--pill); overflow:hidden;
     }
-    
-    .word{
-      position:absolute; font-weight:700; white-space:nowrap; pointer-events:none;
+    .word{position:absolute; font-weight:700; opacity:.95; white-space:nowrap; pointer-events:none;
       filter:drop-shadow(0 1px 0 rgba(0,0,0,.06));
-      animation: floatUp linear forwards;
-      will-change: transform, opacity;
+      animation: float linear forwards;
     }
-    
-    @keyframes floatUp{
-      0%   { transform: translate3d(var(--dx,0), 20px, 0) scale(1); opacity: 0; }
-      12%  { opacity: 1; }
-      70%  { transform: translate3d(calc(var(--dx,0) * -1), -180px, 0) scale(1.02); opacity: 1; }
-      100% { transform: translate3d(0, -260px, 0) scale(1.02); opacity: 0; }
+    @keyframes float{
+      from{transform:translateY(20px); opacity:0}
+      8% {opacity:.95}
+      to{transform:translateY(-260px); opacity:0}
     }
 
     /* Sections */
@@ -92,8 +87,6 @@
     .footline{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between}
     .muted{color:var(--muted)}
   </style>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9382191250873184"
-     crossorigin="anonymous"></script>
 </head>
 <body>
   <!-- Header -->
@@ -104,7 +97,12 @@
         <span>LocalFlow</span>
         <small class="muted">by Stance</small>
       </div>
-
+      <nav style="display:flex; gap:8px;">
+        <a class="chip" href="#concept">개념</a>
+        <a class="chip" href="#loop">작동방식</a>
+        <a class="chip" href="#values">가치</a>
+        <a class="chip" href="#roadmap">로드맵</a>
+      </nav>
     </div>
   </header>
 
@@ -113,14 +111,13 @@
     <div class="wrap">
       <span class="pill">시민 참여형 로컬 순환 프로젝트</span>
       <h1 id="hero-title">뭐 먹고 싶니? <br/>그 한마디가 지역을 움직입니다.</h1>
-      <p>LocalFlow는 ‘먹고 싶은 것’을 데이터로 모아 주간 랭킹을 만들고, 실제 소비로 연결합니다.</p>
+      <p>LocalFlow는 ‘먹고 싶은 것’을 데이터로 모아 주간 랭킹을 만들고, 실제 소비로 연결합니다.
+        <strong>로컬이 흘러야, 도시가 살아납니다.</strong></p>
 
-      <br>
-      
       <form class="ask" onsubmit="return addWord(event)" aria-label="먹고 싶은 음식 입력">
         <input class="input" id="foodInput" name="food" maxlength="24" autocomplete="off" placeholder="예: 치킨, 라멘, 곱창, 탕수육…" aria-label="먹고 싶은 음식" />
         <button class="btn" type="submit">보내기</button>
-        <a class="chip" href="#loop">??</a>
+        <a class="chip" href="#loop">어떻게 작동하나요?</a>
       </form>
 
       <div class="cloud" id="cloud" aria-hidden="true"></div>
@@ -137,16 +134,16 @@
       <h2>LocalFlow — 개념</h2>
       <div class="grid cols-3">
         <div class="card">
+          <h3>욕구의 시각화</h3>
+          <p>도시의 식욕을 데이터로 그립니다. 단 한 문장이 사회를 움직입니다.</p>
+        </div>
+        <div class="card">
           <h3>참여의 단순화</h3>
           <p>로그인 없이, 한 번의 입력. 초저항 인터페이스로 누구나 참여.</p>
         </div>
         <div class="card">
           <h3>소비의 순환화</h3>
-          <p>주간 랭킹 1등 메뉴를 매주 <strong>! 목요일 !</strong> 선정합니다.</p>
-        </div>        
-        <div class="card">
-          <h3>욕구의 시각화</h3>
-          <p>전달된 내용은 필터링 후 노출됩니다. AI 필터링으로 <strong>24시간 이후 확인 가능합니다.</strong></p>
+          <p>주간 랭킹 1등 메뉴로 <strong>실제 구매(예: 30만원)</strong>를 실행하고 공개합니다.</p>
         </div>
       </div>
     </div>
@@ -159,7 +156,7 @@
       <div class="grid cols-4" style="--gap:14px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;">
         <div class="card"><span class="pill">① 참여</span><h3>입력</h3><p>“뭐 먹고 싶니?”에 답하면 데이터로 저장됩니다.</p></div>
         <div class="card"><span class="pill">② 집계</span><h3>랭킹</h3><p>일주일 단위로 그룹화하여 상위 메뉴를 산출합니다.</p></div>
-        <div class="card"><span class="pill">③ 실행</span><h3>구매</h3><p>매주 정해진 금액 만큼의 인원을 추첨하고 상품권을 증정합니다.</p></div>
+        <div class="card"><span class="pill">③ 실행</span><h3>구매</h3><p>1등 메뉴를 실제로 구매하고 영수증/사진을 인증합니다.</p></div>
         <div class="card"><span class="pill">④ 공개</span><h3>공유</h3><p>웹/카드뉴스로 결과를 발표하고 다음 주로 이어갑니다.</p></div>
       </div>
     </div>
@@ -214,113 +211,55 @@
   <!-- Footer -->
   <footer>
     <div class="wrap footline">
-      <div class="muted">© 2025 Stance — LocalFlow Project .feat GPT</div>
+      <div class="muted">© 2025 Stance Solutions — LocalFlow Project</div>
       <div class="muted">LocalFlow는 시민 참여형 로컬 순환 실험입니다.</div>
     </div>
   </footer>
 
-<script>
-const cloud = document.getElementById('cloud');
-const input = document.getElementById('foodInput');
-let cloudWidth = cloud.clientWidth;
+  <script>
+    // --- Lightweight floating-word demo (no backend) ---
+    const cloud = document.getElementById('cloud');
+    const input = document.getElementById('foodInput');
+    const seedWords = [
+      "치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어",
+      "떡볶이🌶️","칼국수","국밥","돈카츠","초밥","쌀국수","짬뽕","갈비찜","닭갈비","분식","감자탕","김밥","아구찜"
+    ];
+    let cloudWidth = cloud.clientWidth;
 
-const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
-
-function todayKey(){ return new Date().toISOString().slice(0,10); }
-
-function makeSizeScaler(items){
-  const counts = items.map(i=>i.count);
-  const min = Math.min(...counts), max = Math.max(...counts);
-  const span = Math.max(1, max-min);
-  return c => 14 + ((c - min)/span) * (28-14); // 14~28px
-}
-
-function spawn(arg1, arg2) {
-  const el = document.createElement('div');
-  el.className = 'word';
-
-  let item = typeof arg1 === 'object' ? arg1 : { food: arg1, count: 1 };
-  const sizeScale = typeof arg2 === 'function' ? arg2 : null;
-  // -----------------
-
-  el.textContent = item.food;
-  el.title = `${item.food} • ${item.count}`;
-
-  const fs = sizeScale ? sizeScale(item.count) : 14 + Math.random() * 14;
-  const x = Math.max(8, Math.random() * (cloudWidth - 80));
-  const dur = 9 + Math.random() * 8;
-
-  el.style.left = x + 'px';
-  el.style.bottom = '-20px';
-  el.style.fontSize = fs + 'px';
-  el.style.animationDuration = dur + 's';
-  if(item.rank === 1){ el.style.fontWeight = '800'; }
-
-  cloud.appendChild(el);
-  setTimeout(() => el.remove(), dur * 1000);
-}
-
-
-async function loadWords(){
-  const K_DATA="lf_words_v2", K_DATE="lf_date";
-  const today = todayKey();
-
-  try{
-    if(localStorage.getItem(K_DATE) === today){
-      const cached = JSON.parse(localStorage.getItem(K_DATA)||"[]");
-      if(cached.length){ console.log("use cached", cached); return cached; }
+    function spawn(word){
+      const el = document.createElement('div');
+      el.className = 'word';
+      el.textContent = word;
+      const x = Math.max(8, Math.random()*(cloudWidth-80));
+      const dur = 9 + Math.random()*8;   // seconds
+      const fs = 14 + Math.random()*14;  // font-size
+      el.style.left = x+'px';
+      el.style.bottom = '-20px';
+      el.style.fontSize = fs+'px';
+      el.style.animationDuration = dur+'s';
+      cloud.appendChild(el);
+      setTimeout(()=> el.remove(), dur*1000);
     }
-  }catch{}
 
-  try{
-    const res = await fetch(DATA_URL, {cache:'no-store'});
-    console.log("fetch status", res.status, res.headers.get("access-control-allow-origin"));
-    const data = await res.json();
-    let items = Array.isArray(data.top) ? data.top.map((it,i)=>({
-      food: String(it.food||'').trim(),
-      count: Number(it.count)||1,
-      rank: i+1
-    })) : [];
-    if(!items.length){
-      console.warn("empty top, fallback");
-      items = ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"]
-        .map((n,i)=>({food:n,count:1,rank:i+1}));
+    function seedLoop(){
+      spawn(seedWords[Math.floor(Math.random()*seedWords.length)]);
+      setTimeout(seedLoop, 600 + Math.random()*900);
     }
-    localStorage.setItem(K_DATE, today);
-    localStorage.setItem(K_DATA, JSON.stringify(items));
-    return items;
-  }catch(e){
-    console.error("fetch failed", e);
-    return ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"]
-      .map((n,i)=>({food:n,count:1,rank:i+1}));
-  }
-}
+    seedLoop();
 
-let WORDS=null, sizeScale=null;
-async function initWords(){ WORDS = await loadWords(); sizeScale = makeSizeScaler(WORDS); }
+    function addWord(e){
+      e.preventDefault();
+      const v = (input.value || "").trim();
+      if(!v) return false;
+      spawn(v);
+      input.value = "";
+      input.focus();
+      // NOTE: 실제 저장은 서버 연결 후 fetch('/submit', {method:'POST', body:...}) 형태로 교체
+      return false;
+    }
 
-async function seedLoop(){
-  if(!WORDS) await initWords();
-  const pick = WORDS[Math.floor(Math.random()*WORDS.length)];
-  spawn(pick, sizeScale);
-  setTimeout(seedLoop, 600 + Math.random()*900);
-}
-seedLoop();
-
-function addWord(e){
-  e.preventDefault();
-  const v = (input.value||"").trim();
-  if(!v) return false;
-  spawn({food:v,count:1,rank:99}, sizeScale);
-  input.value=""; input.focus();
-  fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`);
-  return false;
-}
-
-addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
-</script>
-
-
-  
+    // handle resize
+    addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
+  </script>
 </body>
 </html>
