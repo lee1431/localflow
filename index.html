@@ -219,13 +219,11 @@ let cloudWidth = cloud.clientWidth;
 
 const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
 
-// 오늘 날짜 문자열
 function todayKey() {
   const d = new Date();
   return d.toISOString().slice(0, 10); // ex: 2025-10-30
 }
 
-// 하루 1회만 가져오기
 async function loadWords() {
   const keyData = "localflow_words";
   const keyDate = "localflow_date";
@@ -234,7 +232,6 @@ async function loadWords() {
   const savedData = localStorage.getItem(keyData);
   const today = todayKey();
 
-  // ✅ 오늘 날짜 데이터 있으면 캐시 사용
   if (savedDate === today && savedData) {
     console.log("using cached words for", today);
     try {
@@ -244,7 +241,6 @@ async function loadWords() {
     }
   }
 
-  // ⬇️ 없으면 서버에서 새로 가져오기
   try {
     const res = await fetch(DATA_URL, { cache: "no-store" });
     const data = await res.json();
@@ -256,7 +252,6 @@ async function loadWords() {
       );
     }
 
-    // ✅ 저장 (하루 1회용)
     localStorage.setItem(keyDate, today);
     localStorage.setItem(keyData, JSON.stringify(words));
 
