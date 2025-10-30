@@ -1,30 +1,13 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-TV9LZR2H');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GHMLRVYMT2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-GHMLRVYMT2');
-  </script>
-  
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>LocalFlow — 로컬이 흘러야, 도시가 살아난다</title>
 
   <!-- SEO -->
   <meta name="description" content="LocalFlow는 ‘뭐 먹고 싶니?’라는 한마디로 지역의 식욕 데이터를 모아 주간 순환 소비를 실행하는 시민 참여형 프로젝트입니다. LocalFlow by Stance." />
-  <meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 시민참여" />
+  <meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 단양, 제천, 먹고싶니, 지역분권, 시민참여" />
   <meta name="theme-color" content="#61D6C2" />
 
   <!-- Open Graph -->
@@ -34,7 +17,7 @@
   <meta property="og:url" content="https://localflow.info/" />
   <meta property="og:image" content="https://localflow.info/og-cover.png" />
 
-  <!-- Favicon -->
+  <!-- Favicon (원하면 교체) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
 
   <style>
@@ -51,33 +34,6 @@
     a{color:var(--ink); text-decoration:none}
     .wrap{max-width:1100px; margin:0 auto; padding:0 20px}
 
-    /* --- 모바일 메뉴 기본 숨김 --- */
-  .nav-menu { display: flex; gap: 8px; }
-  .menu-toggle { display: none; cursor: pointer; background:none; border:none; }
-
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      background: #fff;
-      position: absolute;
-      top: 64px;
-      right: 16px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .nav-menu.active { display: flex; }
-
-    .menu-toggle {
-      display: block;
-      font-size: 1.6rem;
-      line-height: 1;
-      color: var(--ink);
-    }
-    
     /* Header */
     header{position:sticky; top:0; backdrop-filter:saturate(1.2) blur(8px); background:#ffffffb8; border-bottom:1px solid var(--line); z-index:10}
     .nav{display:flex; align-items:center; justify-content:space-between; height:64px}
@@ -133,27 +89,22 @@
   </style>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TV9LZR2H"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
   <!-- Header -->
- <header>
-  <div class="wrap nav">
-    <div class="brand">
-      <span class="logo" aria-hidden="true"></span>
-      <span>LocalFlow</span>
-      <small class="muted">by Stance</small>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span>LocalFlow</span>
+        <small class="muted">by Stance</small>
+      </div>
+      <nav style="display:flex; gap:8px;">
+        <a class="chip" href="#concept">개념</a>
+        <a class="chip" href="#loop">작동방식</a>
+        <a class="chip" href="#values">가치</a>
+        <a class="chip" href="#roadmap">로드맵</a>
+      </nav>
     </div>
-    <!-- 메뉴 항목 -->
-    <nav class="nav-menu" id="navMenu">
-      <a class="chip" href="#concept">개념</a>
-      <a class="chip" href="#loop">작동방식</a>
-      <a class="chip" href="#values">가치</a>
-      <a class="chip" href="#roadmap">로드맵</a>
-    </nav>
-  </div>
-</header>
+  </header>
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
@@ -260,63 +211,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- Footer -->
   <footer>
     <div class="wrap footline">
-      <div class="muted">© 2025 Stance — LocalFlow Project</div>
+      <div class="muted">© 2025 Stance Solutions — LocalFlow Project</div>
       <div class="muted">LocalFlow는 시민 참여형 로컬 순환 실험입니다.</div>
     </div>
   </footer>
 
   <script>
-    // --- Lightweight floating-word demo (no backend) ---
-    const cloud = document.getElementById('cloud');
-    const input = document.getElementById('foodInput');
-    const seedWords = [
-      "치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어",
-      "떡볶이🌶️","칼국수","국밥","돈카츠","초밥","쌀국수","짬뽕","갈비찜","닭갈비","분식","감자탕","김밥","아구찜"
-    ];
-    let cloudWidth = cloud.clientWidth;
-    
+  const cloud = document.getElementById('cloud');
+  const input = document.getElementById('foodInput');
+  const seedWords = [
+    "치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"
+  ];
+  let cloudWidth = cloud.clientWidth;
 
-    function spawn(word){
-      const el = document.createElement('div');
-      el.className = 'word';
-      el.textContent = word;
-      const x = Math.max(8, Math.random()*(cloudWidth-80));
-      const dur = 9 + Math.random()*8;   // seconds
-      const fs = 14 + Math.random()*14;  // font-size
-      el.style.left = x+'px';
-      el.style.bottom = '-20px';
-      el.style.fontSize = fs+'px';
-      el.style.animationDuration = dur+'s';
-      cloud.appendChild(el);
-      setTimeout(()=> el.remove(), dur*1000);
-    }
+  function spawn(word){
+    const el = document.createElement('div');
+    el.className = 'word';
+    el.textContent = word;
+    const x = Math.max(8, Math.random()*(cloudWidth-80));
+    const dur = 9 + Math.random()*8;
+    const fs = 14 + Math.random()*14;
+    el.style.left = x+'px';
+    el.style.bottom = '-20px';
+    el.style.fontSize = fs+'px';
+    el.style.animationDuration = dur+'s';
+    cloud.appendChild(el);
+    setTimeout(()=> el.remove(), dur*1000);
+  }
 
-    function seedLoop(){
-      spawn(seedWords[Math.floor(Math.random()*seedWords.length)]);
-      setTimeout(seedLoop, 600 + Math.random()*900);
-    }
-    seedLoop();
+  function seedLoop(){
+    spawn(seedWords[Math.floor(Math.random()*seedWords.length)]);
+    setTimeout(seedLoop, 600 + Math.random()*900);
+  }
+  seedLoop();
 
-    function addWord(e){
-      e.preventDefault();
-      const v = (input.value || "").trim();
-      if(!v) return false;
-      spawn(v);
-      input.value = "";
-      input.focus();
+  function addWord(e){
+    e.preventDefault();
+    const v = (input.value || "").trim();
+    if(!v) return false;
 
-      fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
-        .then(r => console.log("전송완료:", v))
-        .catch(err => console.error("전송실패:", err));
-      
-      return false;
-    }
+    spawn(v);
+    input.value = "";
+    input.focus();
 
-    // handle resize
-    addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
+    fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
+      .then(r => console.log("전송완료:", v))
+      .catch(err => console.error("전송실패:", err));
 
+    return false;
+  }
 
-    
-  </script>
+  addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
+</script>
+  
 </body>
 </html>
