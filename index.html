@@ -213,52 +213,71 @@
   </footer>
 
   <script>
-  const cloud = document.getElementById('cloud');
-  const input = document.getElementById('foodInput');
-  const seedWords = [
-    "치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"
-  ];
-  let cloudWidth = cloud.clientWidth;
+const cloud = document.getElementById('cloud');
+const input = document.getElementById('foodInput');
+let cloudWidth = cloud.clientWidth;
 
-  function spawn(word){
-    const el = document.createElement('div');
-    el.className = 'word';
-    el.textContent = word;
-    const x = Math.max(8, Math.random()*(cloudWidth-80));
-    const dur = 9 + Math.random()*8;
-    const fs = 14 + Math.random()*14;
-    el.style.left = x+'px';
-    el.style.bottom = '-20px';
-    el.style.fontSize = fs+'px';
-    el.style.animationDuration = dur+'s';
-    cloud.appendChild(el);
-    setTimeout(()=> el.remove(), dur*1000);
+// ✅ JSON 데이터 URL (갤8 서버에서 제공 중)
+const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
+
+// --- 단어 스폰 함수 ---
+function spawn(word){
+  const el = document.createElement('div');
+  el.className = 'word';
+  el.textContent = word;
+  const x = Math.max(8, Math.random() * (cloudWidth - 80));
+  const dur = 9 + Math.random() * 8;
+  const fs = 14 + Math.random() * 14;
+  el.style.left = x + 'px';
+  el.style.bottom = '-20px';
+  el.style.fontSize = fs + 'px';
+  el.style.animationDuration = dur + 's';
+  cloud.appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000);
+}
+
+// --- 서버 데이터 로드 ---
+async function loadWords(){
+  try {
+    const res = await fetch(DATA_URL, { cache: 'no-store' });
+    const data = await res.json();
+    // counts.json 구조: { date, total, top:[{food,count}, ...] }
+    if(data && Array.isArray(data.top)){
+      return data.top.map(item => `${item.food} (${item.count})`);
+    }
+  } catch(e){
+    console.warn('fetch failed, using fallback seed words');
   }
+  // fallback
+  return ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"];
+}
 
-  function seedLoop(){
-    spawn(seedWords[Math.floor(Math.random()*seedWords.length)]);
-    setTimeout(seedLoop, 600 + Math.random()*900);
-  }
-  seedLoop();
+// --- 루프 시작 ---
+async function seedLoop(){
+  const words = await loadWords();
+  const pick = words[Math.floor(Math.random() * words.length)];
+  spawn(pick);
+  setTimeout(seedLoop, 600 + Math.random() * 900);
+}
+seedLoop();
 
-  function addWord(e){
-    e.preventDefault();
-    const v = (input.value || "").trim();
-    if(!v) return false;
+// --- 폼 입력 처리 ---
+function addWord(e){
+  e.preventDefault();
+  const v = (input.value || "").trim();
+  if(!v) return false;
+  spawn(v);
+  input.value = "";
+  input.focus();
+  // 실제 서버로 전송
+  fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
+  return false;
+}
 
-    spawn(v);
-    input.value = "";
-    input.focus();
-
-    fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
-      .then(r => console.log("전송완료:", v))
-      .catch(err => console.error("전송실패:", err));
-
-    return false;
-  }
-
-  addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
+// --- 리사이즈 대응 ---
+addEventListener('resize', () => { cloudWidth = cloud.clientWidth; });
 </script>
+
   
 </body>
 </html>
