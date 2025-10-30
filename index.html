@@ -212,7 +212,7 @@
     </div>
   </footer>
 
-  <script>
+<script>
 const cloud = document.getElementById('cloud');
 const input = document.getElementById('foodInput');
 let cloudWidth = cloud.clientWidth;
@@ -222,6 +222,16 @@ const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
 function todayKey() {
   const d = new Date();
   return d.toISOString().slice(0, 10); // ex: 2025-10-30
+}
+
+function spawn(word){
+  const el = document.createElement('div');
+  el.className = 'word';
+  el.textContent = word;
+  const x = Math.random() * 300;
+  el.style.left = x + 'px';
+  cloud.appendChild(el);
+  setTimeout(()=> el.remove(), 10000);
 }
 
 async function loadWords() {
