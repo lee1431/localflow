@@ -217,36 +217,58 @@ const cloud = document.getElementById('cloud');
 const input = document.getElementById('foodInput');
 let cloudWidth = cloud.clientWidth;
 
-const DATA_URL = "https://mrdindoin.ddns.net/event/latest-counts.json";
+const DATA_URL = "https://mrdindoin.ddns.net/data/latest-counts.json";
 
-function spawn(word){
-  const el = document.createElement('div');
-  el.className = 'word';
-  el.textContent = word;
-  const x = Math.max(8, Math.random() * (cloudWidth - 80));
-  const dur = 9 + Math.random() * 8;
-  const fs = 14 + Math.random() * 14;
-  el.style.left = x + 'px';
-  el.style.bottom = '-20px';
-  el.style.fontSize = fs + 'px';
-  el.style.animationDuration = dur + 's';
-  cloud.appendChild(el);
-  setTimeout(() => el.remove(), dur * 1000);
+// 오늘 날짜 문자열
+function todayKey() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10); // ex: 2025-10-30
 }
 
-async function loadWords(){
-  try {
-    const res = await fetch(DATA_URL, { cache: 'no-store' });
-    const data = await res.json();
-    // counts.json 구조: { date, total, top:[{food,count}, ...] }
-    if(data && Array.isArray(data.top)){
-      return data.top.map(item => `${item.food} (${item.count})`);
+// 하루 1회만 가져오기
+async function loadWords() {
+  const keyData = "localflow_words";
+  const keyDate = "localflow_date";
+
+  const savedDate = localStorage.getItem(keyDate);
+  const savedData = localStorage.getItem(keyData);
+  const today = todayKey();
+
+  // ✅ 오늘 날짜 데이터 있으면 캐시 사용
+  if (savedDate === today && savedData) {
+    console.log("using cached words for", today);
+    try {
+      return JSON.parse(savedData);
+    } catch {
+      localStorage.removeItem(keyData);
     }
-  } catch(e){
-    console.warn('fetch failed, using fallback seed words');
   }
-  // fallback
-  return ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"];
+
+  // ⬇️ 없으면 서버에서 새로 가져오기
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await res.json();
+
+    let words = [];
+    if (data && Array.isArray(data.top)) {
+      words = data.top.map(
+        (item) => `${item.food} (${item.count})`
+      );
+    }
+
+    // ✅ 저장 (하루 1회용)
+    localStorage.setItem(keyDate, today);
+    localStorage.setItem(keyData, JSON.stringify(words));
+
+    console.log("fetched new words for", today);
+    return words;
+  } catch (e) {
+    console.warn("fetch failed, fallback words used", e);
+    return [
+      "치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥",
+      "피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"
+    ];
+  }
 }
 
 async function seedLoop(){
