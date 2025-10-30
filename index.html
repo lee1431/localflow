@@ -51,6 +51,33 @@
     a{color:var(--ink); text-decoration:none}
     .wrap{max-width:1100px; margin:0 auto; padding:0 20px}
 
+    /* --- 모바일 메뉴 기본 숨김 --- */
+  .nav-menu { display: flex; gap: 8px; }
+  .menu-toggle { display: none; cursor: pointer; background:none; border:none; }
+
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      background: #fff;
+      position: absolute;
+      top: 64px;
+      right: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .nav-menu.active { display: flex; }
+
+    .menu-toggle {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    
     /* Header */
     header{position:sticky; top:0; backdrop-filter:saturate(1.2) blur(8px); background:#ffffffb8; border-bottom:1px solid var(--line); z-index:10}
     .nav{display:flex; align-items:center; justify-content:space-between; height:64px}
@@ -111,21 +138,26 @@
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
   <!-- Header -->
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <span class="logo" aria-hidden="true"></span>
-        <span>LocalFlow</span>
-        <small class="muted">by Stance</small>
-      </div>
-      <nav style="display:flex; gap:8px;">
-        <a class="chip" href="#concept">개념</a>
-        <a class="chip" href="#loop">작동방식</a>
-        <a class="chip" href="#values">가치</a>
-        <a class="chip" href="#roadmap">로드맵</a>
-      </nav>
+ <header>
+  <div class="wrap nav">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <span>LocalFlow</span>
+      <small class="muted">by Stance</small>
     </div>
-  </header>
+
+    <!-- 햄버거 버튼 -->
+    <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">☰</button>
+
+    <!-- 메뉴 항목 -->
+    <nav class="nav-menu" id="navMenu">
+      <a class="chip" href="#concept">개념</a>
+      <a class="chip" href="#loop">작동방식</a>
+      <a class="chip" href="#values">가치</a>
+      <a class="chip" href="#roadmap">로드맵</a>
+    </nav>
+  </div>
+</header>
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
@@ -239,6 +271,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <script>
     // --- Lightweight floating-word demo (no backend) ---
+
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('navMenu');
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('active');
+    });
     const cloud = document.getElementById('cloud');
     const input = document.getElementById('foodInput');
     const seedWords = [
@@ -246,6 +284,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       "떡볶이🌶️","칼국수","국밥","돈카츠","초밥","쌀국수","짬뽕","갈비찜","닭갈비","분식","감자탕","김밥","아구찜"
     ];
     let cloudWidth = cloud.clientWidth;
+    
 
     function spawn(word){
       const el = document.createElement('div');
@@ -275,12 +314,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       spawn(v);
       input.value = "";
       input.focus();
+
+      fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`)
+        .then(r => console.log("전송완료:", v))
+        .catch(err => console.error("전송실패:", err));
       
       return false;
     }
 
     // handle resize
     addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
+
+
+    
   </script>
 </body>
 </html>
