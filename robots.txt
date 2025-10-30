@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://localflow.info/sitemap.xml
+
+# Friendly reminder
+# LocalFlow by Stance — 시민참여형 로컬 순환 프로젝트
