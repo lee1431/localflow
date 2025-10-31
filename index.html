@@ -445,6 +445,35 @@ async function seedLoop(){
 }
 seedLoop();
 
+// --- Email Handling ---
+  let userEmail = null;
+  const emailInput = document.getElementById('emailInput');
+  const emailSubmit = document.getElementById('emailSubmit');
+  const emailDisplay = document.getElementById('emailDisplay');
+  const emailBtn = document.getElementById('emailBtn');
+  
+  emailSubmit.addEventListener('click', () => {
+    const val = emailInput.value.trim();
+    if (!val || !val.includes('@')) {
+      alert('올바른 이메일을 입력하세요.');
+      return;
+    }
+    userEmail = val;
+    // 입력창 숨기기, 버튼 표시
+    emailInput.style.display = 'none';
+    emailSubmit.style.display = 'none';
+    emailBtn.textContent = val;
+    emailDisplay.style.display = 'block';
+  });
+  
+  // 이메일 버튼 눌러 수정 모드로 전환
+  emailBtn.addEventListener('click', () => {
+    emailDisplay.style.display = 'none';
+    emailInput.style.display = 'inline-block';
+    emailSubmit.style.display = 'inline-block';
+    emailInput.focus();
+  });
+
 function addWord(e){
   e.preventDefault();
   const v = (input.value||"").trim();
@@ -716,34 +745,7 @@ window.addEventListener('resize', () => {
     }
 
 
-   // --- Email Handling ---
-    let userEmail = null;
-    const emailInput = document.getElementById('emailInput');
-    const emailSubmit = document.getElementById('emailSubmit');
-    const emailDisplay = document.getElementById('emailDisplay');
-    const emailBtn = document.getElementById('emailBtn');
-    
-    emailSubmit.addEventListener('click', () => {
-      const val = emailInput.value.trim();
-      if (!val || !val.includes('@')) {
-        alert('올바른 이메일을 입력하세요.');
-        return;
-      }
-      userEmail = val;
-      // 입력창 숨기기, 버튼 표시
-      emailInput.style.display = 'none';
-      emailSubmit.style.display = 'none';
-      emailBtn.textContent = val;
-      emailDisplay.style.display = 'block';
-    });
-    
-    // 이메일 버튼 눌러 수정 모드로 전환
-    emailBtn.addEventListener('click', () => {
-      emailDisplay.style.display = 'none';
-      emailInput.style.display = 'inline-block';
-      emailSubmit.style.display = 'inline-block';
-      emailInput.focus();
-    });
+   
    
 
    // --- Back to Top ---
