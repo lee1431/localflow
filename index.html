@@ -211,8 +211,7 @@
         확인
       </button>
       <div id="emailDisplay" style="margin-top:10px;display:none;">
-        <button id="emailBtn"
-                style="background:#fff;border:1px solid #ccc;border-radius:999px;padding:8px 14px;cursor:pointer;">
+        <button id="emailBtn" style="background:#fff;border:1px solid #ccc;border-radius:999px;padding:8px 14px;cursor:pointer;">
         </button>
       </div>
       <form class="ask" onsubmit="return addWord(event)" aria-label="먹고 싶은 음식 입력">
@@ -476,13 +475,22 @@ seedLoop();
 
 function addWord(e){
   e.preventDefault();
+  
+  const uemail = document.getElementById('emailBtn')?.textContent.trim() || "";  
+  
   const v = (input.value||"").trim();
   if(!v) return false;
   spawn(v);
-  fetch(`https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`);
-  if(userEmail) url += `&email=${encodeURIComponent(userEmail)}`;
+
+  let url = `https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`;
+  
+  if (uemail && uemail.includes("@")) {
+    url += `&email=${encodeURIComponent(uemail)}`;
+  }
+  
   fetch(url);
-  input.value=""; input.focus();
+  input.value="";
+  input.focus();
   return false;
 }
 
