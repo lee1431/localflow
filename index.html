@@ -246,14 +246,7 @@
 
   <button id="toTop" class="to-top" aria-label="맨 위로">↑</button>
 
- <script>
-   (function fixHeaderOffset(){
-  const hdr = document.querySelector('header');
-  function apply(){ document.body.style.paddingTop = hdr.offsetHeight + 'px'; }
-  apply();
-  window.addEventListener('resize', apply);
-})();
-   
+ <script>  
 const btn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 const ovl  = document.getElementById('overlay');
