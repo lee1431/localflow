@@ -138,6 +138,31 @@
       .notice-card{ grid-template-columns:1fr; }
       .notice-thumb{ width:100%; height:180px; }
     }
+
+    /* === Notice Modal === */
+    .notice-modal{position:fixed;inset:0;z-index:80;display:none;}
+    .notice-modal.show{display:block;}
+    .notice-modal .modal-backdrop{
+      position:absolute;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(3px);
+    }
+    .notice-modal .modal-dialog{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:90%;max-width:520px;max-height:90vh;overflow:auto;
+      background:#fff;border-radius:18px;padding:22px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);
+    }
+    .modal-img{width:100%;border-radius:12px;margin-bottom:16px;object-fit:cover;}
+    .modal-title{margin:6px 0 12px;font-size:22px;font-weight:700;}
+    .modal-body{line-height:1.65;white-space:pre-line;}
+    .modal-meta{font-size:.85rem;color:var(--muted);margin-bottom:4px;}
+    .modal-close{
+      position:absolute;top:10px;right:14px;border:none;background:none;
+      font-size:24px;cursor:pointer;color:#444;
+    }
+    @media(max-width:480px){
+      .modal-dialog{padding:18px;}
+      .modal-img{max-height:200px;object-fit:cover;}
+    }
     
   </style>
 
@@ -258,6 +283,18 @@
   </footer>
 
   <button id="toTop" class="to-top" aria-label="맨 위로">↑</button>
+
+  <!-- Notice Modal -->
+  <div id="noticeModal" class="notice-modal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="닫기">×</button>
+      <img id="modalImg" class="modal-img" src="" alt="" />
+      <div class="modal-meta" id="modalDate"></div>
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
 
  <script>  
 const btn = document.getElementById('menuBtn');
@@ -520,6 +557,61 @@ window.addEventListener('resize', () => {
     
     $more.addEventListener('click', renderPage);
     loadNotices();
+
+    // ===== Notice Modal =====
+    const modal = document.getElementById('noticeModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalDate = document.getElementById('modalDate');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.querySelector('.modal-close');
+    
+    function openModal(notice){
+      modalImg.src = notice.image || '';
+      modalImg.style.display = notice.image ? 'block' : 'none';
+      modalDate.textContent = fmtDate(notice.date);
+      modalTitle.textContent = notice.title;
+      modalBody.innerHTML = nl2br(notice.body);
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal(){
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    // 닫기 버튼 / 배경 클릭 / ESC
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('modal-backdrop')) closeModal();
+    });
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') closeModal();
+    });
+    
+    // 카드 클릭 이벤트 연결 (렌더링 후)
+    function attachNoticeEvents(){
+      $feed.querySelectorAll('.card').forEach((card, idx)=>{
+        card.addEventListener('click', ()=>{
+          const n = _notices[idx];
+          if(n) openModal(n);
+        });
+      });
+    }
+    
+    // renderPage 끝부분에 이 줄 추가:
+    function renderPage(){
+      const start = _page * PAGE_SIZE;
+      const slice = _notices.slice(start, start + PAGE_SIZE);
+      if(!slice.length){ $more.style.display = 'none'; return; }
+      const html = slice.map(noticeItemHTML).join('');
+      $feed.insertAdjacentHTML('beforeend', html);
+      _page++;
+      $more.style.display = (_page * PAGE_SIZE < _notices.length) ? 'inline-block' : 'none';
+      attachNoticeEvents(); // << 추가
+    }
+   
 
    // --- Back to Top ---
   const toTop = document.getElementById('toTop');
