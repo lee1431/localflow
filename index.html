@@ -380,6 +380,57 @@ function addWord(e){
   return false;
 }
 
+   // --- Close menu on nav-link click + smooth scroll ---
+    document.querySelectorAll('#mobileMenu a').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+    
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+    
+        if (typeof openMenu === 'function') {
+          openMenu(false);
+        } else {
+          const mobileMenu = document.getElementById('mobileMenu');
+          const ovl = document.getElementById('overlay');
+          const btn = document.getElementById('menuBtn');
+          mobileMenu?.classList.remove('show');
+          ovl?.classList.remove('show');
+          btn?.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+    
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (typeof openMenu === 'function') openMenu(false);
+        else {
+          document.getElementById('mobileMenu')?.classList.remove('show');
+          document.getElementById('overlay')?.classList.remove('show');
+          document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 860) {
+    if (typeof openMenu === 'function') openMenu(false);
+    else {
+      document.getElementById('mobileMenu')?.classList.remove('show');
+      document.getElementById('overlay')?.classList.remove('show');
+      document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
    // --- Back to Top ---
   const toTop = document.getElementById('toTop');
   window.addEventListener('scroll', () => {
