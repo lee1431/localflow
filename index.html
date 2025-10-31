@@ -104,22 +104,25 @@
 </head>
 <body>
   <!-- Header -->
-  <header>
-    <div class="wrap nav">
-      <div class="brand">
-        <span class="logo" aria-hidden="true"></span>
-        <span>LocalFlow</span>
-        <small class="muted">by Stance</small>
-      </div>
-      <nav class="menu" id="menu">
-        <a class="chip" href="#concept">개념</a>
-        <a class="chip" href="#loop">작동방식</a>
-        <a class="chip" href="#values">가치</a>
-        <a class="chip" href="#roadmap">로드맵</a>
-      </nav>
-      <button class="hamb" id="hamb" aria-label="메뉴 열기/닫기"><span></span></button>
-    </div>
-  </header>
+  <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
+  <div class="flex items-center justify-between px-4 py-3">
+    <h1 class="font-bold text-lg">LocalFlow</h1>
+    <button id="menuBtn" class="p-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 드롭다운 메뉴 -->
+  <nav id="mobileMenu" class="hidden flex-col bg-white text-center border-t border-gray-200">
+    <a href="#concept" class="py-3 hover:bg-gray-100">개념</a>
+    <a href="#how" class="py-3 hover:bg-gray-100">작동방식</a>
+    <a href="#value" class="py-3 hover:bg-gray-100">가치</a>
+    <a href="#roadmap" class="py-3 hover:bg-gray-100">로드맵</a>
+  </nav>
+</header>
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
@@ -207,6 +210,7 @@
   </footer>
 
   <script>
+    
   // --- UI: mobile menu toggle ---
   const hamb = document.getElementById('hamb');
   const menu = document.getElementById('menu');
@@ -330,6 +334,11 @@
     input.value=""; input.focus();
     return false;
   }
+
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    });
 
   addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
   </script>
