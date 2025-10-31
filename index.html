@@ -164,6 +164,8 @@
       .modal-img{max-height:200px;object-fit:cover;}
     }
     
+    #toast.show{ opacity:1; }
+    
   </style>
 
   
@@ -295,6 +297,17 @@
       <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
+
+  <div id="toast" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+  background:#111;color:#fff;padding:10px 14px;border-radius:999px;font-size:.9rem;
+  box-shadow:0 10px 24px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .2s;
+  z-index:90">새 공지가 업데이트되었습니다</div>
+
+
+
+
+
+  
 
  <script>  
 const btn = document.getElementById('menuBtn');
@@ -524,7 +537,7 @@ window.addEventListener('resize', () => {
       const html = slice.map(noticeItemHTML).join('');
       $feed.insertAdjacentHTML('beforeend', html);
       _page++;
-      // 더보기 노출 제어
+
       $more.style.display = (_page * PAGE_SIZE < _notices.length) ? 'inline-block' : 'none';
     }
     
@@ -534,7 +547,6 @@ window.addEventListener('resize', () => {
         const res = await fetch(NOTICE_URL, {cache:'no-store', mode:'cors'});
         const data = await res.json();
     
-        // 배열 보정 + 최신순 정렬(날짜 내림차순)
         _notices = (Array.isArray(data) ? data : [])
           .map(n => ({
             title: n.title ?? '',
@@ -581,7 +593,6 @@ window.addEventListener('resize', () => {
       document.body.style.overflow = '';
     }
     
-    // 닫기 버튼 / 배경 클릭 / ESC
     modalClose.addEventListener('click', closeModal);
     modal.addEventListener('click', (e)=>{
       if(e.target.classList.contains('modal-backdrop')) closeModal();
@@ -590,7 +601,6 @@ window.addEventListener('resize', () => {
       if(e.key === 'Escape') closeModal();
     });
     
-    // 카드 클릭 이벤트 연결 (렌더링 후)
     function attachNoticeEvents(){
       $feed.querySelectorAll('.card').forEach((card, idx)=>{
         card.addEventListener('click', ()=>{
@@ -600,7 +610,6 @@ window.addEventListener('resize', () => {
       });
     }
     
-    // renderPage 끝부분에 이 줄 추가:
     function renderPage(){
       const start = _page * PAGE_SIZE;
       const slice = _notices.slice(start, start + PAGE_SIZE);
@@ -610,6 +619,86 @@ window.addEventListener('resize', () => {
       _page++;
       $more.style.display = (_page * PAGE_SIZE < _notices.length) ? 'inline-block' : 'none';
       attachNoticeEvents(); // << 추가
+    }
+
+
+   // ===== Auto Refresh for Notices =====
+    const REFRESH_MS = 120000; // 2분마다 갱신 (원하면 300000=5분)
+    let _sig = "";             // 데이터 시그니처(간단 해시)
+    let _timer = null;
+    
+    function signatureOf(arr){
+      // 최신 날짜 + 길이 + 앞 3개 제목을 묶어 간단 시그니처
+      if(!Array.isArray(arr) || !arr.length) return "empty";
+      const latest = arr
+        .map(n => new Date(n.date).getTime() || 0)
+        .reduce((a,b)=>Math.max(a,b), 0);
+      const titles = arr.slice(0,3).map(n => n.title).join("|");
+      return `${arr.length}-${latest}-${titles}`;
+    }
+    
+    function toast(msg="새 공지가 업데이트되었습니다"){
+      const t = document.getElementById('toast');
+      if(!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1800);
+    }
+    
+    async function refreshNotices(){
+      try{
+        // 새 데이터 가져오기
+        const res = await fetch(NOTICE_URL, {cache:'no-store', mode:'cors'});
+        const data = await res.json();
+        const next = (Array.isArray(data) ? data : [])
+          .map(n => ({ title:n.title??'', body:n.body??'', date:n.date??'', image:n.image??'' }))
+          .sort((a,b)=> new Date(b.date) - new Date(a.date));
+    
+        const nextSig = signatureOf(next);
+        if(nextSig !== _sig){
+          // 갱신 발생 → 상태 교체 & 리렌더
+          _notices = next;
+          _sig = nextSig;
+          $feed.innerHTML = '';
+          _page = 0;
+          renderPage();
+          toast();
+        }
+      }catch(e){
+        // 조용히 무시(네트워크 이슈 등), 연속 오류 시 백오프 원하면 여기서 처리
+        // console.warn('refresh error', e);
+      }
+    }
+    
+    function startNoticeAutoRefresh(){
+      // 초기 시그니처 설정
+      _sig = signatureOf(_notices);
+      stopNoticeAutoRefresh();
+      _timer = setInterval(refreshNotices, REFRESH_MS);
+    }
+    
+    function stopNoticeAutoRefresh(){
+      if(_timer){ clearInterval(_timer); _timer = null; }
+    }
+    
+    // 탭 비활성화 시 정지, 다시 활성화 시 즉시 갱신 + 타이머 재가동
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){ stopNoticeAutoRefresh(); }
+      else { refreshNotices(); startNoticeAutoRefresh(); }
+    });
+    
+    // 초기 로딩 직후 자동 갱신 시작
+    // (loadNotices() 내부에서 renderPage()가 끝난 뒤 호출)
+    const _origLoadNotices = loadNotices;
+    loadNotices = async function(){
+      await _origLoadNotices();
+      startNoticeAutoRefresh();
+    };
+    
+    // 페이지 첫 로딩 시 loadNotices가 이미 호출되었다면,
+    // 아래 한 줄로도 시작 가능 (중복 시작 방지 위해 존재 체크)
+    if(typeof _notices !== 'undefined' && _notices.length >= 0 && !_timer){
+      startNoticeAutoRefresh();
     }
    
 
