@@ -239,8 +239,8 @@
   const mobileMenu = document.getElementById('mobileMenu');
   const ovl  = document.getElementById('overlay');
 
-  btn.addEventListener('click', () => { mobileMenu.classList.toggle('show'); ovl.classList.toggle('show'); });
-  ovl.addEventListener('click', () => { mobileMenu.classList.remove('show'); ovl.classList.remove('show'); });
+  btn.addEventListener('click', () => { menu.classList.toggle('show'); ovl.classList.toggle('show'); });
+  ovl.addEventListener('click', () => { menu.classList.remove('show'); ovl.classList.remove('show'); });
 
   // --- Floating words + data hybrid ---
   const cloud = document.getElementById('cloud');
