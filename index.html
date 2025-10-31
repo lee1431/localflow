@@ -128,6 +128,16 @@
     }
     .to-top.show{ opacity:1; pointer-events:auto; }
     .to-top:active{ transform:translateY(1px); }
+
+    .notice-card{ display:grid; grid-template-columns:96px 1fr; gap:14px; align-items:start; }
+    .notice-thumb{ width:96px; height:96px; border-radius:12px; object-fit:cover; border:1px solid var(--line); background:#fff; }
+    .notice-meta{ font-size:.85rem; color:var(--muted); }
+    .notice-title{ margin:0 0 6px; font-size:18px; font-weight:700; }
+    .notice-body{ margin:6px 0 0; line-height:1.6; word-break:keep-all; }
+    @media(max-width:859px){
+      .notice-card{ grid-template-columns:1fr; }
+      .notice-thumb{ width:100%; height:180px; }
+    }
     
   </style>
 
@@ -211,18 +221,21 @@
     </div>
   </section>
 
-  <!-- Values -->
-  <section id="values">
-    <div class="wrap">
-      <h2>우리가 만드는 가치</h2>
-      <div class="grid cols-2">
-        <div class="card"><h3>지역 경제</h3><p>로컬에서 모은 로컬의 선택을 로컬에 다시 씁니다. 순환입니다.</p></div>
-        <div class="card"><h3>시민 공동체</h3><p>익명성 속에서도 연대가 생깁니다. “오늘, 모두가 먹고 싶은 것”.</p></div>
-        <div class="card"><h3>데이터 문화</h3><p>맛의 주기를 기록합니다. 도시의 미식 지도가 됩니다.</p></div>
-        <div class="card"><h3>지방분권 감수성</h3><p>행정의 분권을 넘어 <strong>생활의 분권</strong>으로.</p></div>
-      </div>
+<!-- Notices -->
+<section id="notices">
+  <div class="wrap">
+    <h2>공지</h2>
+    <div id="noticeSkeleton" class="grid cols-2" aria-hidden="true">
+      <div class="card"><div class="muted">불러오는 중…</div></div>
+      <div class="card"><div class="muted">불러오는 중…</div></div>
     </div>
-  </section>
+    <div id="noticeFeed" class="grid cols-2"></div>
+    <div style="margin-top:12px">
+      <button id="noticeMore" class="btn" style="display:none">더보기</button>
+    </div>
+  </div>
+</section>
+
 
   <!-- Roadmap -->
   <section id="roadmap">
@@ -430,6 +443,83 @@ window.addEventListener('resize', () => {
     }
   }
 });
+
+    const NOTICE_URL = "https://mrdindoin.ddns.net/data/notices.json";
+    const $feed = document.getElementById('noticeFeed');
+    const $skeleton = document.getElementById('noticeSkeleton');
+    const $more = document.getElementById('noticeMore');
+    const PAGE_SIZE = 6;
+    let _notices = [], _page = 0;
+    
+    function fmtDate(iso){
+      try{
+        const d = new Date(iso);
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const day = String(d.getDate()).padStart(2,'0');
+        return `${y}.${m}.${day}`;
+      }catch{ return iso||''; }
+    }
+    
+    function esc(s){ return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function nl2br(s){ return esc(s).replace(/\n/g, '<br>'); }
+    
+    function noticeItemHTML(n){
+      const hasImg = !!n.image;
+      return `
+        <article class="card">
+          <div class="notice-card">
+            ${hasImg ? `<img class="notice-thumb" loading="lazy" src="${esc(n.image)}" alt="">` : `<div class="notice-thumb" aria-hidden="true" style="display:none"></div>`}
+            <div>
+              <div class="notice-meta">${fmtDate(n.date)}</div>
+              <h3 class="notice-title">${esc(n.title)}</h3>
+              <div class="notice-body">${nl2br(n.body)}</div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+    
+    function renderPage(){
+      const start = _page * PAGE_SIZE;
+      const slice = _notices.slice(start, start + PAGE_SIZE);
+      if(!slice.length){ $more.style.display = 'none'; return; }
+      const html = slice.map(noticeItemHTML).join('');
+      $feed.insertAdjacentHTML('beforeend', html);
+      _page++;
+      // 더보기 노출 제어
+      $more.style.display = (_page * PAGE_SIZE < _notices.length) ? 'inline-block' : 'none';
+    }
+    
+    async function loadNotices(){
+      try{
+        $skeleton.style.display = 'grid';
+        const res = await fetch(NOTICE_URL, {cache:'no-store', mode:'cors'});
+        const data = await res.json();
+    
+        // 배열 보정 + 최신순 정렬(날짜 내림차순)
+        _notices = (Array.isArray(data) ? data : [])
+          .map(n => ({
+            title: n.title ?? '',
+            body: n.body ?? '',
+            date: n.date ?? '',
+            image: n.image ?? ''
+          }))
+          .sort((a,b) => new Date(b.date) - new Date(a.date));
+    
+        $feed.innerHTML = '';
+        _page = 0;
+        renderPage();
+      }catch(e){
+        $feed.innerHTML = `<div class="card"><div class="muted">공지 데이터를 불러오지 못했습니다.</div></div>`;
+        console.error('notices load error', e);
+      }finally{
+        $skeleton.style.display = 'none';
+      }
+    }
+    
+    $more.addEventListener('click', renderPage);
+    loadNotices();
 
    // --- Back to Top ---
   const toTop = document.getElementById('toTop');
