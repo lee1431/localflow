@@ -47,6 +47,9 @@
     .brand small{font-weight:600; color:var(--muted)}
     .chip{padding:.4rem .7rem; border:1px solid var(--line); border-radius:999px; background:#fff; font-size:.85rem}
 
+    .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.15); display:none; z-index:40; }
+    .overlay.show{ display:block; }
+
     /* Mobile menu */
     .hamb{width:40px; height:40px; border:1px solid var(--line); border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer}
     .hamb span{display:block; width:18px; height:2px; background:var(--ink); position:relative}
@@ -96,6 +99,19 @@
       .cloud{height:300px}
     }
 
+    /* Mobile dropdown */
+    .mobile-nav{ display:none; background:#fff; border-top:1px solid var(--line); }
+    .mobile-nav.show{ display:block; }
+    .mobile-nav a{
+      display:block; padding:14px 16px; text-align:center;
+      border-top:1px solid var(--line);
+    }
+    .mobile-nav a:hover{ background:#f6f7f9; }
+    
+    /* 헤더 레이어 우선순위 확실히 */
+    header{ position:sticky; top:0; backdrop-filter:saturate(1.2) blur(8px);
+      background:#ffffffb8; border-bottom:1px solid var(--line); z-index:50; }
+
     /* Footer */
     footer{padding:40px 0; border-top:1px solid var(--line); background:#fff}
     .footline{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between}
@@ -104,25 +120,28 @@
 </head>
 <body>
   <!-- Header -->
-  <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
-  <div class="flex items-center justify-between px-4 py-3">
-    <h1 class="font-bold text-lg">LocalFlow</h1>
-    <button id="menuBtn" class="p-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6h16M4 12h16m-7 6h7"/>
-      </svg>
-    </button>
-  </div>
+  <header>
+  <div class="wrap">
+    <div class="nav" style="display:flex;align-items:center;justify-content:space-between;height:64px;">
+      <div class="brand">
+        <span class="logo"></span>
+        <div>LocalFlow <small>by Stance</small></div>
+      </div>
+      <button id="menuBtn" aria-label="메뉴 열기" class="hamb" style="margin-left:12px">
+        <span></span>
+      </button>
+    </div>
 
-  <!-- 드롭다운 메뉴 -->
-  <nav id="mobileMenu" class="hidden flex-col bg-white text-center border-t border-gray-200">
-    <a href="#concept" class="py-3 hover:bg-gray-100">개념</a>
-    <a href="#how" class="py-3 hover:bg-gray-100">작동방식</a>
-    <a href="#value" class="py-3 hover:bg-gray-100">가치</a>
-    <a href="#roadmap" class="py-3 hover:bg-gray-100">로드맵</a>
-  </nav>
+    <!-- 드롭다운 메뉴 -->
+    <nav id="mobileMenu" class="mobile-nav" aria-label="Mobile Navigation">
+      <a href="#concept">개념</a>
+      <a href="#loop">작동방식</a>
+      <a href="#values">가치</a>
+      <a href="#roadmap">로드맵</a>
+    </nav>
+  </div>
 </header>
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-title">
@@ -215,6 +234,13 @@
   const hamb = document.getElementById('hamb');
   const menu = document.getElementById('menu');
   hamb?.addEventListener('click', ()=> menu.classList.toggle('show'));
+
+  const btn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const ovl  = document.getElementById('overlay');
+
+  btn.addEventListener('click', () => { mobileMenu.classList.toggle('show'); ovl.classList.toggle('show'); });
+  ovl.addEventListener('click', () => { mobileMenu.classList.remove('show'); ovl.classList.remove('show'); });
 
   // --- Floating words + data hybrid ---
   const cloud = document.getElementById('cloud');
@@ -336,8 +362,7 @@
   }
 
     document.getElementById('menuBtn').addEventListener('click', () => {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('hidden');
+      document.getElementById('mobileMenu').classList.toggle('show');
     });
 
   addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
