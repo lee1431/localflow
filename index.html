@@ -376,6 +376,22 @@ function makeSizeScaler(items){
   };
 }
 
+function mapCountsToItems(json){
+  const arr = Array.isArray(json?.top) ? json.top : [];
+  return arr.map((it,i)=>({
+    food: String(it.food||'').trim(),
+    count: Number(it.count)||1,
+    rank: i+1
+  }));
+}
+async function fetchWithTimeout(url, ms=4000, opts={}){
+  const c = new AbortController();
+  const id = setTimeout(()=>c.abort(), ms);
+  try { return await fetch(url, { ...opts, signal:c.signal }); }
+  finally { clearTimeout(id); }
+}
+
+   
 function spawn(arg1, arg2){
   let item = (typeof arg1 === 'object') ? arg1 : { food: String(arg1), count: 1, rank: 99 };
   const scale = (typeof arg2 === 'function') ? arg2 : null;
@@ -405,31 +421,25 @@ function spawn(arg1, arg2){
 }
 
 async function loadWords(){
-  const K_DATA="lf_words_v2", K_DATE="lf_date";
-  const today = todayKey();
+  const fallback = ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"]
+    .map((n,i)=>({food:n,count:1,rank:i+1}));
 
+  const url = DATA_URL + `?t=${Date.now()}`; // 중간 캐시 회피
   try{
-    if(localStorage.getItem(K_DATE) === today){
-      const cached = JSON.parse(localStorage.getItem(K_DATA)||"[]");
-      if(cached.length) return cached;
-    }
-  }catch{}
+    let res = await fetchWithTimeout(url, 4000, { cache:'no-store' });
+    if(!res.ok) throw new Error(res.status);
+    let data = await res.json();
+    let items = mapCountsToItems(data);
+    if(items.length) return items;
 
-  try{
-    const res = await fetch(DATA_URL, {cache:'no-store'});
-    const data = await res.json();
-    let items = Array.isArray(data.top) ? data.top.map((it,i)=>({
-      food: String(it.food||'').trim(),
-      count: Number(it.count)||1,
-      rank: i+1
-    })) : [];
-    if(!items.length) throw new Error("empty top");
-    localStorage.setItem(K_DATE, today);
-    localStorage.setItem(K_DATA, JSON.stringify(items));
-    return items;
+    // 데이터가 비어있으면 한 번만 재시도
+    res = await fetchWithTimeout(url, 4000, { cache:'no-store' });
+    if(!res.ok) throw new Error(res.status);
+    data = await res.json();
+    items = mapCountsToItems(data);
+    return items.length ? items : fallback;
   }catch{
-    return ["치킨🍗","라멘🍜","곱창🔥","짜장면","비빔밥","피자🍕","탕수육🥢","막국수","삼겹살🐷","연어"]
-      .map((n,i)=>({food:n,count:1,rank:i+1}));
+    return fallback;
   }
 }
 
