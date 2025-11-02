@@ -225,6 +225,11 @@
     </div>
   </section>
 
+  <section id="weeklyTop" class="my-10 text-center">
+    <h3 class="text-xl font-bold mb-4">이번주 키워드 🥇</h3>
+    <div id="keywordList" class="flex justify-center gap-6 text-lg"></div>
+  </section>
+
   <!-- Concept -->
   <section id="concept">
     <div class="wrap">
@@ -682,6 +687,14 @@ window.addEventListener('resize', () => {
       attachNoticeEvents(); // << 추가
     }
 
+   fetch('https://mrdindoin.ddns.net/data/top_keywords.json')
+    .then(r => r.json())
+    .then(d => {
+      const box = document.getElementById('keywordList');
+      box.innerHTML = d.top_keywords.map(k =>
+        `<div><b>${k.rank}위</b> ${k.keyword} <span style="color:#999;">(${k.count})</span></div>`
+      ).join('');
+    });
 
    // ===== Auto Refresh for Notices =====
     const REFRESH_MS = 120000; // 2분마다 갱신 (원하면 300000=5분)
