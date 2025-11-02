@@ -137,7 +137,7 @@
     }
 
       .weekly-keywords{
-        margin: 32px auto; padding: 20px 16px; max-width: 980px;
+        margin: 62px auto; padding: 20px 16px; max-width: 980px;
         background: var(--card); border:1px solid var(--ring);
         border-radius: var(--radius); box-shadow: var(--shadow);
       }
