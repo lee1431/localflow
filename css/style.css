@@ -57,7 +57,7 @@
     }
 
     /* Sections */
-    section{padding:56px 0; border-top:1px solid var(--line); scroll-margin-top: 130px;}
+    section{padding:56px 0; border-top:1px solid var(--line); scroll-margin-top: 230px;}
     h2{font-size:clamp(22px,4vw,28px); margin:0 0 14px}
     .grid{display:grid; grid-template-columns:1fr; gap:14px}
     .card{padding:18px; border:1px solid var(--line); border-radius:16px; background:#fff}
