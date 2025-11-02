@@ -1,5 +1,5 @@
 (async function loadWeeklyKeywords(){
-  const URL = '/data/top_keywords.json';           // JSON 경로
+  const URL = 'https://mrdindoin.ddns.net/data/top_keywords.json';           // JSON 경로
 
   const root   = document.querySelector('.weekly-keywords');
   const listEl = root.querySelector('.wk-list');
