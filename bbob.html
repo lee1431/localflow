@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>추억의 뽑기판 (웹)</title>
+<style>
+  :root{
+    --cell-size: clamp(28px, 8.5vw, 56px);
+    --gap: 6px;
+    --radius: 10px;
+    --primary: #2b8aef;
+    --ink: #14213d;
+    --line: #e9edf3;
+    --yellow: #ffd34d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, 'Apple SD Gothic Neo', sans-serif; color:var(--ink); background:#fbfcff}
+  header{position:sticky; top:0; z-index:2; background:#fff; border-bottom:1px solid var(--line)}
+  .wrap{max-width:960px; margin:0 auto; padding:14px 16px}
+  h1{margin:0; font-size:clamp(18px,3.8vw,22px)}
+  .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+  input[type="email"]{flex:1; min-width:220px; padding:10px 12px; border:1px solid var(--line); border-radius:10px}
+  .btn{padding:10px 14px; border:0; border-radius:10px; background:var(--primary); color:#fff; cursor:pointer}
+  .btn[disabled]{opacity:.5; cursor:not-allowed}
+  .hint{font-size:12px; color:#667085}
+  main{padding:18px 16px}
+  .board{
+    display:grid;
+    grid-template-columns: repeat(10, var(--cell-size));
+    gap:var(--gap);
+    justify-content:center;
+    user-select:none;
+    perspective: 900px;
+    margin: 0 auto;
+  }
+  .cell{
+    width:var(--cell-size); height:var(--cell-size);
+    position:relative;
+    transform-style:preserve-3d;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+    border-radius:var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    cursor:pointer;
+  }
+  .cell.is-open{ transform: rotateY(180deg); cursor:default; }
+  .face{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    backface-visibility:hidden;
+    font-weight:700;
+  }
+  .front{
+    background:linear-gradient(135deg,#0b5ed7,#113a8a);
+    color:#fff;
+  }
+  .front .star{
+    width:60%; height:60%;
+    border-radius:6px;
+    display:grid; place-items:center;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,.15) 0 8px, rgba(255,255,255,.05) 8px 16px);
+    border:2px solid rgba(255,255,255,.3);
+  }
+  .front .star::after{
+    content:"★"; color:var(--yellow); font-size:clamp(16px,5vw,22px);
+    text-shadow:0 2px 0 rgba(0,0,0,.25);
+  }
+  .back{
+    transform: rotateY(180deg);
+    background:#fff;
+    font-size:clamp(12px,3.4vw,16px);
+  }
+  .pill{display:inline-flex; align-items:center; gap:6px; padding:.35rem .6rem; background:#fff; border:1px solid var(--line); border-radius:999px}
+  .legend{display:flex; flex-wrap:wrap; gap:8px; margin:14px auto; justify-content:center}
+  .toast{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+    background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>추억의 뽑기판</h1>
+      <div class="row">
+        <input id="email" type="email" placeholder="연락용 이메일 (선택)" />
+        <button id="resetBtn" class="btn" title="URL에 #admin이 있을 때만 활성화" disabled>새 판 만들기</button>
+      </div>
+      <div class="row hint">
+        오늘은 브라우저당 1회만 뽑을 수 있어요. (오프라인 데모용)
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="legend" id="legend"></div>
+    <div id="board" class="board" aria-label="뽑기판"></div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+/* =======================
+   설정 (수량만 바꿔서 쓰세요)
+   총합이 보드 칸 수(100)와 같아야 함
+======================= */
+const PRIZE_COUNTS = {
+  "치킨": 1,
+  "커피": 10,
+  "사탕": 20,
+  "꽝": 69
+};
+// 표시용 이모지(원하면 수정)
+const PRIZE_EMOJI = {
+  "치킨":"🍗", "커피":"☕️", "사탕":"🍬", "꽝":"🙈"
+};
+
+// ===== 유틸 =====
+const todayKey = () => new Date().toISOString().slice(0,10); // YYYY-MM-DD
+const LS_PICK_KEY = 'lottery_pick_' + todayKey();
+const LS_BOARD_KEY = 'lottery_board_' + todayKey(); // 오늘 보드(seed)
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+// 암호학적 섞기 (가능하면 crypto 사용)
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const r = (window.crypto && crypto.getRandomValues)
+      ? crypto.getRandomValues(new Uint32Array(1))[0] % (i+1)
+      : Math.floor(Math.random()*(i+1));
+    [arr[i], arr[r]] = [arr[r], arr[i]];
+  }
+  return arr;
+}
+
+// 보드 데이터 만들기(100칸)
+function buildBoardData(){
+  const totalCells = 100;
+  const pool = [];
+  let sum = 0;
+  for(const [k,v] of Object.entries(PRIZE_COUNTS)){ sum += v; for(let i=0;i<v;i++) pool.push(k); }
+  if(sum !== totalCells) {
+    alert(`PRIZE_COUNTS 총합이 ${totalCells}이 아닙니다. 현재 ${sum}`);
+  }
+  shuffle(pool);
+  return pool; // 길이 100, 각 칸의 보상 문자열
+}
+
+// 저장된 보드 불러오기(없으면 생성)
+function getBoardData(){
+  const saved = localStorage.getItem(LS_BOARD_KEY);
+  if(saved){ try{ return JSON.parse(saved); }catch{} }
+  const board = buildBoardData();
+  localStorage.setItem(LS_BOARD_KEY, JSON.stringify(board));
+  return board;
+}
+
+// 전설(수량표) 표시 — 공개가 싫으면 이 블록을 주석 처리
+function renderLegend(){
+  const legend = document.getElementById('legend');
+  legend.innerHTML = Object.entries(PRIZE_COUNTS).map(([k,v]) =>
+    `<span class="pill">${PRIZE_EMOJI[k]||""}<b>${k}</b> × ${v}</span>`
+  ).join('');
+}
+
+// 보드 렌더
+function renderBoard(){
+  const board = document.getElementById('board');
+  const data = getBoardData();
+  board.innerHTML = "";
+  data.forEach((prize, idx)=>{
+    const el = document.createElement('div');
+    el.className = 'cell';
+    el.setAttribute('data-prize', prize);
+    el.innerHTML = `
+      <div class="face front" aria-hidden="false">
+        <div class="star"></div>
+      </div>
+      <div class="face back" aria-hidden="true">${PRIZE_EMOJI[prize]||""}&nbsp;${prize}</div>
+    `;
+    el.addEventListener('click', ()=> onPick(el, idx));
+    board.appendChild(el);
+  });
+}
+
+// 클릭 처리 (하루 1회 제한)
+function onPick(cell, idx){
+  if(localStorage.getItem(LS_PICK_KEY)){
+    toast('오늘은 이미 참여하셨어요!');
+    return;
+  }
+  if(cell.classList.contains('is-open')) return;
+
+  cell.classList.add('is-open');
+  const prize = cell.getAttribute('data-prize');
+  const email = (document.getElementById('email').value||"").trim();
+
+  // 저장 (운영 전환 시 서버로 전송하세요)
+  const result = { date: todayKey(), prize, index: idx, email };
+  localStorage.setItem(LS_PICK_KEY, JSON.stringify(result));
+
+  // 연출
+  toast(`결과: ${prize}${PRIZE_EMOJI[prize]?" "+PRIZE_EMOJI[prize]:""}`);
+  navigator.vibrate && navigator.vibrate(60); // 모바일 진동(지원 기기)
+}
+
+// 관리자: 새 판 만들기 (URL에 #admin 있을 때만 활성화)
+function setupAdmin(){
+  const btn = document.getElementById('resetBtn');
+  const isAdmin = location.hash.includes('admin');
+  if(!isAdmin){ btn.disabled = true; return; }
+  btn.disabled = false;
+  btn.addEventListener('click', ()=>{
+    if(!confirm('오늘 보드를 새로 섞을까요? (이미 뽑은 사용자 기록은 유지됩니다)')) return;
+    localStorage.removeItem(LS_BOARD_KEY);
+    renderBoard();
+    toast('새 보드가 생성되었습니다.');
+  });
+}
+
+// 초기화
+renderLegend();
+renderBoard();
+setupAdmin();
+</script>
+</body>
+</html>
