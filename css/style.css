@@ -32,7 +32,7 @@
     @media(min-width:860px){ .menu{display:flex} .hamb{display:none} }
 
     /* Hero */
-    .hero{position:relative; padding:80px 0 52px; overflow:hidden; background:
+    .hero{position:relative; padding:30px 0 52px; overflow:hidden; background:
       radial-gradient(1200px 400px at 50% -50%, var(--cream), transparent 60%);}
     .hero h1{font-size:clamp(28px,5vw,44px); line-height:1.1; margin:0 0 10px}
     .hero p{font-size:clamp(16px,2.5vw,18px); color:var(--muted); margin:0 0 22px}
