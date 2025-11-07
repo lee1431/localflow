@@ -215,3 +215,33 @@
 
     
     #toast.show{ opacity:1; }
+
+      #roadmap{
+      --ink:#0b0f14; --muted:#5c6b7a; --line:#e8edf3; --accent:#0b7dda;
+      --chip:#eef6ff; --bg:#ffffff; --soft:#f7fafc;
+      color:var(--ink); background:var(--bg); border-top:1px solid var(--line);
+      font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif;
+    }
+    #roadmap .wrap{max-width:1080px;margin:0 auto;padding:40px 16px;}
+    #roadmap h2{margin:0 0 8px;font-size:22px;letter-spacing:.2px}
+    #roadmap .sub{color:var(--muted); margin-bottom:22px}
+    #roadmap .card{border:1px solid var(--line); background:#fff; border-radius:14px; padding:16px}
+    #roadmap .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    #roadmap .col-4{grid-column:span 4}
+    #roadmap .col-6{grid-column:span 6}
+    #roadmap .col-12{grid-column:span 12}
+    #roadmap .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--chip);color:#0858a7;font-weight:600;font-size:12px}
+    #roadmap .k{font-weight:700}
+    #roadmap .muted{color:var(--muted)}
+    #roadmap .li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed var(--line)}
+    #roadmap .li:first-child{border-top:0}
+    #roadmap .dot{width:8px;height:8px;border-radius:2px;background:var(--accent);margin-top:7px;flex:0 0 auto}
+    #roadmap details{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:10px 12px}
+    #roadmap summary{cursor:pointer;font-weight:700}
+    #roadmap code{background:#f3f6fa;border:1px solid var(--line);padding:2px 6px;border-radius:6px}
+    #roadmap .stat{display:flex;gap:10px;align-items:baseline}
+    #roadmap .stat .n{font-size:22px;font-weight:900}
+    @media (max-width:800px){
+      #roadmap .col-4,#roadmap .col-6{grid-column:span 12}
+    }
+
