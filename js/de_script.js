@@ -14,6 +14,13 @@ function setMidnightKST() {
 }
 setMidnightKST();
 
+fetch('https://mrdindoin.ddns.net/data/views.json', {cache:'no-store'})
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById('viewTotal').textContent = d.total;
+    document.getElementById('viewToday').textContent = d.today;
+  });
+
 const btn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 const ovl  = document.getElementById('overlay');
