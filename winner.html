@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>LocalFlow — 당첨 확인 & 재고 & 후기</title>
+<meta name="theme-color" content="#61D6C2"/>
+<meta name="description" content="LocalFlow 당첨 여부 조회, 상품 재고 확인, 당첨자 후기 모음"/>
+
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#111826; --ink:#eaf2ff; --muted:#9fb0c7; --line:#1e2330; --accent:#61d6c2;
+    --pill:#0f172a; --thumb:#0c121d;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;background:linear-gradient(180deg,#0a0f16,#070b11);color:var(--ink);
+       font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Noto Sans KR,sans-serif}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:14px}
+
+  header{position:sticky;top:0;background:rgba(7,11,17,.85);backdrop-filter:saturate(150%) blur(6px);
+         border-bottom:1px solid var(--line);z-index:10}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:26px;height:26px;border:1px solid var(--line);border-radius:7px;display:grid;place-items:center;
+        background:#0e1522;font-weight:800}
+  .pill{display:inline-block;padding:.32rem .65rem;border:1px solid var(--line);border-radius:999px;background:var(--pill);color:var(--muted);font-size:12px}
+  .badge{font-size:10px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;background:#0f1624;color:var(--muted)}
+
+  h1{margin:10px 0 8px;font-size:clamp(22px,4vw,28px)}
+  h2{margin:18px 0 10px;font-size:clamp(18px,3.4vw,22px)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .grid{display:grid;gap:12px}
+  .cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .cols-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .cols-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+  .muted{color:var(--muted)}
+  .hr{height:1px;background:var(--line);margin:12px 0}
+  .btn{appearance:none;border:1px solid var(--line);background:#0f172a;color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+  input[type="search"],input[type="email"],input[type="text"],select{
+    padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#0f172a;color:var(--ink);width:100%
+  }
+
+  /* 섹션1: 응모 여부 조회 */
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{border-bottom:1px solid #1a2331;padding:8px 10px;text-align:left}
+  .table th{color:#b7c5dd;font-weight:700}
+  .status-pill{padding:.25rem .5rem;border:1px solid var(--line);border-radius:999px;background:#0e1624;font-size:12px}
+  .ok{color:#22c55e;border-color:#1f3b2b}
+  .no{color:#f97316;border-color:#3a2415}
+  .win{color:#60a5fa;border-color:#1a2c45}
+
+  /* 섹션2: 상품 카드 */
+  .prize{display:grid;grid-template-rows:120px auto;gap:8px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0e1624}
+  .prize .thumb{height:120px;background:#0c121d;display:grid;place-items:center}
+  .prize .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .prize .meta{padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .stock{font-size:12px;color:var(--muted)}
+  .stock strong{color:#e5f0ff}
+
+  /* 섹션3: 후기 그리드 */
+  .rev{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0e1624}
+  .rev .thumb{aspect-ratio:1/1;background:#0c121d}
+  .rev .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .rev .body{padding:8px 10px}
+  .rev .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+
+  /* 모달 */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal.show{display:flex}
+  .dialog{max-width:900px;width:100%;background:#0f172a;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .dialog header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .dialog .content{max-height:min(80vh,1000px);overflow:auto}
+  .dialog img{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <div class="logo">LF</div>
+      <div>LocalFlow <small class="muted">— 당첨 확인</small></div>
+      <span class="badge">beta</span>
+    </div>
+    <a class="pill" href="/" title="메인으로">← LocalFlow</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <span class="pill">주간 순환 프로젝트</span>
+    <h1>내가 당첨됐나요?</h1>
+    <p class="muted" style="margin:0">이 페이지에서 <b>응모 여부/당첨 여부</b>를 확인하고, <b>상품 재고</b>와 <b>당첨 후기</b>를 볼 수 있습니다.</p>
+  </section>
+
+  <!-- 1. 응모 여부 조회 -->
+  <section style="margin-top:12px">
+    <h2>1) 응모 여부 조회</h2>
+    <div class="card">
+      <div class="grid cols-2" style="align-items:end">
+        <div>
+          <label class="muted">이메일로 직접 확인</label>
+          <div class="grid" style="grid-template-columns:1fr auto;gap:10px">
+            <input id="qEmail" type="email" placeholder="you@example.com" autocomplete="email">
+            <button id="btnCheck" class="btn">확인</button>
+          </div>
+          <div id="checkArea" style="margin-top:10px" class="muted">이메일을 입력하고 확인을 누르세요.</div>
+        </div>
+        <div>
+          <label class="muted">응모자 리스트 검색</label>
+          <div class="grid" style="grid-template-columns:1fr auto auto;gap:10px">
+            <input id="qSearch" type="search" placeholder="이메일/닉네임/메모 검색(부분 일치)">
+            <select id="qFilter">
+              <option value="">전체</option>
+              <option value="win">당첨자만</option>
+              <option value="nowin">미당첨만</option>
+            </select>
+            <button id="btnReload" class="btn">새로고침</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div style="overflow:auto">
+        <table class="table" aria-label="응모자 목록">
+          <thead>
+            <tr><th style="min-width:220px">이메일</th><th style="min-width:140px">닉네임</th><th style="min-width:120px">응모일</th><th style="min-width:120px">상태</th></tr>
+          </thead>
+          <tbody id="applTbody"><tr><td colspan="4" class="muted">불러오는 중…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 상품 종류 및 재고 -->
+  <section style="margin-top:12px">
+    <h2>2) 상품 종류 및 재고</h2>
+    <div id="prizeGrid" class="grid cols-3">
+      <!-- JS 렌더 -->
+    </div>
+  </section>
+
+  <!-- 3. 당첨자 후기 -->
+  <section style="margin-top:12px">
+    <h2>3) 당첨자 후기</h2>
+    <div id="revGrid" class="grid cols-4">
+      <!-- JS 렌더 -->
+    </div>
+    <p class="muted" style="margin-top:6px">
+      ※ 업로드는 당첨자 개별 이메일로 전달된 전용 업로드 URL에서 진행합니다. (스팸/도용 방지)
+    </p>
+  </section>
+</main>
+
+<!-- 후기 미리보기 모달 -->
+<div id="modal" class="modal" aria-hidden="true" role="dialog" aria-label="후기 이미지 확대">
+  <div class="dialog">
+    <header>
+      <strong id="mTitle">후기 미리보기</strong>
+      <button id="mClose" class="pill" aria-label="닫기">닫기</button>
+    </header>
+    <div class="content">
+      <img id="mImg" src="" alt="후기 이미지">
+      <div style="padding:10px;border-top:1px solid var(--line)">
+        <div id="mMeta" class="muted" style="font-size:12px"></div>
+        <div id="mText" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== API Endpoints (동일 오리진 권장) =====
+   응모자/당첨 조회     GET  /event/applicants.json
+                       -> [{email,nick,date,win(boolean)}]
+   단건 확인           GET  /event/check?email=...
+                       -> {exists:true|false, win:true|false, round:"2025-W45", prize:"치킨 쿠폰"?}
+   상품/재고           GET  /data/prizes.json
+                       -> {round:"...", items:[{id,name,stock,img}]}
+   후기 리스트         GET  /data/reviews.json
+                       -> [{id,img,thumb?,title,text,by,date}]  (thumb 없으면 img 사용)
+*/
+const API = {
+  applicants: "/event/applicants.json",
+  check:      "/event/check",
+  prizes:     "/data/prizes.json",
+  reviews:    "/data/reviews.json"
+};
+
+const $ = s=>document.querySelector(s);
+
+/* ---------- 1) 응모 여부 조회 ---------- */
+const qEmail = $("#qEmail");
+const btnCheck = $("#btnCheck");
+const checkArea = $("#checkArea");
+
+const qSearch = $("#qSearch");
+const qFilter = $("#qFilter");
+const btnReload = $("#btnReload");
+const applTbody = $("#applTbody");
+
+let APPLICANTS = [];
+
+btnCheck.onclick = async ()=>{
+  const v=(qEmail.value||"").trim();
+  if(!v){ alert("이메일을 입력하세요."); return; }
+  try{
+    const r = await fetch(`${API.check}?email=${encodeURIComponent(v)}`, {cache:"no-store"});
+    const j = await r.json();
+    if(!j.exists){
+      checkArea.innerHTML = `❌ <span class="status-pill no">응모 기록 없음</span>`;
+    }else if(j.win){
+      checkArea.innerHTML = `✅ <span class="status-pill win">당첨</span> — 회차 <b>${j.round||"-"}</b> / 상품 <b>${j.prize||"-"}</b>`;
+    }else{
+      checkArea.innerHTML = `📝 <span class="status-pill ok">응모됨</span> — 회차 <b>${j.round||"-"}</b>`;
+    }
+  }catch(e){
+    checkArea.textContent = "서버 통신 오류. 잠시 후 다시 시도하세요.";
+  }
+};
+
+btnReload.onclick = loadApplicants;
+qSearch.addEventListener("input", debounce(renderApplicants, 180));
+qFilter.addEventListener("change", renderApplicants);
+
+async function loadApplicants(){
+  applTbody.innerHTML = `<tr><td colspan="4" class="muted">불러오는 중…</td></tr>`;
+  try{
+    const r = await fetch(API.applicants, {cache:"no-store"});
+    APPLICANTS = r.ok ? await r.json() : [];
+  }catch(e){ APPLICANTS = []; }
+  renderApplicants();
+}
+function renderApplicants(){
+  const q=(qSearch.value||"").trim().toLowerCase();
+  const f=qFilter.value;
+  const rows = APPLICANTS.filter(a=>{
+    const okF = f==="" || (f==="win" && a.win) || (f==="nowin" && !a.win);
+    if(!okF) return false;
+    if(!q) return true;
+    return (a.email||"").toLowerCase().includes(q) ||
+           (a.nick||"").toLowerCase().includes(q) ||
+           (a.memo||"").toLowerCase().includes(q);
+  }).map(a=>{
+    const st = a.win ? `<span class="status-pill win">당첨</span>`
+                     : `<span class="status-pill ok">응모</span>`;
+    return `<tr>
+      <td>${escapeHtml(a.email||"")}</td>
+      <td>${escapeHtml(a.nick||"-")}</td>
+      <td>${escapeHtml(a.date||"-")}</td>
+      <td>${st}</td>
+    </tr>`;
+  }).join("");
+  applTbody.innerHTML = rows || `<tr><td colspan="4" class="muted">검색 결과가 없습니다.</td></tr>`;
+}
+
+/* ---------- 2) 상품 종류 및 재고 ---------- */
+const prizeGrid = $("#prizeGrid");
+async function loadPrizes(){
+  prizeGrid.innerHTML = "";
+  try{
+    const r = await fetch(API.prizes, {cache:"no-store"});
+    const j = r.ok ? await r.json() : {items:[]};
+    (j.items||[]).forEach(p=>{
+      const img = p.img ? `<img src="${encodeURI(p.img)}" loading="lazy" alt="${escapeHtml(p.name)}">`
+                        : `<span class="muted">No Image</span>`;
+      prizeGrid.insertAdjacentHTML("beforeend", `
+        <article class="prize">
+          <div class="thumb">${img}</div>
+          <div class="meta">
+            <div><strong>${escapeHtml(p.name)}</strong><div class="stock">재고 <strong>${p.stock??"-"}</strong></div></div>
+            ${p.brand?`<span class="pill">${escapeHtml(p.brand)}</span>`:""}
+          </div>
+        </article>
+      `);
+    });
+  }catch(e){
+    prizeGrid.innerHTML = `<div class="card muted">상품 정보를 불러오지 못했습니다.</div>`;
+  }
+}
+
+/* ---------- 3) 당첨자 후기 ---------- */
+const revGrid = $("#revGrid");
+const modal = $("#modal"), mImg=$("#mImg"), mTitle=$("#mTitle"), mText=$("#mText"), mMeta=$("#mMeta");
+$("#mClose").onclick = ()=> modal.classList.remove("show");
+modal.addEventListener("click", e=>{ if(e.target===modal) modal.classList.remove("show"); });
+
+async function loadReviews(){
+  revGrid.innerHTML = "";
+  try{
+    const r = await fetch(API.reviews, {cache:"no-store"});
+    const arr = r.ok ? await r.json() : [];
+    if(!arr.length){
+      revGrid.innerHTML = `<div class="card muted">아직 후기가 없습니다.</div>`;
+      return;
+    }
+    arr.forEach(v=>{
+      const t = v.thumb || v.img;
+      revGrid.insertAdjacentHTML("beforeend", `
+        <article class="rev">
+          <div class="thumb">
+            <img src="${encodeURI(t)}" loading="lazy" alt="${escapeHtml(v.title||'후기 이미지')}"
+                 onclick="openReview('${encodeURIComponent(v.img)}','${escapeHtmlJS(v.title||"후기")}','${escapeHtmlJS(v.by||"-")}','${escapeHtmlJS(v.date||"")}','${escapeHtmlJS(v.text||"")}')">
+          </div>
+          <div class="body">
+            <div class="meta"><span>${escapeHtml(v.title||"후기")}</span><span>${escapeHtml(v.date||"")}</span></div>
+            <div class="muted" style="font-size:12px">${escapeHtml(v.by||"")}</div>
+          </div>
+        </article>
+      `);
+    });
+  }catch(e){
+    revGrid.innerHTML = `<div class="card muted">후기를 불러오지 못했습니다.</div>`;
+  }
+}
+
+window.openReview = (imgUrlEnc, title, by, date, text)=>{
+  mImg.src = decodeURIComponent(imgUrlEnc);
+  mTitle.textContent = title;
+  mMeta.textContent = `${by||""} ${date?(" · "+date):""}`;
+  mText.textContent = text||"";
+  modal.classList.add("show");
+};
+
+/* ---------- utils ---------- */
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+function escapeHtmlJS(s){ return escapeHtml(s).replace(/\n/g," "); }
+function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+
+/* ---------- init ---------- */
+loadApplicants();
+loadPrizes();
+loadReviews();
+</script>
+
+</body>
+</html>
