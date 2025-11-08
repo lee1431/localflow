@@ -76,6 +76,9 @@
   }
 })();
 
+
+
+
 (async function(){
   const A = document.getElementById('tickerA');
   const B = document.getElementById('tickerB');
@@ -83,7 +86,7 @@
   // -------- fetch --------
   let d;
   try{
-    const r = await fetch('/data/finance.json',{cache:'no-store'});
+    const r = await fetch('https://mrdindoin.ddns.net/data/finance.json',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     d = await r.json();
   }catch(e){
