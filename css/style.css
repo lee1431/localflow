@@ -245,3 +245,10 @@
       #roadmap .col-4,#roadmap .col-6{grid-column:span 12}
     }
 
+
+      @keyframes flow {
+        from { transform: translateX(100%); }
+        to   { transform: translateX(-100%); }
+      }
+      .marquee:hover { animation-play-state: paused; }
+
