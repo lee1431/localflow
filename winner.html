@@ -141,36 +141,60 @@
   /* 푸터 톤 */
   footer{ color:#667085; }
 
-  /* 검색창 + 필터 (Light Theme) */
+  /* 검색창 + 필터 */
   input[type="search"],
-  select {
-    background: transparent !important;
-    border: 1px solid var(--line);
-    color: var(--ink);
-    box-shadow: none;
-    transition: border-color .2s, box-shadow .2s;
+  select{
+    background:transparent !important;
+    border:1px solid var(--line);
+    color:var(--ink);
+    box-shadow:none;
+    transition:border-color .2s, box-shadow .2s;
+    border-radius:10px;
   }
-  
-  input[type="search"]::placeholder {
-    color: #9ca3af;
-  }
-  
+  input[type="search"]::placeholder{ color:#9ca3af; }
   input[type="search"]:focus,
-  select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(97,214,194,0.25);
+  select:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(97,214,194,.25);
   }
   
-  /* select(드롭다운) 화살표 깔끔하게 */
-  select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23667085' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px 6px;
-    padding-right: 28px;
+  /* 셀렉트 화살표 (라이트) */
+  select{
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23667085' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 10px center;
+    background-size:10px 6px;
+    padding-right:28px;
   }
+  
+  /* 버튼 통일감 */
+  .btn{
+    background:#fff;
+    color:#0c1220;
+    border:1px solid var(--line);
+    transition:box-shadow .2s, border-color .2s, transform .02s;
+  }
+  .btn:hover{ border-color:#cbd5e1; box-shadow:0 1px 6px rgba(0,0,0,.06); }
+  .btn:active{ transform:translateY(1px); }
+  .btn[disabled]{ opacity:.5; cursor:not-allowed; box-shadow:none; }
+  
+  /* 테이블 가독성 업 */
+  .table th{ color:#111827; background:#fbfdff; }
+  .table th,.table td{ border-bottom:1px solid var(--line); }
+  .table tr:nth-child(even) td{ background:#fcfcfd; }
+  .table tr:hover td{ background:#f7fafc; } /* 행 hover */
+  
+  /* 상태 pill 라이트 톤 */
+  .status-pill{ background:#fff; border:1px solid var(--line); }
+  .status-pill.ok{  color:#16a34a; border-color:#c7f2d8; background:#ecfdf5; }
+  .status-pill.no{  color:#ea580c; border-color:#fde6d6; background:#fff7ed; }
+  .status-pill.win{ color:#2563eb; border-color:#dbeafe; background:#eff6ff; }
+  
+  /* 카드/모달 살짝 그림자 */
+  .card{ background:var(--panel); border:1px solid var(--line); box-shadow:0 1px 8px rgba(0,0,0,.04); }
+  .dialog{ background:#fff; border:1px solid var(--line); box-shadow:0 10px 30px rgba(0,0,0,.12); }
   
 </style>
 </head>
