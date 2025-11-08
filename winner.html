@@ -73,6 +73,12 @@
   .dialog header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
   .dialog .content{max-height:min(80vh,1000px);overflow:auto}
   .dialog img{width:100%;height:auto;display:block}
+
+  .pager{
+    margin-top:10px; display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .pager .btn[disabled]{opacity:.5; cursor:not-allowed}
+  
 </style>
 </head>
 <body>
@@ -95,35 +101,42 @@
     <p class="muted" style="margin:0">이 페이지에서 <b>응모 여부/당첨 여부</b>를 확인하고, <b>상품 재고</b>와 <b>당첨 후기</b>를 볼 수 있습니다.</p>
   </section>
 
-  <!-- 1. 응모 여부 조회 -->
-  <section style="margin-top:12px">
-    <h2>1) 응모 여부 조회</h2>
-    <div class="card">
-      <div class="grid cols-2" style="align-items:end">
-        <div>
-          <label class="muted">이메일로 직접 확인</label>
-          <div class="grid" style="grid-template-columns:1fr auto;gap:10px">
-            <input id="qEmail" type="email" placeholder="you@example.com" autocomplete="email">
-            <button id="btnCheck" class="btn">확인</button>
-          </div>
-          <div id="checkArea" style="margin-top:10px" class="muted">이메일을 입력하고 확인을 누르세요.</div>
-        </div>
-
-
-      </div>
-
-      <div class="hr"></div>
-
-      <div style="overflow:auto">
-        <table class="table" aria-label="응모자 목록">
-          <thead>
-            <tr><th style="min-width:220px">이메일</th><th style="min-width:140px">닉네임</th><th style="min-width:120px">응모일</th><th style="min-width:120px">상태</th></tr>
-          </thead>
-          <tbody id="applTbody"><tr><td colspan="4" class="muted">불러오는 중…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+  <!-- 검색 + 필터 + 새로고침 -->
+  <div class="grid" style="grid-template-columns:1fr auto auto;gap:10px;margin-top:10px">
+    <input id="listSearch" type="search" placeholder="이메일/닉네임/메모 검색 (부분 일치)">
+    <select id="listFilter" aria-label="필터">
+      <option value="">전체</option>
+      <option value="win">당첨자만</option>
+      <option value="nowin">미당첨만</option>
+    </select>
+    <button id="btnReset" class="btn">초기화</button>
+  </div>
+  
+  <div class="hr"></div>
+  
+  <!-- 테이블 -->
+  <div style="overflow:auto">
+    <table class="table" aria-label="응모자 목록">
+      <thead>
+        <tr>
+          <th style="min-width:220px">이메일</th>
+          <th style="min-width:140px">닉네임</th>
+          <th style="min-width:120px">응모일</th>
+          <th style="min-width:120px">상태</th>
+        </tr>
+      </thead>
+      <tbody id="applTbody">
+        <tr><td colspan="4" class="muted">불러오는 중…</td></tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 페이저 -->
+  <div id="applPager" class="pager">
+    <button id="btnPrev" class="btn" disabled>이전</button>
+    <div id="applInfo" class="muted">-</div>
+    <button id="btnNext" class="btn" disabled>다음</button>
+  </div>
 
   <!-- 2. 상품 종류 및 재고 -->
   <section style="margin-top:12px">
@@ -183,57 +196,44 @@ const API = {
 const $ = s=>document.querySelector(s);
 
 /* ---------- 1) 응모 여부 조회 ---------- */
-const qEmail = $("#qEmail");
-const btnCheck = $("#btnCheck");
-const checkArea = $("#checkArea");
 
-const qSearch = $("#qSearch");
-const qFilter = $("#qFilter");
+const API_APPLICANTS = "/event/applicants"; // 동일 오리진 프록시/서버 기준
 
-const applTbody = $("#applTbody");
+const applTbody  = document.getElementById("applTbody");
+const listSearch = document.getElementById("listSearch");
+const listFilter = document.getElementById("listFilter");
+const btnReset   = document.getElementById("btnReset");
+const btnPrev    = document.getElementById("btnPrev");
+const btnNext    = document.getElementById("btnNext");
+const applInfo   = document.getElementById("applInfo");
 
-let APPLICANTS = [];
+const applState = { page: 1, size: 20, q: "", f: "" };
 
-btnCheck.onclick = async ()=>{
-  const v=(qEmail.value||"").trim();
-  if(!v){ alert("이메일을 입력하세요."); return; }
-  try{
-    const r = await fetch(`${API.check}?email=${encodeURIComponent(v)}`, {cache:"no-store"});
-    const j = await r.json();
-    if(!j.exists){
-      checkArea.innerHTML = `❌ <span class="status-pill no">응모 기록 없음</span>`;
-    }else if(j.win){
-      checkArea.innerHTML = `✅ <span class="status-pill win">당첨</span> — 회차 <b>${j.round||"-"}</b> / 상품 <b>${j.prize||"-"}</b>`;
-    }else{
-      checkArea.innerHTML = `📝 <span class="status-pill ok">응모됨</span> — 회차 <b>${j.round||"-"}</b>`;
-    }
-  }catch(e){
-    checkArea.textContent = "서버 통신 오류. 잠시 후 다시 시도하세요.";
-  }
-};
-  
-if (qSearch) qSearch.addEventListener("input", debounce(renderApplicants, 180));
-if (qFilter) qFilter.addEventListener("change", renderApplicants);
-
-async function loadApplicants(){
+function setLoading(){
   applTbody.innerHTML = `<tr><td colspan="4" class="muted">불러오는 중…</td></tr>`;
-  try{
-    const r = await fetch(API.applicants, {cache:"no-store"});
-    APPLICANTS = r.ok ? await r.json() : [];
-  }catch(e){ APPLICANTS = []; }
-  renderApplicants();
 }
-function renderApplicants(){
-  const q=(qSearch?.value||"").trim().toLowerCase();
-  const f=(qFilter?.value||"");
-  const rows = APPLICANTS.filter(a=>{
-    const okF = f==="" || (f==="win" && a.win) || (f==="nowin" && !a.win);
-    if(!okF) return false;
-    if(!q) return true;
-    return (a.email||"").toLowerCase().includes(q) ||
-           (a.nick||"").toLowerCase().includes(q) ||
-           (a.memo||"").toLowerCase().includes(q);
-  }).map(a=>{
+
+async function fetchApplicants(){
+  setLoading();
+  const params = new URLSearchParams({ page: applState.page, size: applState.size });
+  if (applState.q) params.set("q", applState.q);
+  if (applState.f) params.set("f", applState.f);
+
+  try{
+    const r = await fetch(`${API_APPLICANTS}?${params.toString()}`, { cache:"no-store" });
+    if(!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    renderApplicants(j);
+  }catch(e){
+    applTbody.innerHTML = `<tr><td colspan="4" class="muted">목록을 불러오지 못했습니다${e?.message?` (${e.message})`:""}.</td></tr>`;
+    applInfo.textContent = "-";
+    btnPrev.disabled = btnNext.disabled = true;
+  }
+}
+
+function renderApplicants(j){
+  // rows
+  const rows = (j.items||[]).map(a=>{
     const st = a.win ? `<span class="status-pill win">당첨</span>`
                      : `<span class="status-pill ok">응모</span>`;
     return `<tr>
@@ -243,8 +243,45 @@ function renderApplicants(){
       <td>${st}</td>
     </tr>`;
   }).join("");
+
   applTbody.innerHTML = rows || `<tr><td colspan="4" class="muted">검색 결과가 없습니다.</td></tr>`;
+
+  // pager
+  applInfo.textContent = `총 ${j.total?.toLocaleString?.()||0}명 · ${j.page}/${j.pages||1} 페이지`;
+  btnPrev.disabled = (j.page <= 1);
+  btnNext.disabled = !j.has_next;
+  btnPrev.onclick  = ()=>{ if(j.page>1){ applState.page = j.page-1; fetchApplicants(); window.scrollTo({top:0,behavior:"smooth"});} };
+  btnNext.onclick  = ()=>{ if(j.has_next){ applState.page = j.page+1; fetchApplicants(); window.scrollTo({top:0,behavior:"smooth"});} };
 }
+
+// 검색/필터/리셋
+if (listSearch) listSearch.addEventListener("input", debounce(()=>{
+  applState.q = (listSearch.value||"").trim();
+  applState.page = 1;
+  fetchApplicants();
+}, 250));
+
+if (listFilter) listFilter.addEventListener("change", ()=>{
+  applState.f = listFilter.value || "";
+  applState.page = 1;
+  fetchApplicants();
+});
+
+if (btnReset) btnReset.onclick = ()=>{
+  if (listSearch) listSearch.value = "";
+  if (listFilter) listFilter.value = "";
+  applState.q = ""; applState.f = ""; applState.page = 1;
+  fetchApplicants();
+};
+
+// 유틸 (escapeHtml / debounce) — 기존에 있으면 중복 정의 생략
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+
+// 최초 로드
+fetchApplicants();
+
+  
 
 /* ---------- 2) 상품 종류 및 재고 ---------- */
 const prizeGrid = $("#prizeGrid");
