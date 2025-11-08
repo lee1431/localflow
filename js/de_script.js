@@ -193,7 +193,7 @@ function addWord(e){
   if(!v) return false;
   spawn(v);
 
-  let url = `https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}`;
+  let url = `https://mrdindoin.ddns.net/event/?food=${encodeURIComponent(v)}&email=${encodeURIComponent(uemail)}`;
   
   if (uemail && uemail.includes("@")) {
     url += `&email=${encodeURIComponent(uemail)}`;
