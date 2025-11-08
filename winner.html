@@ -141,18 +141,35 @@
   /* 푸터 톤 */
   footer{ color:#667085; }
 
-  /* 검색창(밝은 테마용) */
-  input[type="search"] {
+  /* 검색창 + 필터 (Light Theme) */
+  input[type="search"],
+  select {
     background: transparent !important;
     border: 1px solid var(--line);
     color: var(--ink);
     box-shadow: none;
     transition: border-color .2s, box-shadow .2s;
   }
-  input[type="search"]:focus {
+  
+  input[type="search"]::placeholder {
+    color: #9ca3af;
+  }
+  
+  input[type="search"]:focus,
+  select:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(97,214,194,0.25);
+  }
+  
+  /* select(드롭다운) 화살표 깔끔하게 */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23667085' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 6px;
+    padding-right: 28px;
   }
   
 </style>
