@@ -246,9 +246,18 @@
     }
 
 
-      @keyframes flow {
-        from { transform: translateX(100%); }
-        to   { transform: translateX(-100%); }
+     .marquee-box{
+        position:relative; overflow:hidden; border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb;
+        background:#fff; padding:10px 0;
       }
-      .marquee:hover { animation-play-state: paused; }
+      .marquee{
+        position:absolute; white-space:nowrap; will-change:transform; left:0; top:0; width:max-content;
+        animation:slide var(--dur,20s) linear infinite;
+      }
+      .marquee.clone{ animation-delay: calc(var(--dur,20s)/2); }
+      .marquee:hover, .marquee.clone:hover{ animation-play-state: paused; }
+      @keyframes slide {
+        from { transform: translateX(var(--start,100%)); }
+        to   { transform: translateX(var(--end,-100%)); }
+      }
 
