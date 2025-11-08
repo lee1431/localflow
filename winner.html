@@ -78,6 +78,69 @@
     margin-top:10px; display:flex; align-items:center; justify-content:center; gap:10px;
   }
   .pager .btn[disabled]{opacity:.5; cursor:not-allowed}
+
+  
+  /* ==== LocalFlow Light Theme Override ==== */
+  :root{
+    --bg:#f7fafc;         /* 페이지 배경 */
+    --panel:#ffffff;      /* 카드/모달 배경 */
+    --ink:#0c1220;        /* 본문 텍스트 */
+    --muted:#667085;      /* 보조 텍스트 */
+    --line:#e5e7eb;       /* 경계선 */
+    --accent:#61d6c2;     /* 브랜드 포인트 */
+    --pill:#ffffff;       /* 배지/필 기본 */
+    --thumb:#f3f5f7;      /* 썸네일 바탕 */
+  }
+  
+  /* 페이지/헤더 배경 교체 */
+  body{ background:#fff; color:var(--ink); }
+  header{ background:rgba(255,255,255,.9); border-bottom:1px solid var(--line); }
+  .logo{ background:#fff; }
+  
+  /* 카드/표/배지 톤 업 */
+  .card{ background:var(--panel); border:1px solid var(--line); box-shadow:0 1px 8px rgba(0,0,0,.04); }
+  .pill{ background:#fff; border:1px solid var(--line); color:#475467; }
+  .badge{ background:#fff; border:1px solid var(--line); color:#475467; }
+  
+  /* 표 가독성(라이트) */
+  .table th{ color:#111827; background:#fbfdff; }
+  .table th,.table td{ border-bottom:1px solid var(--line); }
+  .table tr:nth-child(even) td{ background:#fcfcfd; }
+  
+  /* 상태 Pill 색상(라이트 대비) */
+  .status-pill{ background:#fff; border:1px solid var(--line); }
+  .status-pill.ok{     color:#16a34a; border-color:#c7f2d8; background:#ecfdf5; }
+  .status-pill.no{     color:#ea580c; border-color:#fde6d6; background:#fff7ed; }
+  .status-pill.win{    color:#2563eb; border-color:#dbeafe; background:#eff6ff; }
+  
+  /* 썸네일/프라이즈/리뷰 카드 */
+  .prize{ background:#fff; border:1px solid var(--line); }
+  .prize .thumb{ background:#fafafa; }
+  .rev{ background:#fff; border:1px solid var(--line); }
+  .rev .thumb{ background:#fafafa; }
+  
+  /* 모달(라이트) */
+  .modal{ background:rgba(0,0,0,.35); }
+  .dialog{ background:#fff; border:1px solid var(--line); color:var(--ink); }
+  .dialog header{ border-bottom:1px solid var(--line); }
+  .dialog .content{ background:#fff; }
+  
+  /* 버튼(라이트) */
+  .btn{ background:#fff; color:#0c1220; border:1px solid var(--line); }
+  .btn.primary{ background:#0f172a0d; } /* 아주 연한 남청 톤 */
+  .btn:active{ transform:translateY(1px); }
+  
+  /* 휠/마퀴 */
+  .wheel{ background:#f5f7fb; color:#475467; border:1px dashed #d4dbe7; }
+  marquee{ color:#667085; }
+  
+  /* 헤더 네비/링크 대비 */
+  a{ color:#0c1220; }
+  a.pill{ color:#0c1220; }
+  
+  /* 푸터 톤 */
+  footer{ color:#667085; }
+
   
 </style>
 </head>
