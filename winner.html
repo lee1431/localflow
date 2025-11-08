@@ -357,7 +357,7 @@ function escapeHtmlJS(s){ return escapeHtml(s).replace(/\n/g," "); }
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 /* ---------- init ---------- */
-loadApplicants();
+
 loadPrizes();
 loadReviews();
 </script>
