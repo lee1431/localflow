@@ -189,7 +189,7 @@ const checkArea = $("#checkArea");
 
 const qSearch = $("#qSearch");
 const qFilter = $("#qFilter");
-const btnReload = $("#btnReload");
+
 const applTbody = $("#applTbody");
 
 let APPLICANTS = [];
@@ -211,8 +211,7 @@ btnCheck.onclick = async ()=>{
     checkArea.textContent = "서버 통신 오류. 잠시 후 다시 시도하세요.";
   }
 };
-
-btnReload.onclick = loadApplicants;
+  
 qSearch.addEventListener("input", debounce(renderApplicants, 180));
 qFilter.addEventListener("change", renderApplicants);
 
