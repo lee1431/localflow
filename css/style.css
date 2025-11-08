@@ -253,8 +253,9 @@
         border-bottom:1px solid #e5e7eb;
         font-size:13px;
         background:#fff;
-        height:38px;
-        line-height:38px;
+        height:40px;
+        line-height:40px;
+        margin-top: 36px;
       }
       .marquee{
         position:absolute;
@@ -264,9 +265,9 @@
         top:50%;
         transform:translateY(-50%);
         width:max-content;
-        animation:slide var(--dur,20s) linear infinite;
+        animation:slide var(--dur,40s) linear infinite;
       }
-      .marquee.clone{ animation-delay: calc(var(--dur,20s)/2); }
+      .marquee.clone{ animation-delay: calc(var(--dur,40s)/2); }
       .marquee:hover, .marquee.clone:hover{ animation-play-state: paused; }
       @keyframes slide {
         from { transform: translateX(var(--start,100%)); }
