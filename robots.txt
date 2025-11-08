@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 
+User-agent: Yandex
+Disallow: /
+
 Sitemap: https://localflow.info/sitemap.xml
 
 # Friendly reminder
