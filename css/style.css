@@ -257,6 +257,12 @@
         line-height:40px;
         margin-top: 36px;
       }
+      .marquee-box::before {
+        content:"";
+        position:absolute;
+        top:0; left:0; right:0; height:1px;
+        background:linear-gradient(90deg,#e5e7eb00,#e5e7eb80,#e5e7eb00);
+      }
       .marquee{
         position:absolute;
         white-space:nowrap;
