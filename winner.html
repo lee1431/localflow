@@ -212,8 +212,8 @@ btnCheck.onclick = async ()=>{
   }
 };
   
-qSearch.addEventListener("input", debounce(renderApplicants, 180));
-qFilter.addEventListener("change", renderApplicants);
+if (qSearch) qSearch.addEventListener("input", debounce(renderApplicants, 180));
+if (qFilter) qFilter.addEventListener("change", renderApplicants);
 
 async function loadApplicants(){
   applTbody.innerHTML = `<tr><td colspan="4" class="muted">불러오는 중…</td></tr>`;
@@ -224,8 +224,8 @@ async function loadApplicants(){
   renderApplicants();
 }
 function renderApplicants(){
-  const q=(qSearch.value||"").trim().toLowerCase();
-  const f=qFilter.value;
+  const q=(qSearch?.value||"").trim().toLowerCase();
+  const f=(qFilter?.value||"");
   const rows = APPLICANTS.filter(a=>{
     const okF = f==="" || (f==="win" && a.win) || (f==="nowin" && !a.win);
     if(!okF) return false;
