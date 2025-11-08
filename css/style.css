@@ -246,37 +246,4 @@
     }
 
 
-     .marquee-box{
-        position:relative;
-        overflow:hidden;
-        border-top:1px solid #e5e7eb;
-        border-bottom:1px solid #e5e7eb;
-        font-size:13px;
-        background:#fff;
-        height:40px;
-        line-height:40px;
-        margin-top: 36px;
-      }
-      .marquee-box::before {
-        content:"";
-        position:absolute;
-        top:0; left:0; right:0; height:1px;
-        background:linear-gradient(90deg,#e5e7eb00,#e5e7eb80,#e5e7eb00);
-      }
-      .marquee{
-        position:absolute;
-        white-space:nowrap;
-        will-change:transform;
-        left:0;
-        top:50%;
-        transform:translateY(-50%);
-        width:max-content;
-        animation:slide var(--dur,40s) linear infinite;
-      }
-      .marquee.clone{ animation-delay: calc(var(--dur,40s)/2); }
-      .marquee:hover, .marquee.clone:hover{ animation-play-state: paused; }
-      @keyframes slide {
-        from { transform: translateX(var(--start,100%)); }
-        to   { transform: translateX(var(--end,-100%)); }
-      }
 
