@@ -302,7 +302,7 @@
       
       /* 3위는 기본 톤 유지 + 약한 황금빛 */
       .wk-item.bronze{
-        background:linear-gradient(180deg,#fff 0%,#fcf5e3 100%);
+        background:linear-gradient(180deg,#fff 0%,#fff 100%);
         border-color:#fbd38d;
       }
       .wk-item.bronze .wk-rank{background:#f59e0b;color:#fff}
