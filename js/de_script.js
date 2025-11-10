@@ -507,14 +507,19 @@ window.addEventListener('resize', () => {
     }
   
     function render(data){
-      const rows = (data.top||[]).slice(0,3).map((t,i)=>`
-        <li class="wk-item">
-          <span class="wk-rank">${i+1}</span>
-          <div class="wk-body">
-            <div class="wk-word">${t.keyword}</div>
-            <div class="wk-meta"><span class="wk-count">${t.count}</span></div>
-          </div>
-        </li>`).join('');
+      const rows = (data.top||[]).slice(0,3).map((t,i)=>{
+        const cls = i===0 ? "gold" : i===1 ? "silver" : "bronze";
+        return `
+          <li class="wk-item ${cls}">
+            <span class="wk-rank">${i+1}</span>
+            <div class="wk-body">
+              <div class="wk-word">${t.keyword}</div>
+              <div class="wk-meta">
+                <span class="wk-count">${t.count}</span>
+              </div>
+            </div>
+          </li>`;
+      }).join('');
       list.innerHTML = rows || '<li class="wk-item"><div class="wk-body">데이터가 없습니다</div></li>';
       upd.textContent = data.updated || '';
     }
