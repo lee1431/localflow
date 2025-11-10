@@ -246,4 +246,24 @@
     }
 
 
+      .top-keywords { padding: 28px 0; }
+      .top-keywords .wk-head { 
+        display:flex; align-items:center; gap:14px; justify-content:space-between; 
+        margin-bottom:12px; 
+      }
+      .top-keywords .tabs { display:flex; gap:8px; }
+      .top-keywords .tab{
+        border:1px solid var(--line,#e5e7eb); background:#fff; padding:6px 12px;
+        border-radius:999px; font-weight:600; cursor:pointer; font-size:.9rem;
+      }
+      .top-keywords .tab.is-active{ background:#111; color:#fff; border-color:#111; }
+      .wk-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+      .wk-item{ display:flex; align-items:center; gap:10px; border:1px solid #e5e7eb; 
+        background:#fff; border-radius:14px; padding:12px; }
+      .wk-rank{ width:28px; height:28px; display:grid; place-items:center; 
+        border-radius:999px; background:#f3f4f6; font-weight:700; }
+      .wk-body{ flex:1; display:flex; align-items:center; justify-content:space-between; }
+      .wk-word{ font-weight:700; }
+      .wk-meta{ color:#6b7280; display:flex; align-items:center; gap:8px; }
+      .wk-count{ font-weight:700; color:#111; }
 
