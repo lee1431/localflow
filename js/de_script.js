@@ -483,4 +483,63 @@ window.addEventListener('resize', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // ---- TOP Keywords (Daily / Weekly / Monthly) ----
+  (function(){
+    const ENDPOINTS = {
+      daily:   'https://mrdindoin.ddns.net/data/top/daily.json',
+      weekly:  'https://mrdindoin.ddns.net/data/top/weekly.json',
+      monthly: 'https://mrdindoin.ddns.net/data/top/monthly.json'
+    };
+  
+    const $list = document.getElementById('topList');
+    const $upd  = document.getElementById('topUpdated');
+    const $tabs = document.querySelectorAll('#top-keywords .tab');
+  
+    async function fetchJSON(url){
+      const r = await fetch(url, {cache: 'no-cache'});
+      if(!r.ok) throw new Error('fetch fail '+url);
+      return await r.json();
+    }
+  
+    function render(data){
+      const rows = (data.top||[]).slice(0,3).map((t, i) => `
+        <li class="wk-item">
+          <span class="wk-rank">${i+1}</span>
+          <div class="wk-body">
+            <div class="wk-word">${t.keyword}</div>
+            <div class="wk-meta">
+              <span class="wk-count">${t.count}</span>
+            </div>
+          </div>
+        </li>`).join('');
+      $list.innerHTML = rows || '<li class="wk-item"><div class="wk-body">데이터가 없습니다</div></li>';
+      $upd.textContent = data.updated ? data.updated : '';
+    }
+  
+    async function load(kind){
+      // 탭 상태
+      $tabs.forEach(b=>{
+        const on = b.dataset.kind === kind;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+  
+      try{
+        const data = await fetchJSON(ENDPOINTS[kind]);
+        render(data);
+      }catch(e){
+        console.error(e);
+        render({top:[]});
+      }
+    }
+  
+    // 탭 클릭
+    $tabs.forEach(btn => btn.addEventListener('click', () => load(btn.dataset.kind)));
+  
+    // 초기 로드 (주간 기본 → 원하면 'daily'로 바꿔도 됨)
+    load('weekly');
+  })();
+
+
+
 addEventListener('resize', ()=> { cloudWidth = cloud.clientWidth; });
