@@ -266,4 +266,22 @@
       .wk-word{ font-weight:700; }
       .wk-meta{ color:#6b7280; display:flex; align-items:center; gap:8px; }
       .wk-count{ font-weight:700; color:#111; }
+      /* 순위별 색상 강조 */
+      .wk-item.gold {
+        background: linear-gradient(135deg, #fff7d6 0%, #ffe680 100%);
+        border-color: #facc15;
+      }
+      .wk-item.silver {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e5e7eb 100%);
+        border-color: #d1d5db;
+      }
+      .wk-item.bronze {
+        background: linear-gradient(135deg, #fdf4e6 0%, #fbbf24 100%);
+        border-color: #f59e0b;
+      }
+      
+      /* 숫자 뱃지도 색상 통일 */
+      .wk-item.gold .wk-rank { background:#facc15; color:#fff; }
+      .wk-item.silver .wk-rank { background:#d1d5db; color:#111; }
+      .wk-item.bronze .wk-rank { background:#f59e0b; color:#fff; }
 
