@@ -491,9 +491,9 @@ window.addEventListener('resize', () => {
     if (!root) return; // 섹션이 없으면 조용히 종료
   
     const ENDPOINTS = {
-      daily:   '/data/top/daily.json',
-      weekly:  '/data/top/weekly.json',
-      monthly: '/data/top/monthly.json'
+      daily:   'https://mrdindoin.ddns.net/data/top/daily.json',
+      weekly:  'https://mrdindoin.ddns.net/data/top/weekly.json',
+      monthly: 'https://mrdindoin.ddns.net/data/top/monthly.json'
     };
   
     const list = document.getElementById('topList');
