@@ -246,42 +246,70 @@
     }
 
 
-      .top-keywords { padding: 28px 0; }
-      .top-keywords .wk-head { 
-        display:flex; align-items:center; gap:14px; justify-content:space-between; 
-        margin-bottom:12px; 
+      /* 래퍼 */
+      .wrap{max-width:980px;margin:0 auto;padding:0 16px;}
+      
+      .top-keywords{padding:28px 0;border-top:1px solid #eee;}
+      .top-keywords .wk-head{
+        display:grid;grid-template-columns:1fr auto auto;align-items:center;
+        gap:12px;margin-bottom:12px
       }
-      .top-keywords .tabs { display:flex; gap:8px; }
+      .top-keywords .tabs{display:flex;gap:8px;flex-wrap:wrap}
       .top-keywords .tab{
-        border:1px solid var(--line,#e5e7eb); background:#fff; padding:6px 12px;
-        border-radius:999px; font-weight:600; cursor:pointer; font-size:.9rem;
+        border:1px solid var(--line,#e5e7eb);background:#fff;padding:6px 12px;
+        border-radius:999px;font-weight:600;cursor:pointer;font-size:.9rem
       }
-      .top-keywords .tab.is-active{ background:#111; color:#fff; border-color:#111; }
-      .wk-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
-      .wk-item{ display:flex; align-items:center; gap:10px; border:1px solid #e5e7eb; 
-        background:#fff; border-radius:14px; padding:12px; }
-      .wk-rank{ width:28px; height:28px; display:grid; place-items:center; 
-        border-radius:999px; background:#f3f4f6; font-weight:700; }
-      .wk-body{ flex:1; display:flex; align-items:center; justify-content:space-between; }
-      .wk-word{ font-weight:700; }
-      .wk-meta{ color:#6b7280; display:flex; align-items:center; gap:8px; }
-      .wk-count{ font-weight:700; color:#111; }
-      /* 순위별 색상 강조 */
-      .wk-item.gold {
-        background: linear-gradient(135deg, #fff7d6 0%, #ffe680 100%);
-        border-color: #facc15;
-      }
-      .wk-item.silver {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e5e7eb 100%);
-        border-color: #d1d5db;
-      }
-      .wk-item.bronze {
-        background: linear-gradient(135deg, #fdf4e6 0%, #fbbf24 100%);
-        border-color: #f59e0b;
+      .top-keywords .tab.is-active{background:#111;color:#fff;border-color:#111}
+      
+      /* 리스트 그리드 */
+      .wk-list{
+        list-style:none;margin:0;padding:0;
+        display:grid;gap:10px;
+        grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
       }
       
-      /* 숫자 뱃지도 색상 통일 */
-      .wk-item.gold .wk-rank { background:#facc15; color:#fff; }
-      .wk-item.silver .wk-rank { background:#d1d5db; color:#111; }
-      .wk-item.bronze .wk-rank { background:#f59e0b; color:#fff; }
-
+      /* 아이템(뱃지형) */
+      .wk-item{
+        display:flex;align-items:center;gap:10px;
+        border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:10px 12px;
+        box-shadow:0 1px 0 rgba(0,0,0,.03);min-width:0
+      }
+      .wk-rank{
+        flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;
+        border-radius:999px;background:#f3f4f6;font-weight:800
+      }
+      .wk-body{flex:1;display:flex;align-items:center;justify-content:space-between;min-width:0}
+      .wk-word{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .wk-count{
+        min-width:38px; text-align:center; font-weight:800; color:#111;
+        background:#f3f4f6;border-radius:999px;padding:4px 10px;border:1px solid #e5e7eb
+      }
+      
+      /* 순위별 색상 — 1등 금, 2등 은, 3등 기본(살짝 황금빛) */
+      .wk-item.gold{
+        background:linear-gradient(180deg,#fff7d6 0%,#ffe48a 100%);
+        border-color:#f5d35c;
+      }
+      .wk-item.gold .wk-rank{background:#facc15;color:#111;border:1px solid #eab308}
+      .wk-item.gold .wk-count{background:#ffe8a3;border-color:#f5d35c}
+      
+      .wk-item.silver{
+        background:linear-gradient(180deg,#f7f8fb 0%,#eceff3 100%);
+        border-color:#d1d5db;
+      }
+      .wk-item.silver .wk-rank{background:#d1d5db;color:#111}
+      .wk-item.silver .wk-count{background:#edf0f4;border-color:#d1d5db}
+      
+      /* 3위는 기본 톤 유지 + 약한 황금빛 */
+      .wk-item.bronze{
+        background:linear-gradient(180deg,#fffaf0 0%,#ffe9b9 100%);
+        border-color:#fbd38d;
+      }
+      .wk-item.bronze .wk-rank{background:#f59e0b;color:#fff}
+      .wk-item.bronze .wk-count{background:#fff1cc;border-color:#fbd38d}
+      
+      /* 모바일 좁은 화면 대응 */
+      @media (max-width:480px){
+        .wk-count{min-width:auto;padding:4px 8px}
+        .top-keywords .wk-head{grid-template-columns:1fr auto;grid-auto-rows:auto}
+      }
