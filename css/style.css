@@ -294,7 +294,7 @@
       .wk-item.gold .wk-count{background:#ffe8a3;border-color:#f5d35c}
       
       .wk-item.silver{
-        background:linear-gradient(180deg,#f7f8fb 0%,#eceff3 100%);
+        background:linear-gradient(180deg,#dadbe0 0%,#eceff3 100%);
         border-color:#d1d5db;
       }
       .wk-item.silver .wk-rank{background:#d1d5db;color:#111}
@@ -302,7 +302,7 @@
       
       /* 3위는 기본 톤 유지 + 약한 황금빛 */
       .wk-item.bronze{
-        background:linear-gradient(180deg,#fffaf0 0%,#ffe9b9 100%);
+        background:linear-gradient(180deg,#fff 0%,#ffe9b9 100%);
         border-color:#fbd38d;
       }
       .wk-item.bronze .wk-rank{background:#f59e0b;color:#fff}
