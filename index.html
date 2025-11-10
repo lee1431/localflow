@@ -85,45 +85,20 @@
     </div>
   </section>
 
-  <section id="weekly-keywords" class="weekly-keywords">
+  <section id="top-keywords" class="top-keywords">
     <div class="wk-head">
-      <h3>이번주 키워드 <span class="medal">🥇</span></h3>
-      <time class="wk-updated"></time>
+      <h3>TOP 키워드</h3>
+  
+      <div class="tabs" role="tablist" aria-label="Top keywords range">
+        <button class="tab is-active" data-kind="daily"  role="tab" aria-selected="true">일간</button>
+        <button class="tab"          data-kind="weekly" role="tab" aria-selected="false">주간</button>
+        <button class="tab"          data-kind="monthly" role="tab" aria-selected="false">월간</button>
+      </div>
+  
+      <time class="wk-updated" id="topUpdated"></time>
     </div>
   
-    <ol class="wk-list">
-      <li class="wk-item gold">
-        <span class="wk-rank">1</span>
-        <div class="wk-body">
-          <div class="wk-word">갓튀긴후라이드</div>
-          <div class="wk-meta">
-            <span class="wk-count">142</span>
-            <span class="wk-trend up">▲2</span>
-          </div>
-        </div>
-      </li>
-  
-      <li class="wk-item silver">
-        <span class="wk-rank">2</span>
-        <div class="wk-body">
-          <div class="wk-word">오뎅탕</div>
-          <div class="wk-meta">
-            <span class="wk-count">126</span>
-            <span class="wk-trend same">–</span>
-          </div>
-        </div>
-      </li>
-  
-      <li class="wk-item bronze">
-        <span class="wk-rank">3</span>
-        <div class="wk-body">
-          <div class="wk-word">민첩버린파닭</div>
-          <div class="wk-meta">
-            <span class="wk-count">118</span>
-            <span class="wk-trend down">▼1</span>
-          </div>
-        </div>
-      </li>
+    <ol class="wk-list" id="topList" aria-live="polite">
     </ol>
   </section>
 
