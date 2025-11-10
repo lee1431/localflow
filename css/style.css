@@ -297,7 +297,7 @@
         background:linear-gradient(180deg,#dadbe0 0%,#fff 100%);
         border-color:#d1d5db;
       }
-      .wk-item.silver .wk-rank{background:#d1d5db;color:#111}
+      .wk-item.silver .wk-rank{background:#e9ebf0;color:#111}
       .wk-item.silver .wk-count{background:#edf0f4;border-color:#d1d5db}
       
       /* 3위는 기본 톤 유지 + 약한 황금빛 */
@@ -305,7 +305,7 @@
         background:linear-gradient(180deg,#fff 0%,#fff 100%);
         border-color:#e6e3df;
       }
-      .wk-item.bronze .wk-rank{background:#f59e0b;color:#fff}
+      .wk-item.bronze .wk-rank{background:#fff;color:#fff}
       .wk-item.bronze .wk-count{background:#fff1cc;border-color:#fbd38d}
       
       /* 모바일 좁은 화면 대응 */
