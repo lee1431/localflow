@@ -67,7 +67,7 @@
     @media(min-width:860px){
       .grid.cols-3{grid-template-columns:repeat(3,1fr)}
       .grid.cols-2{grid-template-columns:repeat(2,1fr)}
-      .hero{padding:110px 0 70px}
+      .hero{padding:50px 0 70px}
       .cloud{height:300px}
     }
 
