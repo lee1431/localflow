@@ -45,3 +45,15 @@ document.getElementById("imgModal")
       e.target.style.display = "none";
     }
   });
+
+fetch('/https://mrdindoin.ddns.net/data/partner_gallery.json')
+  .then(r => r.json())
+  .then(list => {
+    const box = document.getElementById('pgGrid');
+    box.innerHTML = list.slice(0, 4).map(item => `
+      <figure class="pg-item" data-full="${item.full}">
+        <img src="${item.thumb}" alt="${item.title}">
+        <figcaption>${item.title}</figcaption>
+      </figure>
+    `).join('');
+  });
