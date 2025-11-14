@@ -26,6 +26,61 @@
 
 	<!-- StyleSheet -->
   	<link rel="stylesheet" href="./css/index_style.css" />
+
+	<style>
+		.partner-gallery{
+		  margin-top:32px;
+		}
+		
+		.pg-head h3{
+		  margin:0 0 4px;
+		  font-size:18px;
+		}
+		.pg-head .pg-sub{
+		  margin:0 0 12px;
+		  font-size:13px;
+		  color:#9ca3af;
+		}
+		
+		.pg-grid{
+		  display:grid;
+		  grid-template-columns:repeat(4,1fr);
+		  gap:10px;
+		}
+		
+		.pg-item{
+		  border-radius:14px;
+		  overflow:hidden;
+		  background:#020617;
+		  border:1px solid rgba(148,163,184,.3);
+		  box-shadow:0 10px 24px rgba(15,23,42,.5);
+		}
+		
+		.pg-item img{
+		  display:block;
+		  width:100%;
+		  aspect-ratio:4/3;
+		  object-fit:cover;
+		}
+		
+		.pg-item figcaption{
+		  padding:6px 9px 8px;
+		  font-size:12px;
+		  color:#e5e7eb;
+		}
+		
+		/* 반응형 */
+		@media (max-width:900px){
+		  .pg-grid{
+		    grid-template-columns:repeat(2,1fr);
+		  }
+		}
+		@media (max-width:540px){
+		  .pg-grid{
+		    grid-template-columns:1fr;
+		  }
+		}
+	</style>
 	
 </head>
 <body>
@@ -101,6 +156,36 @@
         </p>
       </div>
     </div>
+
+	  <div class="partner-gallery">
+      <div class="pg-head">
+        <h3>성수농원 스냅 갤러리</h3>
+        <p class="pg-sub">이번 달 준비 과정과 현장을 한 컷씩 담았습니다.</p>
+      </div>
+
+      <div class="pg-grid">
+        <!-- 형이 직접 이미지 교체하는 구역 -->
+        <figure class="pg-item">
+          <img src="/gallery/2025-11-sungsoo-01.png" alt="성수농원 체리 박스 적재" />
+          <figcaption>체리 상자 포장 중</figcaption>
+        </figure>
+        <figure class="pg-item">
+          <img src="/gallery/2025-11-sungsoo-02.png" alt="성수농원 비닐하우스 전경" />
+          <figcaption>비닐하우스 아침 풍경</figcaption>
+        </figure>
+        <figure class="pg-item">
+          <img src="/gallery/2025-11-sungsoo-03.png" alt="선별 중인 체리 클로즈업" />
+          <figcaption>당도 체크하는 순간</figcaption>
+        </figure>
+        <figure class="pg-item">
+          <img src="/gallery/2025-11-sungsoo-04.png" alt="성수농원 로고와 상자" />
+          <figcaption>성수농원 x LocalFlow</figcaption>
+        </figure>
+      </div>
+    </div>
+
+
+	  
   </section>
 
   <!-- 참여하기 -->
