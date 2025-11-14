@@ -1,302 +1,32 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>LocalFlow — 이달의 로컬플로우</title>
+  	<meta charset="utf-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  	<meta name="google-adsense-account" content="ca-pub-9382191250873184">
+  	<meta name="theme-color" content="#61D6C2" />
+  
+	<title>LocalFlow — Circulation for 충주</title>
 
-  <!-- 기본 색감은 기존 LocalFlow와 비슷하게 가정 -->
-  <meta name="theme-color" content="#61D6C2" />
-  <style>
-    :root{
-      --bg:#0f172a;
-      --ink:#e5e7eb;
-      --muted:#9ca3af;
-      --accent:#61d6c2;
-      --card:#020617;
-      --line:#1e293b;
-    }
-    *{box-sizing:border-box;}
-    body{
-      margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      background:radial-gradient(circle at top, #1f2937 0, #020617 60%);
-      color:var(--ink);
-    }
-    a{color:inherit;text-decoration:none;}
-    header{
-      position:sticky;top:0;z-index:10;
-      backdrop-filter:blur(16px);
-      background:linear-gradient(to right,rgba(15,23,42,.9),rgba(15,23,42,.7));
-      border-bottom:1px solid rgba(148,163,184,.2);
-    }
-    .nav-inner{
-      max-width:960px;margin:0 auto;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:10px 16px;
-    }
-    .logo{
-      font-weight:700;font-size:16px;letter-spacing:.03em;
-      display:flex;align-items:center;gap:6px;
-    }
-    .logo-pill{
-      width:10px;height:10px;border-radius:999px;
-      background:var(--accent);box-shadow:0 0 12px rgba(97,214,194,.8);
-    }
-    .nav-links{display:flex;gap:14px;font-size:14px;}
-    .nav-links a{opacity:.7;}
-    .nav-links a:hover{opacity:1;}
+	<!-- SEO -->
+	<meta name="description" content="LocalFlow는 ‘뭐 먹고 싶니?’라는 한마디로 지역의 식욕 데이터를 모아 주간 순환 소비를 실행하는 시민 참여형 프로젝트입니다. LocalFlow by Stance." />
+	<meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 시민참여, 먹고싶니" />
+	<meta name="theme-color" content="#61D6C2" />
+	<link rel="canonical" href="https://localflow.info/" />
+	
+	<!-- Open Graph -->
+	<meta property="og:title" content="LocalFlow — Circulation for 충주" />
+	<meta property="og:description" content="‘뭐 먹고 싶니?’ 한마디가 지역을 움직입니다. LocalFlow by Stance." />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://localflow.info/" />
+	<meta property="og:image" content="https://localflow.info/og-cover.png" />
+	
+	<!-- Favicon -->
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
 
-    main{
-      max-width:960px;
-      margin:0 auto;
-      padding:32px 16px 40px;
-    }
-
-    /* Hero = 가운데 박스 (구글 검색창 느낌) */
-    .hero{
-      min-height:calc(100vh - 72px);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-      gap:20px;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:4px 10px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.5);
-      font-size:12px;
-      color:var(--muted);
-      background:rgba(15,23,42,.9);
-    }
-    .pill-dot{
-      width:6px;height:6px;border-radius:999px;
-      background:var(--accent);
-      box-shadow:0 0 8px rgba(97,214,194,.7);
-    }
-    h1{
-      margin:0;
-      font-size:clamp(26px,5vw,34px);
-      letter-spacing:-.02em;
-    }
-    .hero-sub{
-      margin:0;
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    .highlight-box{
-      margin-top:8px;
-      padding:14px 18px;
-      border-radius:999px;
-      background:rgba(15,23,42,.95);
-      border:1px solid rgba(148,163,184,.5);
-      font-size:14px;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      max-width:100%;
-    }
-    .highlight-label{
-      padding:3px 8px;
-      border-radius:999px;
-      background:rgba(34,197,94,.14);
-      border:1px solid rgba(34,197,94,.4);
-      font-size:11px;
-      color:#bbf7d0;
-    }
-
-    .hero-btns{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:10px;
-      margin-top:10px;
-    }
-    .btn{
-      border-radius:999px;
-      padding:9px 18px;
-      font-size:14px;
-      border:1px solid rgba(148,163,184,.6);
-      background:rgba(15,23,42,.9);
-      color:var(--ink);
-      cursor:pointer;
-    }
-    .btn-primary{
-      background:var(--accent);
-      color:#020617;
-      border:none;
-      font-weight:600;
-    }
-    .btn-primary:hover{
-      filter:brightness(1.05);
-    }
-    .btn:hover{
-      border-color:#e5e7eb;
-    }
-
-    /* 섹션 공통 */
-    section{
-      border-top:1px solid var(--line);
-      padding:26px 0 18px;
-    }
-    section h2{
-      margin:0 0 10px;
-      font-size:18px;
-    }
-    section p{
-      margin:0 0 10px;
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    /* 업체 상세 카드 */
-    .vendor-card{
-      display:flex;
-      flex-wrap:wrap;
-      gap:16px;
-      padding:16px;
-      border-radius:16px;
-      background:rgba(15,23,42,.9);
-      border:1px solid rgba(148,163,184,.5);
-      margin-top:8px;
-    }
-    .vendor-thumb{
-      flex:0 0 160px;
-      height:120px;
-      border-radius:12px;
-      background:#020617;
-      background-size:cover;
-      background-position:center;
-    }
-    .vendor-body{
-      flex:1 1 200px;
-      font-size:14px;
-    }
-    .vendor-meta{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:4px;
-    }
-
-    /* 참여 폼 */
-    .join-card{
-      padding:16px;
-      border-radius:16px;
-      background:rgba(15,23,42,.9);
-      border:1px solid rgba(148,163,184,.5);
-      margin-top:8px;
-    }
-    .join-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:8px;
-    }
-    .join-row input{
-      flex:1 1 200px;
-      padding:9px 11px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.8);
-      background:#020617;
-      color:var(--ink);
-      font-size:14px;
-    }
-    .join-row input:focus{
-      outline:none;
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(97,214,194,.6);
-    }
-    .hint{
-      font-size:11px;
-      color:var(--muted);
-      margin-top:6px;
-    }
-    .toast{
-      margin-top:6px;
-      font-size:12px;
-      color:#bbf7d0;
-      display:none;
-    }
-
-    /* 히스토리 카드 그리드 */
-    .history-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-      gap:12px;
-      margin-top:10px;
-    }
-    .history-card{
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,.4);
-      background:rgba(15,23,42,.9);
-      padding:12px 13px;
-      font-size:13px;
-    }
-    .history-tag{
-      font-size:11px;
-      color:var(--muted);
-      margin-bottom:3px;
-    }
-    .history-title{
-      font-weight:600;
-      margin-bottom:2px;
-    }
-    .history-note{
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    footer{
-      border-top:1px solid var(--line);
-      padding:12px 16px 24px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-    }
-    footer a{
-      text-decoration:underline;
-      text-underline-offset:3px;
-    }
-
-    @media (max-width:600px){
-      .vendor-card{padding:14px;}
-      .vendor-thumb{flex:1 1 100%;height:160px;}
-      .nav-inner{padding-inline:12px;}
-    }
-	.lf-card {
-	  width: 100%;
-	  max-width: 360px;
-	  padding: 16px 20px;
-	  border-radius: 16px;
-	  background: rgba(255, 255, 255, 0.05); /* 은은하게 밝게 */
-	  border: 1px solid rgba(97, 214, 194, 0.45); /* 로컬플로우 포인트 컬러 */
-	  backdrop-filter: blur(8px);
-	  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-	  margin-top: 12px;
-	  text-align: left;
-	}
-
-	.lf-card-label {
-	  font-size: 12px;
-	  color: #61d6c2;
-	  font-weight: 600;
-	  margin-bottom: 6px;
-	  opacity: 0.95;
-	}
-
-	.lf-card-text {
-	  font-size: 20px;
-	  line-height: 1.45;
-	  color: #e5e7eb;
-	  font-weight: 500;
-	}
-  </style>
+	<!-- StyleSheet -->
+  	<link rel="stylesheet" href="./css/style.css" />
+	
 </head>
 <body>
 
@@ -429,38 +159,8 @@
   <a href="about.html">LocalFlow 동작 원리 보기</a>
 </footer>
 
-<script>
-  function scrollToSection(id){
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.scrollIntoView({behavior:'smooth', block:'start'});
-  }
 
-  // 참여 폼 처리 (엔드포인트는 형 서버에 맞게 바꾸면 됨)
-  document.getElementById('joinForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const email = document.getElementById('emailInput').value.trim();
-    if(!email) return;
-
-    // TODO: 실제 엔드포인트로 변경
-    // 예: const url = `https://mrdindoin.ddns.net/event/join?email=${encodeURIComponent(email)}`;
-    const url = `https://example.com/localflow/join?email=${encodeURIComponent(email)}`;
-    fetch(url)
-      .catch(()=>{})   // 실패해도 UI는 그냥 토스트만 띄움
-      .finally(()=>{
-        const toast = document.getElementById('joinToast');
-        toast.style.display = 'block';
-        setTimeout(()=>{ toast.style.display = 'none'; }, 3500);
-        document.getElementById('emailInput').value = "";
-      });
-  });
-
-  // 이달 소비 계획 텍스트를 나중에는 JSON에서 가져오게 바꿀 수 있음
-  // 예:
-  // fetch('/data/current_campaign.json').then(r=>r.json()).then(d=>{
-  //   document.getElementById('campaignText').textContent = d.title;
-  // });
-</script>
+<script src ="./js/index_script.js"></script>
 
 </body>
 </html>
