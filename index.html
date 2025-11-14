@@ -3,306 +3,464 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta name="google-adsense-account" content="ca-pub-9382191250873184">
-  <title>LocalFlow — Circulation for 충주</title>
+  <title>LocalFlow — 이달의 로컬플로우</title>
 
-  <!-- SEO -->
-  <meta name="description" content="LocalFlow는 ‘뭐 먹고 싶니?’라는 한마디로 지역의 식욕 데이터를 모아 주간 순환 소비를 실행하는 시민 참여형 프로젝트입니다. LocalFlow by Stance." />
-  <meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 시민참여, 먹고싶니" />
+  <!-- 기본 색감은 기존 LocalFlow와 비슷하게 가정 -->
   <meta name="theme-color" content="#61D6C2" />
-  <link rel="canonical" href="https://localflow.info/" />
+  <style>
+    :root{
+      --bg:#0f172a;
+      --ink:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#61d6c2;
+      --card:#020617;
+      --line:#1e293b;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:radial-gradient(circle at top, #1f2937 0, #020617 60%);
+      color:var(--ink);
+    }
+    a{color:inherit;text-decoration:none;}
+    header{
+      position:sticky;top:0;z-index:10;
+      backdrop-filter:blur(16px);
+      background:linear-gradient(to right,rgba(15,23,42,.9),rgba(15,23,42,.7));
+      border-bottom:1px solid rgba(148,163,184,.2);
+    }
+    .nav-inner{
+      max-width:960px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 16px;
+    }
+    .logo{
+      font-weight:700;font-size:16px;letter-spacing:.03em;
+      display:flex;align-items:center;gap:6px;
+    }
+    .logo-pill{
+      width:10px;height:10px;border-radius:999px;
+      background:var(--accent);box-shadow:0 0 12px rgba(97,214,194,.8);
+    }
+    .nav-links{display:flex;gap:14px;font-size:14px;}
+    .nav-links a{opacity:.7;}
+    .nav-links a:hover{opacity:1;}
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="LocalFlow — Circulation for 충주" />
-  <meta property="og:description" content="‘뭐 먹고 싶니?’ 한마디가 지역을 움직입니다. LocalFlow by Stance." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://localflow.info/" />
-  <meta property="og:image" content="https://localflow.info/og-cover.png" />
+    main{
+      max-width:960px;
+      margin:0 auto;
+      padding:32px 16px 40px;
+    }
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
+    /* Hero = 가운데 박스 (구글 검색창 느낌) */
+    .hero{
+      min-height:calc(100vh - 72px);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap:20px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      font-size:12px;
+      color:var(--muted);
+      background:rgba(15,23,42,.9);
+    }
+    .pill-dot{
+      width:6px;height:6px;border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 0 8px rgba(97,214,194,.7);
+    }
+    h1{
+      margin:0;
+      font-size:clamp(26px,5vw,34px);
+      letter-spacing:-.02em;
+    }
+    .hero-sub{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+    }
 
-  <!-- AdSense (원하실 때 유지) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9382191250873184" crossorigin="anonymous"></script>
+    .highlight-box{
+      margin-top:8px;
+      padding:14px 18px;
+      border-radius:999px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.5);
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      max-width:100%;
+    }
+    .highlight-label{
+      padding:3px 8px;
+      border-radius:999px;
+      background:rgba(34,197,94,.14);
+      border:1px solid rgba(34,197,94,.4);
+      font-size:11px;
+      color:#bbf7d0;
+    }
 
-  <!-- StyleSheet -->
-  <link rel="stylesheet" href="./css/style.css" />
-  
+    .hero-btns{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      margin-top:10px;
+    }
+    .btn{
+      border-radius:999px;
+      padding:9px 18px;
+      font-size:14px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      color:var(--ink);
+      cursor:pointer;
+    }
+    .btn-primary{
+      background:var(--accent);
+      color:#020617;
+      border:none;
+      font-weight:600;
+    }
+    .btn-primary:hover{
+      filter:brightness(1.05);
+    }
+    .btn:hover{
+      border-color:#e5e7eb;
+    }
+
+    /* 섹션 공통 */
+    section{
+      border-top:1px solid var(--line);
+      padding:26px 0 18px;
+    }
+    section h2{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+    section p{
+      margin:0 0 10px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    /* 업체 상세 카드 */
+    .vendor-card{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      padding:16px;
+      border-radius:16px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.5);
+      margin-top:8px;
+    }
+    .vendor-thumb{
+      flex:0 0 160px;
+      height:120px;
+      border-radius:12px;
+      background:#020617;
+      background-size:cover;
+      background-position:center;
+    }
+    .vendor-body{
+      flex:1 1 200px;
+      font-size:14px;
+    }
+    .vendor-meta{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    /* 참여 폼 */
+    .join-card{
+      padding:16px;
+      border-radius:16px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.5);
+      margin-top:8px;
+    }
+    .join-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:8px;
+    }
+    .join-row input{
+      flex:1 1 200px;
+      padding:9px 11px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.8);
+      background:#020617;
+      color:var(--ink);
+      font-size:14px;
+    }
+    .join-row input:focus{
+      outline:none;
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(97,214,194,.6);
+    }
+    .hint{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+    .toast{
+      margin-top:6px;
+      font-size:12px;
+      color:#bbf7d0;
+      display:none;
+    }
+
+    /* 히스토리 카드 그리드 */
+    .history-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+    .history-card{
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.4);
+      background:rgba(15,23,42,.9);
+      padding:12px 13px;
+      font-size:13px;
+    }
+    .history-tag{
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:3px;
+    }
+    .history-title{
+      font-weight:600;
+      margin-bottom:2px;
+    }
+    .history-note{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    footer{
+      border-top:1px solid var(--line);
+      padding:12px 16px 24px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+    footer a{
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
+    @media (max-width:600px){
+      .vendor-card{padding:14px;}
+      .vendor-thumb{flex:1 1 100%;height:160px;}
+      .nav-inner{padding-inline:12px;}
+    }
+	.lf-card {
+	  width: 100%;
+	  max-width: 360px;
+	  padding: 16px 20px;
+	  border-radius: 16px;
+	  background: rgba(255, 255, 255, 0.05); /* 은은하게 밝게 */
+	  border: 1px solid rgba(97, 214, 194, 0.45); /* 로컬플로우 포인트 컬러 */
+	  backdrop-filter: blur(8px);
+	  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+	  margin-top: 12px;
+	  text-align: left;
+	}
+
+	.lf-card-label {
+	  font-size: 12px;
+	  color: #61d6c2;
+	  font-weight: 600;
+	  margin-bottom: 6px;
+	  opacity: 0.95;
+	}
+
+	.lf-card-text {
+	  font-size: 20px;
+	  line-height: 1.45;
+	  color: #e5e7eb;
+	  font-weight: 500;
+	}
+  </style>
 </head>
-  
 <body>
-  <!-- Header -->
-  <header>
-    
-  <div class="wrap">
-    <div class="nav" style="display:flex;align-items:center;justify-content:space-between;height:64px;">
-      <div class="brand">
-        <span class="logo"></span>
-        <div>LocalFlow <small>by Stance</small></div>
-        <span id="viewTotal">—</span><small>total</small>
-        <span id="viewToday">—</span><small>today</small>
-      </div>
-      <button id="menuBtn" aria-label="메뉴 열기" class="hamb" style="margin-left:12px">
-        <span></span>
-      </button>
-    </div>
 
-    <!-- 드롭다운 메뉴 -->
-    <nav id="mobileMenu" class="mobile-nav" aria-label="Mobile Navigation">
-      <a href="#weekly-keywords">순위</a>
-      <a href="#notices">뉴스</a>
-      <a href="#loop">작동방식</a>
-      <a href="#concept">개념</a>
-      <a href="#roadmap">로드맵</a>
+<header>
+  <div class="nav-inner">
+    <div class="logo">
+      <span class="logo-pill"></span>
+      LocalFlow
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">이달의 로컬플로우</a>
+      <a href="vote.html">투표장</a>
+      <a href="about.html">소개</a>
     </nav>
   </div>
 </header>
-  <div id="overlay" class="overlay" aria-hidden="true"></div>  
-  <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="wrap">
-      <span class="pill">시민 참여형 로컬 순환 프로젝트</span>
-      <h1 id="hero-title">뭐 먹고 싶니? <br/>그 한마디가 지역을 움직입니다.</h1>
-      <p>LocalFlow는 ‘먹고 싶은 것’을 데이터로 모아 주간 랭킹을 만들고, 실제 소비로 연결합니다.</p>
 
-      <input id="emailInput" type="email" placeholder="이메일을 입력하세요"
-           style="padding:12px 14px;border:1px solid #ccc;border-radius:10px;width:250px;font-size:15px;" required>
-      <button id="emailSubmit"
-              style="background:#61D6C2;border:none;border-radius:10px;padding:12px 16px;font-weight:600;cursor:pointer;">
-        확인
+<main>
+
+  <!-- HERO: 구글 검색창 느낌 가운데 -->
+  <section class="hero">
+    <span class="pill">
+      <span class="pill-dot"></span>
+      충주 시민 참여 프로젝트 · LocalFlow
+    </span>
+    <h1>이달의 로컬플로우</h1>
+    <p class="hero-sub">
+      매달, 충주의 누군가의 농장·가게를 먼저 찾아갑니다.
+    </p>
+
+    <div class="lf-card" id="campaignCard">
+	  <div class="lf-card-label">이달의 소비 계획</div>
+	  <div class="lf-card-text" id="campaignText">
+		동량면 성수농원에서 재배한 체리 10상자!
+	  </div>
+	</div>
+
+    <div class="hero-btns">
+      <button class="btn-primary btn" onclick="scrollToSection('join')">
+        참여하기
       </button>
-      <div id="emailDisplay" style="margin-top:10px;display:none;">
-        <button id="emailBtn" style="background:#fff;border:1px solid #ccc;border-radius:999px;padding:8px 14px;cursor:pointer;">
-        </button>
-      </div>
-      <form class="ask" onsubmit="return addWord(event)" aria-label="먹고 싶은 음식 입력">
-        <input class="input" id="foodInput" name="food" maxlength="24" autocomplete="off" placeholder="예: 치킨, 라멘, 곱창, 탕수육…" aria-label="먹고 싶은 음식" />
-        <button class="btn" type="submit">보내기</button>
-      </form>
-
-      <div class="cloud" id="cloud" aria-hidden="true"></div>
-      <noscript><p class="muted" style="margin-top:10px">브라우저에서 자바스크립트가 꺼져 있습니다. 단어 구름 애니메이션은 표시되지 않습니다.</p></noscript>
+      <a class="btn" href="vote.html">
+        다음달 메뉴 투표하러 가기
+      </a>
     </div>
   </section>
 
-  <section id="top-keywords" class="top-keywords">
-    <div class="wrap">
-      <div class="wk-head">
-        <h3>TOP 키워드</h3>
-  
-        <div class="tabs" role="tablist" aria-label="Top keywords range">
-          <button class="tab is-active" data-kind="daily"   role="tab" aria-selected="true">일간</button>
-          <button class="tab"            data-kind="weekly" role="tab" aria-selected="false">주간</button>
-          <button class="tab"            data-kind="monthly"role="tab" aria-selected="false">월간</button>
-        </div>
-  
-        <time class="wk-updated" id="topUpdated"></time>
+  <!-- 업체 상세 -->
+  <section id="vendor">
+    <h2>이달의 파트너 · 성수농원</h2>
+    <p>
+      충주 인근에서 체리를 재배하는 소규모 농원입니다.<br/>
+      이번달 LocalFlow는 이곳에서 체리 10상자를 구매해 나누어 쓰고,  
+      실제 사용 후기를 다시 지역 안으로 돌려보내려 합니다.
+    </p>
+
+    <div class="vendor-card">
+      <div class="vendor-thumb"
+           style="background-image:url('img/sungsu-farm.jpg');">
       </div>
-  
-      <ol class="wk-list" id="topList" aria-live="polite"></ol>
-    </div>
-  </section>
-
-  <!-- Notices -->
-    <section id="notices">
-      <div class="wrap">
-        <h2>뉴스</h2>
-        <div id="noticeSkeleton" class="grid cols-2" aria-hidden="true">
-          <div class="card"><div class="muted">불러오는 중…</div></div>
-          <div class="card"><div class="muted">불러오는 중…</div></div>
+      <div class="vendor-body">
+        <strong>성수농원</strong><br/>
+        <div class="vendor-meta">
+          위치: 충주시 동량면 용교리<br/>
+          품목: 체리, 자두, 제철 과일<br/>
+          연락: 010-0000-0000 / 인스타 @sungsu_farm
         </div>
-        <div id="noticeFeed" class="grid cols-2"></div>
-        <div style="margin-top:12px">
-          <button id="noticeMore" class="btn" style="display:none">더보기</button>
-        </div>
-      </div>
-    </section>
-
-
-  <!-- Concept -->
-  <section id="concept">
-    <div class="wrap">
-      <h2>LocalFlow — 개념</h2>
-      <div class="grid cols-3">
-        <div class="card">
-          <h3>참여의 단순화</h3>
-          <p>로그인 없이, 한 번의 입력. 초저항 인터페이스로 누구나 참여.</p>
-        </div>
-        <div class="card">
-          <h3>소비의 순환화</h3>
-          <p>주간 랭킹 1등 메뉴를 매주 <strong>목요일</strong> 선정합니다.</p>
-        </div>
-        <div class="card">
-          <h3>욕구의 시각화</h3>
-          <p>전달된 내용은 필터링 후 노출됩니다. AI 필터링으로 <strong>24시간 이후 확인</strong> 가능합니다.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Loop -->
-  <section id="loop">
-    <div class="wrap">
-      <h2>주간 루프 — 어떻게 작동하나요?</h2>
-      <div class="grid cols-4" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;">
-        <div class="card"><span class="pill">① 참여</span><h3>입력</h3><p>“뭐 먹고 싶니?”에 답하면 데이터로 저장됩니다.</p></div>
-        <div class="card"><span class="pill">② 집계</span><h3>랭킹</h3><p>일주일 단위로 그룹화하여 상위 메뉴를 산출합니다.</p></div>
-        <div class="card"><span class="pill">③ 실행</span><h3>구매</h3><p>매주 정해진 금액만큼의 인원을 추첨, 지역상품권 증정.</p></div>
-        <div class="card"><span class="pill">④ 공개</span><h3>공유</h3><p>웹/카드뉴스로 결과를 발표하고 다음 주로 이어갑니다.</p></div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- Roadmap -->
-  <section id="roadmap" aria-labelledby="rm-title">
-    <div class="wrap">
-    <div class="grid">
-      <div class="col-12">
-        <h2 id="rm-title">LocalFlow Roadmap</h2>
-        <div class="sub">“깨진 항아리 → <b>순환</b>의 항아리”. 물(관심·가치·돈)은 막으면 썩고, 흐르게 설계하면 살아납니다.</div>
-      </div>
-
-      <!-- 이념 요약 -->
-      <div class="col-12 card">
-        <div class="pill">이념 · Leaky → Circulation</div>
-        <p style="margin:10px 0 0">
-          기존 신념은 <span class="k">“항아리는 새지 않아야 한다”</span>였지만, 현실은 이미 새고 있습니다.
-          LocalFlow는 <span class="k">의도된 구멍</span>을 설계해 <span class="k">되돌아오는 통로</span>를 만듭니다.
-          방문은 저장으로, 저장은 리마인드로, 리마인드는 재방문과 지역 소비로 이어집니다.
+        <p style="margin-top:8px;">
+          이번달에는 체리 10상자를 집중 구매하여,  
+          일부는 직접 먹고, 일부는 주변 가게와 나누고,  
+          남은 일부는 다음 실험을 위한 재료로 사용합니다.
         </p>
       </div>
-
-      <!-- NOW / NEXT / LATER -->
-      <div class="col-4 card">
-        <div class="pill">NOW</div>
-        <div class="li"><span class="dot"></span><div>
-          <b>로드맵 섹션 통합</b><div class="muted">화이트 테마, 프레임워크 無</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>조회수 배지</b> (TOTAL / TODAY)<div class="muted">/views.json 비동기 표시</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>기록 카드 MVP</b><div class="muted">문장+이미지 저장 → 가벼운 재노출</div>
-        </div></div>
-      </div>
-
-      <div class="col-4 card">
-        <div class="pill">NEXT</div>
-        <div class="li"><span class="dot"></span><div>
-          <b>리마인드 루프</b><div class="muted">D-3, D-day 토스트/배지, 재방문 유도</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>위젯 공유</b><div class="muted">임베드 스니펫으로 외부 순환 생성</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>로컬 펀드 베타</b><div class="muted">작은 쿠폰/기부가 지역에서 순환</div>
-        </div></div>
-      </div>
-
-      <div class="col-4 card">
-        <div class="pill">LATER</div>
-        <div class="li"><span class="dot"></span><div>
-          <b>모듈 마켓</b><div class="muted">별배경/기념일/방명록 등 블록 판매</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>개방형 로그</b><div class="muted">순환 지표(재방문·교환) 공개 선택</div>
-        </div></div>
-        <div class="li"><span class="dot"></span><div>
-          <b>팀 협업</b><div class="muted">역할/권한, 에셋 CDN</div>
-        </div></div>
-      </div>
-
-      <!-- 철학 자세히 -->
-      <div class="col-12">
-        <details>
-          <summary>왜 ‘구멍을 막지 않고’ 설계하나요?</summary>
-          <p style="margin:8px 0 0">
-            구멍을 막으면 일시적으로는 고이지만 오래가면 썩습니다. 반대로, 순환 가능한 구멍을
-            설계하면 작은 방문이 저장으로, 저장이 재방문으로 이어져 <i>살아 있는</i> 공간이 됩니다.
-            LocalFlow의 루프는 <b>Attract → Capture → Weave → Surface → Nudge → Loop</b> 6단계로 돌며
-            중앙집중 대신 <b>분배와 회전</b>을 목표로 합니다.
-          </p>
-        </details>
-      </div>
+    </div>
   </section>
 
+  <!-- 참여하기 -->
+  <section id="join">
+    <h2>다음달 로컬플로우에 참여하기</h2>
+    <p>
+      “그 다음 로컬플로우는 어디로 가야 할까?”<br/>
+      이메일을 남겨주시면, 다음달 소비 계획과 결과를 공유드립니다.
+    </p>
 
-  <!-- Finance -->
-<section id="finance" style="padding:56px 0;background:#fafbfc;">
-  <div class="wrap" style="max-width:980px;margin:0 auto;padding:0 16px;">
-    <h2 style="font-size:clamp(20px,4vw,28px);margin-bottom:18px;">
-      재정 기반 — 어떻게 운영되나요?
-    </h2>
-
-    <div class="grid cols-4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
-      <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-        <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:.8rem;font-weight:600;">① 유입</span>
-        <h3 style="margin:10px 0 6px;font-size:18px;">전역 광고</h3>
-        <p style="margin:0;color:#6b7280;">많은 사용자의 관심이 재정의 첫 흐름이 됩니다.</p>
-      </div>
-      <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-        <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#fefce8;border:1px solid #fef08a;color:#854d0e;font-size:.8rem;font-weight:600;">② 펀딩</span>
-        <h3 style="margin:10px 0 6px;font-size:18px;">펀딩의 흐름</h3>
-        <p style="margin:0;color:#6b7280;">짧게는 한 주, 길게는 한 해.<br>작은 참여들이 모여 지역의 순환을 이어갑니다.</p>
-      </div>
-      <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-        <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-size:.8rem;font-weight:600;">③ 판매</span>
-        <h3 style="margin:10px 0 6px;font-size:18px;">제품 판매</h3>
-        <p style="margin:0;color:#6b7280;">로컬플로우만의 굿즈를 직접 제작하고<br>수익 일부를 순환 구조로 환원합니다.</p>
-      </div>
-
-      <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-        <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#fdf2f8;border:1px solid #fbcfe8;color:#831843;font-size:.8rem;font-weight:600;">④ 순환</span>
-        <h3 style="margin:10px 0 6px;font-size:18px;">로컬 환원</h3>
-        <p style="margin:0;color:#6b7280;">모인 재정은 다시 쿠폰, 이벤트, 지역 지원으로<br>되돌아가며 루프를 완성합니다.</p>
-      </div>
+    <div class="join-card">
+      <form id="joinForm">
+        <div class="join-row">
+          <input type="email" id="emailInput" placeholder="이메일 주소를 입력하세요" required />
+          <button type="submit" class="btn-primary btn">참여하기</button>
+        </div>
+        <div class="hint">
+          당첨/결과 안내 및 프로젝트 소식 이외에는 아무 것도 보내지 않습니다.
+        </div>
+        <div class="toast" id="joinToast">
+          참여가 등록되었습니다. 고맙습니다.
+        </div>
+      </form>
     </div>
+  </section>
 
-    <div style="margin-top:32px;text-align:center;color:#6b7280;font-size:15px;">
-      이 모든 과정은 다시 지역으로 돌아갑니다.<br>
-      LocalFlow의 재정은 이윤이 아닌 <strong>순환</strong>을 목표로 합니다.
+  <!-- 히스토리 -->
+  <section id="history">
+    <h2>역대 로컬플로우 기록</h2>
+    <p>
+      로컬플로우가 지나간 발자국입니다.  
+      플래닛충주?🤣의 정신을 잇는, 작은 내수 순환 기록장입니다.
+    </p>
+
+    <div class="history-grid" id="historyGrid">
+      <!-- 초기에는 하드코딩, 나중에 JSON 연결 가능 -->
+      <div class="history-card">
+        <div class="history-tag">2025년 11월</div>
+        <div class="history-title">성수농원 · 체리 10상자</div>
+        <div class="history-note">체리 일부는 직접 소비, 일부는 주변 가게에 나눔, 일부는 실험용.</div>
+      </div>
+      <div class="history-card">
+        <div class="history-tag">2025년 12월 (예정)</div>
+        <div class="history-title">○○빵집 · 크루아상 300개</div>
+        <div class="history-note">아침 빵 한 개가 필요한 곳으로 보내기 프로젝트.</div>
+      </div>
+      <!-- 이후 카드들 추가 -->
     </div>
+  </section>
 
+</main>
 
-    
-  </div>
-</section>
+<footer>
+  LocalFlow · Stance 프로젝트<br/>
+  <a href="vote.html">“뭐 먹고 싶니?” 투표장으로 가기</a> ·
+  <a href="about.html">LocalFlow 동작 원리 보기</a>
+</footer>
 
+<script>
+  function scrollToSection(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
 
+  // 참여 폼 처리 (엔드포인트는 형 서버에 맞게 바꾸면 됨)
+  document.getElementById('joinForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value.trim();
+    if(!email) return;
 
-      
+    // TODO: 실제 엔드포인트로 변경
+    // 예: const url = `https://mrdindoin.ddns.net/event/join?email=${encodeURIComponent(email)}`;
+    const url = `https://example.com/localflow/join?email=${encodeURIComponent(email)}`;
+    fetch(url)
+      .catch(()=>{})   // 실패해도 UI는 그냥 토스트만 띄움
+      .finally(()=>{
+        const toast = document.getElementById('joinToast');
+        toast.style.display = 'block';
+        setTimeout(()=>{ toast.style.display = 'none'; }, 3500);
+        document.getElementById('emailInput').value = "";
+      });
+  });
 
-  <!-- Footer -->
-  <footer>
-    <div class="wrap footline">
-      <div class="muted">© 2025 Stance — LocalFlow Project .feat GPT</div>
-      <div class="muted">LocalFlow는 시민 참여형 로컬 순환 실험입니다.</div>
-    </div>
-  </footer>
+  // 이달 소비 계획 텍스트를 나중에는 JSON에서 가져오게 바꿀 수 있음
+  // 예:
+  // fetch('/data/current_campaign.json').then(r=>r.json()).then(d=>{
+  //   document.getElementById('campaignText').textContent = d.title;
+  // });
+</script>
 
-  <button id="toTop" class="to-top" aria-label="맨 위로">↑</button>
-
-  <!-- Notice Modal -->
-  <div id="noticeModal" class="notice-modal" aria-hidden="true">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog" role="dialog" aria-modal="true">
-      <button class="modal-close" aria-label="닫기">×</button>
-      <img id="modalImg" class="modal-img" src="" alt="" />
-      <div class="modal-meta" id="modalDate"></div>
-      <h3 class="modal-title" id="modalTitle"></h3>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <div id="toast" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-  background:#111;color:#fff;padding:10px 14px;border-radius:999px;font-size:.9rem;
-  box-shadow:0 10px 24px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .2s;
-  z-index:90">새 공지가 업데이트되었습니다</div>
-
-
-
-<script src ="./js/de_script.js"></script>
-  
 </body>
 </html>
