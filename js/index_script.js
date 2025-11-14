@@ -46,7 +46,7 @@ document.getElementById("imgModal")
     }
   });
 
-fetch('/https://mrdindoin.ddns.net/data/partner_gallery.json')
+fetch('https://mrdindoin.ddns.net/data/partner_gallery.json')
   .then(r => r.json())
   .then(list => {
     const box = document.getElementById('pgGrid');
