@@ -370,3 +370,12 @@ border-radius:999px;
 border:1px solid #e5e7eb;
 background:#f9fafb;
 }
+
+.hg-thumb,
+.pg-item img {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
