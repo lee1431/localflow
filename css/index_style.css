@@ -337,6 +337,15 @@ grid-template-columns:1fr;
 }
 
 
+.hg-thumb,
+.pg-item img {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 
 /* 모달 전체 배경 */
 .img-modal {
