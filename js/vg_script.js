@@ -28,3 +28,30 @@ document.addEventListener('DOMContentLoaded', () => {
       grid.innerHTML = `<p class="muted" style="font-size:13px;">아직 기록된 활동이 없습니다.</p>`;
     });
 });
+
+
+document.addEventListener("click", function(e){
+  const item = e.target.closest(".pg-item");
+  if(!item) return;
+
+  const full = item.dataset.full;
+  if(!full) return;
+
+  const modal = document.getElementById("imgModal");
+  const modalImg = document.getElementById("imgModalImg");
+
+  modalImg.src = full;
+  modal.style.display = "flex";
+});
+
+document.getElementById("imgModalClose")
+  .addEventListener("click", ()=> {
+    document.getElementById("imgModal").style.display = "none";
+  });
+
+document.getElementById("imgModal")
+  .addEventListener("click", (e)=> {
+    if(e.target.id === "imgModal") {
+      e.target.style.display = "none";
+    }
+  });
