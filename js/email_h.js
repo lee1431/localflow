@@ -11,14 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = (input.value || "").trim();
     if (!email) return;
 
-    const naverOnly = /^[0-9a-zA-Z._%+-]+@naver\.com$/i;
-    if (!naverOnly.test(email)) {
+    // ✅ 네이버 + 다음 메일만 허용: naver.com, daum.net, hanmail.net
+    const allowed = /^[0-9a-zA-Z._%+-]+@(naver\.com|daum\.net|hanmail\.net)$/i;
+    if (!allowed.test(email)) {
+      const msg = '네이버(@naver.com) 또는 다음(@daum.net, @hanmail.net) 메일만 등록할 수 있습니다.';
       if (toast) {
-        toast.textContent = '네이버 메일(@naver.com)만 등록할 수 있습니다.';
+        toast.textContent = msg;
         toast.style.display = 'block';
         setTimeout(()=>{ toast.style.display = 'none'; }, 3500);
       } else {
-        alert('네이버 메일(@naver.com)만 등록할 수 있습니다.');
+        alert(msg);
       }
       return;
     }
