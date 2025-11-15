@@ -381,11 +381,40 @@ cursor: pointer;
 font-weight: 600;
 }
 
-.glow-card {
+/* --- 카드 전체 --- */
+.lf-card {
   background: #0f172a;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 0 24px rgba(97,214,194,0.15); /* 은은한 로컬플로우 글로우 */
-  backdrop-filter: blur(6px);                 /* 살짝 유리느낌 */
+  padding: 20px 22px;
+  margin-top: 20px;
+  box-shadow: 0 0 24px rgba(97,214,194,0.18);
+  backdrop-filter: blur(6px);
+
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.lf-card:hover {
+  box-shadow: 0 0 32px rgba(97,214,194,0.28);
+  transform: translateY(-2px);
+}
+.lf-card-label {
+  display: inline-block;
+  font-size: .8rem;
+  padding: .35rem .85rem;
+  background: rgba(97,214,194,0.15);
+  color: #61d6c2;
+  border-radius: 999px;
+  border: 1px solid rgba(97,214,194,0.35);
+  font-weight: 600;
+}
+.lf-card-text {
+  margin-top: 14px;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: #e2e8f0;
+}
+.lf-card-text strong {
+  color: #61d6c2;
+  font-weight: 600;
 }
