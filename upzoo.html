@@ -182,7 +182,7 @@
     isProcessing = true;
     setStatus(null, '서버 확인 중…', `<span>토큰: <span>${token}</span></span>`);
     try{
-      const res = await fetch('/api/coupon/use', {
+      const res = await fetch('https://mrdindoin.ddns.net/upzoo/api/coupon/use', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({token})
