@@ -150,7 +150,6 @@
   const btnRescan = document.getElementById('btn-rescan');
   let qr = null;
   let isProcessing = false;
-  let currentCamId = null;
 
   function setStatus(mode, title, detail){
     statusBox.classList.remove('ok','err');
@@ -175,12 +174,12 @@
       const qsToken = u.searchParams.get('token');
       if(qsToken) return qsToken;
 
-      // 2) /c/ABC123 이런 패턴이면 마지막 path 조각
+      // 2) /c/ABC123 패턴은 마지막 path 조각 사용
       const segs = u.pathname.split('/').filter(Boolean);
       const last = segs[segs.length - 1];
       if(last) return last;
     }catch(e){
-      // URL 아니면 그냥 그대로 토큰으로
+      // URL 아니면 그냥 raw를 토큰으로
     }
     return raw.trim();
   }
@@ -217,37 +216,45 @@
     }
   }
 
-  function stopScanner(){
-    if(qr){
-      qr.stop().catch(()=>{}).finally(()=>{
-        qr.clear().catch(()=>{});
-      });
+  async function stopScanner(){
+    if(!qr) return;
+    try{
+      await qr.stop();
+    }catch(e){
+      console.warn('stop error (무시해도 됨):', e);
     }
+    try{
+      await qr.clear();
+    }catch(e){
+      console.warn('clear error (무시해도 됨):', e);
+    }
+    qr = null;
   }
 
-  function startScanner(){
-    stopScanner();
+  async function startScanner(){
+    // 다시 스캔 시 상태 초기화
+    isProcessing = false;
+    setStatus(null, '카메라 준비 중…', '<div>잠시만 기다려 주세요.</div>');
+
+    await stopScanner(); // 혹시 남아있던 인스턴스 정리
+
     qr = new Html5Qrcode("qr-reader");
 
-    Html5Qrcode.getCameras().then(devices => {
+    try{
+      const devices = await Html5Qrcode.getCameras();
       if (!devices || !devices.length) {
         setStatus('err', '카메라 장치를 찾을 수 없습니다.', '');
         return;
       }
 
-      // 🔥 후방 카메라 후보 찾기
+      // 🔥 후방 카메라 우선 선택
       let backCam =
-        devices.find(d => d.label.toLowerCase().includes('back')) ||
-        devices.find(d => d.label.toLowerCase().includes('rear')) ||
-        devices.find(d => d.label.toLowerCase().includes('후면')) ||
-        devices[0]; // 그래도 못 찾으면 첫 번째
+        devices.find(d => (d.label || '').toLowerCase().includes('back')) ||
+        devices.find(d => (d.label || '').toLowerCase().includes('rear')) ||
+        devices.find(d => (d.label || '').includes('후면')) ||
+        devices[0];
 
-      currentCamId = backCam.id;
-
-      const config = {
-        fps: 10,
-        qrbox: { width: 240, height: 240 }
-      };
+      const config = { fps: 10, qrbox: { width: 240, height: 240 } };
 
       const onScanSuccess = (decodedText, decodedResult) => {
         if(isProcessing) return;
@@ -256,36 +263,36 @@
           setStatus('err', '인식 실패', '유효한 토큰을 찾을 수 없습니다.');
           return;
         }
+        // 한 번 읽으면 멈추고 서버로 전송
         stopScanner();
         sendTokenToServer(token);
       };
 
       const onScanError = (err) => {
-        // 필요하면 디버그용으로만 사용
+        // 필요하면 디버깅용
         // console.warn(err);
       };
 
-      qr.start(currentCamId, config, onScanSuccess, onScanError)
-        .then(() => {
-          setStatus(null, '대기 중…', '<span>QR 코드에 카메라를 가져다 대면 자동 인식됩니다.<br>(후면 카메라 사용)</span>');
-        })
-        .catch(err => {
-          console.error(err);
-          setStatus('err', '카메라 시작 실패', '<div>브라우저 권한 또는 다른 앱에서 카메라 사용 중인지 확인해 주세요.</div>');
-        });
-    }).catch(err => {
+      await qr.start(backCam.id, config, onScanSuccess, onScanError);
+      setStatus(null, '대기 중…', '<span>QR 코드에 카메라를 가져다 대면 자동 인식됩니다.<br>(후면 카메라 사용)</span>');
+    }catch(err){
       console.error(err);
-      setStatus('err', '카메라 정보 조회 실패', '<div>브라우저 또는 기기 설정을 확인해 주세요.</div>');
-    });
+      setStatus('err', '카메라 시작 실패', '<div>브라우저 권한 또는 다른 앱에서 카메라 사용 중인지 확인해 주세요.</div>');
+      await stopScanner();
+    }
   }
 
   btnRescan.addEventListener('click', () => {
+    // 다시 스캔 버튼 누르면 다시 startScanner
     startScanner();
   });
 
   // 첫 진입 시 자동 시작
-  startScanner();
+  window.addEventListener('load', () => {
+    startScanner();
+  });
 </script>
+
 
 </body>
 </html>
