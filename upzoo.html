@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>LocalFlow 업주용 쿠폰 스캐너</title>
+  <style>
+    :root{
+      --bg:#050711;
+      --panel:#0f172a;
+      --accent:#61d6c2;
+      --danger:#f97373;
+      --ok:#4ade80;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:#1f2937;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:radial-gradient(circle at top,#111827,#020617);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .wrap{
+      width:100%;
+      max-width:480px;
+      background:rgba(15,23,42,.94);
+      border-radius:20px;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:0 18px 45px rgba(0,0,0,.7);
+      padding:18px 18px 20px;
+    }
+    h1{
+      margin:0 0 4px;
+      font-size:20px;
+    }
+    .sub{
+      margin:0 0 14px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 10px;
+      border-radius:999px;
+      background:rgba(15,118,110,.18);
+      border:1px solid rgba(45,212,191,.4);
+      font-size:11px;
+      margin-bottom:8px;
+    }
+    .badge-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:#22c55e;
+      box-shadow:0 0 8px #22c55e;
+    }
+    #qr-reader{
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:#020617;
+      margin-bottom:12px;
+    }
+    #status{
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(15,23,42,0.9);
+      border:1px solid var(--line);
+      font-size:13px;
+      min-height:42px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      white-space:pre-line;
+    }
+    #status strong{
+      font-weight:600;
+    }
+    #status.ok strong{color:var(--ok);}
+    #status.err strong{color:var(--danger);}
+    .field-row{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .field-row span{
+      color:var(--text);
+      font-weight:500;
+    }
+    .btn-row{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      justify-content:flex-end;
+    }
+    button{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.7);
+      background:#020617;
+      color:var(--text);
+      font-size:12px;
+      padding:7px 14px;
+    }
+    button.primary{
+      border-color:transparent;
+      background:linear-gradient(135deg,#22c55e,#4ade80);
+      color:#022c22;
+      font-weight:600;
+    }
+  </style>
+
+  <!-- QR 스캐너 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      LocalFlow 업주용 쿠폰 스캐너
+    </div>
+    <h1>QR 쿠폰 스캔</h1>
+    <p class="sub">
+      당첨자가 보여주는 QR 코드를 스캔하면<br>
+      사용 가능 여부가 자동으로 확인됩니다.
+    </p>
+
+    <div id="qr-reader"></div>
+
+    <div id="status">
+      <strong>대기 중…</strong>
+      <span style="font-size:12px;color:var(--muted);">
+        QR 코드에 카메라를 가져다 대면 자동 인식됩니다.
+      </span>
+    </div>
+
+    <div class="btn-row">
+      <button id="btn-rescan">다시 스캔</button>
+    </div>
+  </div>
+
+<script>
+  const statusBox = document.getElementById('status');
+  const btnRescan = document.getElementById('btn-rescan');
+  let scanner = null;
+  let isProcessing = false;
+
+  function setStatus(mode, title, detail){
+    statusBox.classList.remove('ok','err');
+    if(mode) statusBox.classList.add(mode);
+    statusBox.innerHTML = '';
+    const s1 = document.createElement('strong');
+    s1.textContent = title;
+    statusBox.appendChild(s1);
+    if(detail){
+      const s2 = document.createElement('div');
+      s2.className = 'field-row';
+      s2.innerHTML = detail;
+      statusBox.appendChild(s2);
+    }
+  }
+
+  function extractToken(raw){
+    // QR 안에 URL이 들어있는 경우: ?token=... 추출
+    try{
+      const u = new URL(raw);
+      const t = u.searchParams.get('token');
+      if(t) return t;
+    }catch(e){
+      // URL 아니면 그냥 토큰으로 사용
+    }
+    return raw.trim();
+  }
+
+  async function sendTokenToServer(token){
+    isProcessing = true;
+    setStatus(null, '서버 확인 중…', `<span>토큰: <span>${token}</span></span>`);
+    try{
+      const res = await fetch('/api/coupon/use', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({token})
+      });
+      const data = await res.json();
+      if(data.ok){
+        const detail = `
+          <div>업체: <span>${data.shop_name || data.shop_id || '-'}</span></div>
+          <div>금액: <span>${data.amount || '-'} 원</span></div>
+          <div>사용시각: <span>${data.used_at || '-'}</span></div>
+        `;
+        setStatus('ok', '✅ 쿠폰 사용 처리 완료', detail);
+      }else{
+        const detail = `
+          <div>사유: <span>${data.message || '사용 불가'}</span></div>
+          ${data.used_at ? `<div>사용시각: <span>${data.used_at}</span></div>` : ''}
+        `;
+        setStatus('err', '⛔ 쿠폰 사용 불가', detail);
+      }
+    }catch(err){
+      console.error(err);
+      setStatus('err', '서버 통신 오류', '<div>네트워크 상태를 확인해 주세요.</div>');
+    }finally{
+      isProcessing = false;
+    }
+  }
+
+  function startScanner(){
+    if(scanner){
+      scanner.clear().catch(()=>{});
+      scanner = null;
+    }
+
+    const config = { fps: 10, qrbox: { width: 240, height: 240 } };
+    scanner = new Html5QrcodeScanner("qr-reader", config, false);
+
+    const onScanSuccess = (decodedText, decodedResult) => {
+      if(isProcessing) return; // 이미 처리 중이면 무시
+      const token = extractToken(decodedText);
+      if(!token){
+        setStatus('err', '인식 실패', '유효한 토큰을 찾을 수 없습니다.');
+        return;
+      }
+      // 한 번 인식하면 일단 스캐너는 멈추고 서버로 전송
+      scanner.clear().catch(()=>{});
+      sendTokenToServer(token);
+    };
+
+    const onScanError = (errorMessage) => {
+      // 콘솔에만 띄우고 조용히 무시
+      // console.warn(errorMessage);
+    };
+
+    scanner.render(onScanSuccess, onScanError);
+    setStatus(null, '대기 중…', '<span>QR 코드에 카메라를 가져다 대면 자동 인식됩니다.</span>');
+  }
+
+  btnRescan.addEventListener('click', () => {
+    startScanner();
+  });
+
+  // 첫 진입 시 자동 시작
+  startScanner();
+</script>
+</body>
+</html>
