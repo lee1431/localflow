@@ -148,8 +148,9 @@
 <script>
   const statusBox = document.getElementById('status');
   const btnRescan = document.getElementById('btn-rescan');
-  let scanner = null;
+  let qr = null;
   let isProcessing = false;
+  let currentCamId = null;
 
   function setStatus(mode, title, detail){
     statusBox.classList.remove('ok','err');
@@ -167,25 +168,31 @@
   }
 
   function extractToken(raw){
-    // QR 안에 URL이 들어있는 경우: ?token=... 추출
     try{
       const u = new URL(raw);
-      const t = u.searchParams.get('token');
-      if(t) return t;
+
+      // 1) ?token=... 우선
+      const qsToken = u.searchParams.get('token');
+      if(qsToken) return qsToken;
+
+      // 2) /c/ABC123 이런 패턴이면 마지막 path 조각
+      const segs = u.pathname.split('/').filter(Boolean);
+      const last = segs[segs.length - 1];
+      if(last) return last;
     }catch(e){
-      // URL 아니면 그냥 토큰으로 사용
+      // URL 아니면 그냥 그대로 토큰으로
     }
     return raw.trim();
   }
 
   async function sendTokenToServer(token){
     isProcessing = true;
-    setStatus(null, '서버 확인 중…', `<span>토큰: <span>${token}</span></span>`);
+    setStatus(null, '서버 확인 중…', `<div>토큰: <span>${token}</span></div>`);
     try{
       const res = await fetch('https://mrdindoin.ddns.net/upzoo/api/coupon/use', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({token})
+        body: JSON.stringify({ token })
       });
       const data = await res.json();
       if(data.ok){
@@ -210,34 +217,66 @@
     }
   }
 
-  function startScanner(){
-    if(scanner){
-      scanner.clear().catch(()=>{});
-      scanner = null;
+  function stopScanner(){
+    if(qr){
+      qr.stop().catch(()=>{}).finally(()=>{
+        qr.clear().catch(()=>{});
+      });
     }
+  }
 
-    const config = { fps: 10, qrbox: { width: 240, height: 240 } };
-    scanner = new Html5QrcodeScanner("qr-reader", config, false);
+  function startScanner(){
+    stopScanner();
+    qr = new Html5Qrcode("qr-reader");
 
-    const onScanSuccess = (decodedText, decodedResult) => {
-      if(isProcessing) return; // 이미 처리 중이면 무시
-      const token = extractToken(decodedText);
-      if(!token){
-        setStatus('err', '인식 실패', '유효한 토큰을 찾을 수 없습니다.');
+    Html5Qrcode.getCameras().then(devices => {
+      if (!devices || !devices.length) {
+        setStatus('err', '카메라 장치를 찾을 수 없습니다.', '');
         return;
       }
-      // 한 번 인식하면 일단 스캐너는 멈추고 서버로 전송
-      scanner.clear().catch(()=>{});
-      sendTokenToServer(token);
-    };
 
-    const onScanError = (errorMessage) => {
-      // 콘솔에만 띄우고 조용히 무시
-      // console.warn(errorMessage);
-    };
+      // 🔥 후방 카메라 후보 찾기
+      let backCam =
+        devices.find(d => d.label.toLowerCase().includes('back')) ||
+        devices.find(d => d.label.toLowerCase().includes('rear')) ||
+        devices.find(d => d.label.toLowerCase().includes('후면')) ||
+        devices[0]; // 그래도 못 찾으면 첫 번째
 
-    scanner.render(onScanSuccess, onScanError);
-    setStatus(null, '대기 중…', '<span>QR 코드에 카메라를 가져다 대면 자동 인식됩니다.</span>');
+      currentCamId = backCam.id;
+
+      const config = {
+        fps: 10,
+        qrbox: { width: 240, height: 240 }
+      };
+
+      const onScanSuccess = (decodedText, decodedResult) => {
+        if(isProcessing) return;
+        const token = extractToken(decodedText);
+        if(!token){
+          setStatus('err', '인식 실패', '유효한 토큰을 찾을 수 없습니다.');
+          return;
+        }
+        stopScanner();
+        sendTokenToServer(token);
+      };
+
+      const onScanError = (err) => {
+        // 필요하면 디버그용으로만 사용
+        // console.warn(err);
+      };
+
+      qr.start(currentCamId, config, onScanSuccess, onScanError)
+        .then(() => {
+          setStatus(null, '대기 중…', '<span>QR 코드에 카메라를 가져다 대면 자동 인식됩니다.<br>(후면 카메라 사용)</span>');
+        })
+        .catch(err => {
+          console.error(err);
+          setStatus('err', '카메라 시작 실패', '<div>브라우저 권한 또는 다른 앱에서 카메라 사용 중인지 확인해 주세요.</div>');
+        });
+    }).catch(err => {
+      console.error(err);
+      setStatus('err', '카메라 정보 조회 실패', '<div>브라우저 또는 기기 설정을 확인해 주세요.</div>');
+    });
   }
 
   btnRescan.addEventListener('click', () => {
@@ -247,5 +286,6 @@
   // 첫 진입 시 자동 시작
   startScanner();
 </script>
+
 </body>
 </html>
