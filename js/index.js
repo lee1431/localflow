@@ -32,29 +32,7 @@ fetch('https://mrdindoin.ddns.net/data/views.json', {cache:'no-store'})
     document.getElementById('viewToday').textContent = d.today;
   });
 
-const btn = document.getElementById('menuBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-const ovl  = document.getElementById('overlay');
 
-function openMenu(open) {
-  if (open) {
-    mobileMenu.classList.add('show');
-    ovl.classList.add('show');
-    btn.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
-  } else {
-    mobileMenu.classList.remove('show');
-    ovl.classList.remove('show');
-    btn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }
-}
-
-btn.addEventListener('click', () => {
-  const willOpen = !mobileMenu.classList.contains('show');
-  openMenu(willOpen);
-});
-ovl.addEventListener('click', () => openMenu(false));
 
 // --- Floating words + data hybrid ---
 const cloud = document.getElementById('cloud');
