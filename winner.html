@@ -1,203 +1,35 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="google-adsense-account" content="ca-pub-9382191250873184">
+<meta name="theme-color" content="#61D6C2" />
+
 <title>LocalFlow — 당첨 확인 & 재고 & 후기</title>
-<meta name="theme-color" content="#61D6C2"/>
-<meta name="description" content="LocalFlow 당첨 여부 조회, 상품 재고 확인, 당첨자 후기 모음"/>
 
-<style>
-  :root{
-    --bg:#0b0f14; --panel:#111826; --ink:#eaf2ff; --muted:#9fb0c7; --line:#1e2330; --accent:#61d6c2;
-    --pill:#0f172a; --thumb:#0c121d;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:linear-gradient(180deg,#0a0f16,#070b11);color:var(--ink);
-       font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Noto Sans KR,sans-serif}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1080px;margin:0 auto;padding:14px}
+<!-- SEO -->
+<meta name="description" content="LocalFlow 당첨 여부 조회, 상품 재고 확인, 당첨자 후기 모음  LocalFlow by Stance."/>
+<meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 시민참여, 먹고싶니" />
+<meta name="theme-color" content="#61D6C2" />
+<link rel="canonical" href="https://localflow.info/winner.html" />
 
-  header{position:sticky;top:0;background:rgba(7,11,17,.85);backdrop-filter:saturate(150%) blur(6px);
-         border-bottom:1px solid var(--line);z-index:10}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:26px;height:26px;border:1px solid var(--line);border-radius:7px;display:grid;place-items:center;
-        background:#0e1522;font-weight:800}
-  .pill{display:inline-block;padding:.32rem .65rem;border:1px solid var(--line);border-radius:999px;background:var(--pill);color:var(--muted);font-size:12px}
-  .badge{font-size:10px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;background:#0f1624;color:var(--muted)}
+<!-- Open Graph -->
+<meta property="og:title" content="LocalFlow — Circulation for 충주" />
+<meta property="og:description" content="‘뭐 먹고 싶니?’ 한마디가 지역을 움직입니다. LocalFlow by Stance." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://localflow.info/winner.html" />
+<meta property="og:image" content="https://localflow.info/og-cover.png" />
 
-  h1{margin:10px 0 8px;font-size:clamp(22px,4vw,28px)}
-  h2{margin:18px 0 10px;font-size:clamp(18px,3.4vw,22px)}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
-  .grid{display:grid;gap:12px}
-  .cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-  .cols-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-  .cols-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-  .muted{color:var(--muted)}
-  .hr{height:1px;background:var(--line);margin:12px 0}
-  .btn{appearance:none;border:1px solid var(--line);background:#0f172a;color:var(--ink);padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
-  .btn:active{transform:translateY(1px)}
-  input[type="search"],input[type="email"],input[type="text"],select{
-    padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#0f172a;color:var(--ink);width:100%
-  }
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
 
-  /* 섹션1: 응모 여부 조회 */
-  .table{width:100%;border-collapse:collapse}
-  .table th,.table td{border-bottom:1px solid #fafbfc;padding:8px 10px;text-align:left}
-  .table th{color:#b7c5dd;font-weight:700}
-  .status-pill{padding:.25rem .5rem;border:1px solid var(--line);border-radius:999px;background:#fafbfc;font-size:12px}
-  .ok{color:#22c55e;border-color:#1f3b2b}
-  .no{color:#f97316;border-color:#3a2415}
-  .win{color:#60a5fa;border-color:#1a2c45}
+<!-- StyleSheet -->
+<link rel="stylesheet" href="./css/local.css" />
+<link rel="stylesheet" href="./css/winner.css" />
 
-  /* 섹션2: 상품 카드 */
-  .prize{display:grid;grid-template-rows:120px auto;gap:8px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0e1624}
-  .prize .thumb{height:120px;background:#0c121d;display:grid;place-items:center}
-  .prize .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .prize .meta{padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .stock{font-size:12px;color:var(--muted)}
-  .stock strong{color:#e5f0ff}
-
-  /* 섹션3: 후기 그리드 */
-  .rev{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0e1624}
-  .rev .thumb{aspect-ratio:1/1;background:#0c121d}
-  .rev .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .rev .body{padding:8px 10px}
-  .rev .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
-
-  /* 모달 */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
-  .modal.show{display:flex}
-  .dialog{max-width:900px;width:100%;background:#0f172a;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .dialog header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
-  .dialog .content{max-height:min(80vh,1000px);overflow:auto}
-  .dialog img{width:100%;height:auto;display:block}
-
-  .pager{
-    margin-top:10px; display:flex; align-items:center; justify-content:center; gap:10px;
-  }
-  .pager .btn[disabled]{opacity:.5; cursor:not-allowed}
-
-  
-  /* ==== LocalFlow Light Theme Override ==== */
-  :root{
-    --bg:#f7fafc;         /* 페이지 배경 */
-    --panel:#ffffff;      /* 카드/모달 배경 */
-    --ink:#0c1220;        /* 본문 텍스트 */
-    --muted:#667085;      /* 보조 텍스트 */
-    --line:#e5e7eb;       /* 경계선 */
-    --accent:#61d6c2;     /* 브랜드 포인트 */
-    --pill:#ffffff;       /* 배지/필 기본 */
-    --thumb:#f3f5f7;      /* 썸네일 바탕 */
-  }
-  
-  /* 페이지/헤더 배경 교체 */
-  body{ background:#fff; color:var(--ink); }
-  header{ background:rgba(255,255,255,.9); border-bottom:1px solid var(--line); }
-  .logo{ background:#fff; }
-  
-  /* 카드/표/배지 톤 업 */
-  .card{ background:var(--panel); border:1px solid var(--line); box-shadow:0 1px 8px rgba(0,0,0,.04); }
-  .pill{ background:#fff; border:1px solid var(--line); color:#475467; }
-  .badge{ background:#fff; border:1px solid var(--line); color:#475467; }
-  
-  /* 표 가독성(라이트) */
-  .table th{ color:#111827; background:#fbfdff; }
-  .table th,.table td{ border-bottom:1px solid var(--line); }
-  .table tr:nth-child(even) td{ background:#fcfcfd; }
-  
-  /* 상태 Pill 색상(라이트 대비) */
-  .status-pill{ background:#fff; border:1px solid var(--line); }
-  .status-pill.ok{     color:#16a34a; border-color:#c7f2d8; background:#ecfdf5; }
-  .status-pill.no{     color:#ea580c; border-color:#fde6d6; background:#fff7ed; }
-  .status-pill.win{    color:#2563eb; border-color:#dbeafe; background:#eff6ff; }
-  
-  /* 썸네일/프라이즈/리뷰 카드 */
-  .prize{ background:#fff; border:1px solid var(--line); }
-  .prize .thumb{ background:#fafafa; }
-  .rev{ background:#fff; border:1px solid var(--line); }
-  .rev .thumb{ background:#fafafa; }
-  
-  /* 모달(라이트) */
-  .modal{ background:rgba(0,0,0,.35); }
-  .dialog{ background:#fff; border:1px solid var(--line); color:var(--ink); }
-  .dialog header{ border-bottom:1px solid var(--line); }
-  .dialog .content{ background:#fff; }
-  
-  /* 버튼(라이트) */
-  .btn{ background:#fff; color:#0c1220; border:1px solid var(--line); }
-  .btn.primary{ background:#0f172a0d; } /* 아주 연한 남청 톤 */
-  .btn:active{ transform:translateY(1px); }
-  
-  /* 휠/마퀴 */
-  .wheel{ background:#f5f7fb; color:#475467; border:1px dashed #d4dbe7; }
-  marquee{ color:#667085; }
-  
-  /* 헤더 네비/링크 대비 */
-  a{ color:#0c1220; }
-  a.pill{ color:#0c1220; }
-  
-  /* 푸터 톤 */
-  footer{ color:#667085; }
-
-  /* 검색창 + 필터 */
-  input[type="search"],
-  select{
-    background:transparent !important;
-    border:1px solid var(--line);
-    color:var(--ink);
-    box-shadow:none;
-    transition:border-color .2s, box-shadow .2s;
-    border-radius:10px;
-  }
-  input[type="search"]::placeholder{ color:#9ca3af; }
-  input[type="search"]:focus,
-  select:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(97,214,194,.25);
-  }
-  
-  /* 셀렉트 화살표 (라이트) */
-  select{
-    appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23667085' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 10px center;
-    background-size:10px 6px;
-    padding-right:28px;
-  }
-  
-  /* 버튼 통일감 */
-  .btn{
-    background:#fff;
-    color:#0c1220;
-    border:1px solid var(--line);
-    transition:box-shadow .2s, border-color .2s, transform .02s;
-  }
-  .btn:hover{ border-color:#cbd5e1; box-shadow:0 1px 6px rgba(0,0,0,.06); }
-  .btn:active{ transform:translateY(1px); }
-  .btn[disabled]{ opacity:.5; cursor:not-allowed; box-shadow:none; }
-  
-  /* 테이블 가독성 업 */
-  .table th{ color:#111827; background:#fbfdff; }
-  .table th,.table td{ border-bottom:1px solid var(--line); }
-  .table tr:nth-child(even) td{ background:#fcfcfd; }
-  .table tr:hover td{ background:#f7fafc; } /* 행 hover */
-  
-  /* 상태 pill 라이트 톤 */
-  .status-pill{ background:#fff; border:1px solid var(--line); }
-  .status-pill.ok{  color:#16a34a; border-color:#c7f2d8; background:#ecfdf5; }
-  .status-pill.no{  color:#ea580c; border-color:#fde6d6; background:#fff7ed; }
-  .status-pill.win{ color:#2563eb; border-color:#dbeafe; background:#eff6ff; }
-  
-  /* 카드/모달 살짝 그림자 */
-  .card{ background:var(--panel); border:1px solid var(--line); box-shadow:0 1px 8px rgba(0,0,0,.04); }
-  .dialog{ background:#fff; border:1px solid var(--line); box-shadow:0 10px 30px rgba(0,0,0,.12); }
-  
-</style>
 </head>
+  
 <body>
 
 <header>
