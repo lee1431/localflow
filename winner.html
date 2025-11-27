@@ -32,16 +32,31 @@
   
 <body>
 
-<header>
-  <div class="wrap nav">
-    <div class="brand">
-      <div class="logo">LF</div>
-      <div>LocalFlow <small class="muted">— 당첨 확인</small></div>
-      <span class="badge">beta</span>
-    </div>
-    <a class="pill" href="/" title="메인으로">← LocalFlow</a>
-  </div>
-</header>
+<!-- Header -->
+	<header>
+		<div class="wrap nav">
+			<div class="brand">
+				<span class="logo" aria-hidden="true"></span>
+				<span>LocalFlow</span>
+				<small class="muted">by Stance</small>
+				<span id="viewTotal">—</span><small>total</small>
+          		<span id="viewToday">—</span><small>today</small>
+			</div>
+
+			<button class="nav-toggle" type="button" aria-label="메뉴 열기" onclick="toggleNav()">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+
+			<nav class="nav-menu">
+				<a class="chip" href="./index.html">로컬플로우</a>
+				<a class="chip" href="./winner.html">당첨확인</a>
+				<a class="chip" href="./coupon.html">쿠폰</a>
+				<a class="chip" href="./affiliate.html">제휴광고</a>
+			</nav>
+		</div>
+	</header>
 
 <main class="wrap">
   <section class="card">
