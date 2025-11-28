@@ -1,6 +1,6 @@
 async function loadCoupons() {
   try {
-    const res = await fetch('/api/coupons', { cache: 'no-store' });
+    const res = await fetch('https://mrdindoin.ddns.net/cai/api/coupons', { cache: 'no-store' });
     if (!res.ok) throw new Error('쿠폰 불러오기 실패');
 
     const data = await res.json();
