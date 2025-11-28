@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<meta name="google-adsense-account" content="ca-pub-9382191250873184">
+	<meta name="theme-color" content="#61D6C2" />
+
+	<title>LocalFlow — Circulation for 충주</title>
+
+	<!-- SEO -->
+	<meta name="description" content="LocalFlow는 ‘뭐 먹고 싶니?’라는 한마디로 지역의 식욕 데이터를 모아 주간 순환 소비를 실행하는 시민 참여형 프로젝트입니다. LocalFlow by Stance." />
+	<meta name="keywords" content="LocalFlow, 로컬플로우, 로컬, 지역, 순환경제, 충주, 시민참여, 먹고싶니" />
+	<meta name="theme-color" content="#61D6C2" />
+	<link rel="canonical" href="https://localflow.info/" />
+
+	<!-- Open Graph -->
+	<meta property="og:title" content="LocalFlow — Circulation for 충주" />
+	<meta property="og:description" content="‘뭐 먹고 싶니?’ 한마디가 지역을 움직입니다. LocalFlow by Stance." />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://localflow.info/" />
+	<meta property="og:image" content="https://localflow.info/og-cover.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2361D6C2'/%3E%3Cpath d='M18 36c8 10 20 10 28 0' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M14 26c4 6 10 9 18 9s14-3 18-9' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <!-- StyleSheet -->
+  <link rel="stylesheet" href="./css/header.css" />
+  <link rel="stylesheet" href="./css/coupon.css" />
+
+
+</head>
+  
+<body>
+  <!-- Header -->
+	<header>
+		<div class="wrap nav">
+			<div class="brand">
+				<span class="logo" aria-hidden="true"></span>
+				<span>LocalFlow</span>
+				<small class="muted">by Stance</small>
+			</div>
+
+			<button class="nav-toggle" type="button" aria-label="메뉴 열기" onclick="toggleNav()">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+
+			<nav class="nav-menu">
+				<a class="chip" href="./index.html">로컬플로우</a>
+				<a class="chip" href="./winner.html">참여광장</a>
+				<a class="chip" href="./coupon.html">쿠폰</a>
+				<a class="chip" href="./affiliate.html">제휴광고</a>
+			</nav>
+		</div>
+	</header>	
+	
+	
+	
+<section class="coupon-section">
+	<div class="wrap">
+		<h2>LocalFlow 쿠폰</h2>
+
+		<div class="coupon-grid">
+			<article class="coupon-card" data-deadline="2025-07-31T23:59:59+09:00">
+				<div class="coupon-media">
+					<img src="./img/bhc.png" alt="BHC 치킨" />
+					<div class="coupon-store-tag">BHC 치킨</div>
+					<div class="coupon-stock-tag">잔량 <span>5개</span></div>
+					<div class="coupon-title-wrap"><h3>BHC 치킨 후라이드 한마리 쿠폰</h3></div>
+					<div class="coupon-countdown">추첨까지 <span class="coupon-countdown-text">--:--:--</span></div>
+				</div>
+				<div class="coupon-bottom"><button type="button" class="coupon-apply-btn" onclick="openCouponModal('BHC 치킨 후라이드 한마리 쿠폰')">쿠폰 응모하기</button></div>
+			</article>
+			
+			<article class="coupon-card" data-deadline="2025-07-31T23:59:59+09:00">
+				<div class="coupon-media">
+					<img src="./img/goobne.png" alt="굽네치킨" />
+					<div class="coupon-store-tag">굽네치킨</div>
+					<div class="coupon-stock-tag">잔량 <span>5개</span></div>
+					<div class="coupon-title-wrap"><h3>굽네치킨 닭봉 할인쿠폰</h3></div>
+					<div class="coupon-countdown">추첨까지 <span class="coupon-countdown-text">--:--:--</span></div>
+				</div>
+				<div class="coupon-bottom"><button type="button" class="coupon-apply-btn" onclick="openCouponModal('굽네치킨 닭봉 할인쿠폰')">쿠폰 응모하기</button></div>
+			</article>
+
+			<article class="coupon-card" data-deadline="2025-07-31T23:59:59+09:00">
+				<div class="coupon-media">
+					<img src="img/cherry.png" alt="성수농원 체리 한 박스" />
+					<div class="coupon-store-tag">성수농원</div>
+					<div class="coupon-stock-tag">잔량 <span>5개</span></div>
+					<div class="coupon-title-wrap"><h3>성수농원 체리 2kg · 5,000원 할인쿠폰</h3></div>
+					<div class="coupon-countdown">추첨까지 <span class="coupon-countdown-text">--:--:--</span></div>
+				</div>
+				<div class="coupon-bottom"><button type="button" class="coupon-apply-btn" onclick="openCouponModal('성수농원 5,000원 할인쿠폰')">쿠폰 응모하기</button></div>
+			</article>
+
+		</div>
+	</div>
+</section>
+
+	
+	
+	
+<div class="coupon-modal" id="couponModal">
+	<div class="coupon-modal-bg" onclick="closeCouponModal()"></div>
+	<div class="coupon-modal-box">
+		<div class="coupon-modal-header">
+			<span id="couponModalTitle">응모하기</span>
+			<button class="coupon-modal-close" onclick="closeCouponModal()">×</button>
+		</div>
+		<div class="coupon-modal-body">
+			<p class="coupon-modal-desc">
+			응모를 위해 이메일을 입력해주세요.<br>
+			당첨 시 안내 메일을 보내드립니다.
+			</p>
+			<input type="email" id="couponEmail" class="coupon-input" placeholder="이메일을 입력하세요" />
+			<button class="coupon-submit-btn" onclick="submitCouponEmail()">응모완료</button>
+			<p class="coupon-success-msg" id="couponSuccessMsg"></p>
+		</div>
+	</div>
+</div>
+
+	
+<script src="./js/coupon.js"></script>  
+
+	
+</body>
+</html>
