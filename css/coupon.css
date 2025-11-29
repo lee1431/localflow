@@ -1,5 +1,5 @@
-.coupon-section{padding:56px 0;border-top:1px solid var(--line);}
-.coupon-section h2{margin:0 0 18px;font-size:clamp(22px,4vw,26px);}
+.coupon-list{padding:56px 0;border-top:1px solid var(--line);}
+.coupon-list h2{margin:0 0 18px;font-size:clamp(22px,4vw,26px);}
 .coupon-grid{display:grid;grid-template-columns:1fr;gap:18px;}
 @media(min-width:860px){.coupon-grid{grid-template-columns:repeat(3, minmax(0,1fr));}}
 .coupon-card{width:90%;max-width:340px;margin:0 auto;background-color:#f5f8fc;border-radius:1rem;box-shadow:0 4px 12px rgba(0,0,0,0.05);overflow:hidden;transition:transform .3s ease, box-shadow .3s ease;display:flex;flex-direction:column;}
