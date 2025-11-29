@@ -7,6 +7,12 @@ async function loadCoupons() {
     const listEl = document.getElementById('coupon-list');
     listEl.innerHTML = '';
 
+
+    const coupongrid = document.createElement('div');
+    coupongrid.className = 'coupon-grid';
+
+    listEl.appendChild(coupongrid);
+    
     (data.coupons || []).forEach(coupon => {
       const article = document.createElement('article');
       article.className = 'coupon-card';
