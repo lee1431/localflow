@@ -4,19 +4,18 @@ async function loadCoupons() {
     if (!res.ok) throw new Error('쿠폰 불러오기 실패');
 
     const data = await res.json();
-    const listEl = document.getElementById('coupon-list');
-    listEl.innerHTML = '';
+    const listEl = document.querySelector('.coupon-list'); 
+    listEl.innerHTML = '';   // 기존 내용 싹 지우기
 
-    const wraps = document.createElement('div');
-    wraps.className = 'wrap';
+    const wrap = document.createElement('div');
+    wrap.className = 'wrap';
 
-    listEl.appendChild(wraps);
-
+    const title = document.createElement('h2');
+    title.textContent = 'LocalFlow 쿠폰';
+    wrap.appendChild(title);
     const coupongrid = document.createElement('div');
     coupongrid.className = 'coupon-grid';
 
-    listEl.appendChild(coupongrid);
-    
     (data.coupons || []).forEach(coupon => {
       const article = document.createElement('article');
       article.className = 'coupon-card';
@@ -28,8 +27,8 @@ async function loadCoupons() {
           <div class="coupon-store-tag">${coupon.shop_name}</div>
           <div class="coupon-stock-tag">잔량 <span>${coupon.stock_remaining}개</span></div>
           <div class="coupon-title-wrap"><h3>${coupon.title}</h3></div>
-          <div class="coupon-countdown">
-            <span class="coupon-countdown-text">--:--:--</span>
+          <div class="coupon-countdown">추첨까지 
+             <span class="coupon-countdown-text">--:--:--</span>
           </div>
         </div>
         <div class="coupon-bottom">
@@ -44,17 +43,22 @@ async function loadCoupons() {
         </div>
       `;
 
-      listEl.appendChild(article);
+      coupongrid.appendChild(article);
     });
+    wrap.appendChild(coupongrid);
+
+    listEl.appendChild(wrap);
 
     bindCouponButtons();
     initCountdowns();
+
   } catch (err) {
     console.error(err);
-    const listEl = document.getElementById('coupon-list');
+    const listEl = document.querySelector('.coupon-list');
     listEl.innerHTML = '<p class="coupon-error">쿠폰을 불러오지 못했습니다.</p>';
   }
 }
+
 
 function bindCouponButtons() {
   document.querySelectorAll('.coupon-apply-btn').forEach(btn => {
