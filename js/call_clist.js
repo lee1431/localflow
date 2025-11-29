@@ -7,6 +7,10 @@ async function loadCoupons() {
     const listEl = document.getElementById('coupon-list');
     listEl.innerHTML = '';
 
+    const wraps = document.createElement('div');
+    wraps.className = 'wrap';
+
+    listEl.appendChild(wraps);
 
     const coupongrid = document.createElement('div');
     coupongrid.className = 'coupon-grid';
