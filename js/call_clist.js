@@ -15,8 +15,8 @@ async function loadCoupons() {
       article.innerHTML = `
         <div class="coupon-media">
           <img src="${coupon.image}" alt="${coupon.title}" />
-          <div class="coupon-store-tag">${coupon.store}</div>
-          <div class="coupon-stock-tag">잔량 <span>${coupon.stock}개</span></div>
+          <div class="coupon-store-tag">${coupon.shop_name}</div>
+          <div class="coupon-stock-tag">잔량 <span>${coupon.stock_remaining}개</span></div>
           <div class="coupon-title-wrap"><h3>${coupon.title}</h3></div>
           <div class="coupon-countdown">
             <span class="coupon-countdown-text">--:--:--</span>
@@ -86,14 +86,26 @@ function initCountdowns() {
         return;
       }
 
-      const sec = Math.floor(diff / 1000) % 60;
-      const min = Math.floor(diff / (1000 * 60)) % 60;
-      const hr  = Math.floor(diff / (1000 * 60 * 60));
+      const sec = Math.floor(diff / 1000);
+      const d = Math.floor(sec / 86400);
+      const h = Math.floor((sec % 86400) / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
 
-      textEl.textContent =
-        String(hr).padStart(2, '0') + ':' +
-        String(min).padStart(2, '0') + ':' +
-        String(sec).padStart(2, '0');
+      if (d > 0){
+        textEl.textContent =
+          d + '일 ' +
+          String(h).padStart(2,'0') + ':' +
+          String(m).padStart(2,'0') + ':' +
+          String(s).padStart(2,'0');
+      } else {
+        textEl.textContent =
+          String(h).padStart(2,'0') + ':' +
+          String(m).padStart(2,'0') + ':' +
+          String(s).padStart(2,'0');
+      }
+
+      
     });
   }
 
