@@ -189,117 +189,93 @@
   </section>
 
   <!-- Roadmap -->
-  <section id="roadmap" aria-labelledby="rm-title">
-    <div class="wrap">
-      <div class="grid">
-        <div class="col-12">
-          <h2 id="rm-title">LocalFlow Roadmap</h2>
-          <div class="sub">“깨진 항아리 → <b>순환</b>의 항아리”. 물(관심·가치·돈)은 막으면 썩고, 흐르게 설계하면 살아납니다.</div>
-        </div>
+<section id="roadmap" aria-labelledby="rm-title">
+  <div class="wrap">
+    <div class="grid">
+      
+      <!-- 타이틀 -->
+      <div class="col-12">
+        <h2 id="rm-title">LocalFlow Roadmap</h2>
+        <div class="sub">“깨진 항아리 → <b>순환</b>의 항아리”.  
+          작은 흐름이 모여 지역의 큰 흐름이 됩니다.</div>
+      </div>
 
-        <!-- 이념 요약 -->
-        <div class="col-12 card">
-          <div class="pill">이념 · Leaky → Circulation</div>
-          <p style="margin:10px 0 0">
-            기존 신념은 <span class="k">“항아리는 새지 않아야 한다”</span>였지만, 현실은 이미 새고 있습니다.
-            LocalFlow는 <span class="k">의도된 구멍</span>을 설계해 <span class="k">되돌아오는 통로</span>를 만듭니다.
-            방문은 저장으로, 저장은 리마인드로, 리마인드는 재방문과 지역 소비로 이어집니다.
+      <!-- NOW (지금 집중하는 것) -->
+      <div class="col-4 card">
+        <div class="pill">NOW</div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>쿠폰 수집 시작</b>
+          <div class="muted">개인 예산 기반 선구매 → 지역 순환 구조 정착</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>쿠폰 페이지 개편</b>
+          <div class="muted">쿠폰별 “딜러(발급자)” 지정 구조 도입</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>스탕스 홈페이지 연동</b>
+          <div class="muted">LocalFlow ↔ Stance 프로젝트 허브화</div>
+        </div></div>
+      </div>
+
+      <!-- NEXT (곧 진행할 것) -->
+      <div class="col-4 card">
+        <div class="pill">NEXT</div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>오픈 아이디어 모듈</b>
+          <div class="muted">하나의 주제를 여러 사람이 드리블하는 토론형 위젯</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>제휴 광고 영역</b>
+          <div class="muted">외부 광고 + 생활용품(쿠팡) 추천 링크</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>내부 기능 확장</b>
+          <div class="muted">저장·리마인드·재노출 루프 추가</div>
+        </div></div>
+      </div>
+
+      <!-- LATER (확장 단계) -->
+      <div class="col-4 card">
+        <div class="pill">LATER</div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>쿠폰 딜러 시스템 정식화</b>
+          <div class="muted">누구든 본인의 쿠폰 페이지를 운영하는 구조</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>지역 파트너 연계 확대</b>
+          <div class="muted">농가, 카페, 소상공인 순환망 강화</div>
+        </div></div>
+
+        <div class="li"><span class="dot"></span><div>
+          <b>소규모 로컬 펀드 실험</b>
+          <div class="muted">쿠폰과 기부를 결합한 지역 회전 모델</div>
+        </div></div>
+      </div>
+
+      <!-- 철학 -->
+      <div class="col-12">
+        <details>
+          <summary>LocalFlow는 왜 ‘순환’을 중심에 두나요?</summary>
+          <p style="margin:8px 0 0">
+            지역의 돈·관심·스토리는 흐를 때 힘을 가집니다.  
+            구멍을 막는 대신, 되돌아오는 통로를 설계해  
+            작은 방문이 저장으로, 저장이 재노출로, 재방문으로 이어지는  
+            살아 있는 순환을 만들기 위함입니다.
           </p>
-        </div>
-
-        <!-- NOW / NEXT / LATER -->
-        <div class="col-4 card">
-          <div class="pill">NOW</div>
-          <div class="li"><span class="dot"></span><div>
-            <b>로드맵 섹션 통합</b><div class="muted">화이트 테마, 프레임워크 無</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>조회수 배지</b> (TOTAL / TODAY)<div class="muted">/views.json 비동기 표시</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>기록 카드 MVP</b><div class="muted">문장+이미지 저장 → 가벼운 재노출</div>
-          </div></div>
-        </div>
-
-        <div class="col-4 card">
-          <div class="pill">NEXT</div>
-          <div class="li"><span class="dot"></span><div>
-            <b>리마인드 루프</b><div class="muted">D-3, D-day 토스트/배지, 재방문 유도</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>위젯 공유</b><div class="muted">임베드 스니펫으로 외부 순환 생성</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>로컬 펀드 베타</b><div class="muted">작은 쿠폰/기부가 지역에서 순환</div>
-          </div></div>
-        </div>
-
-        <div class="col-4 card">
-          <div class="pill">LATER</div>
-          <div class="li"><span class="dot"></span><div>
-            <b>모듈 마켓</b><div class="muted">별배경/기념일/방명록 등 블록 판매</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>개방형 로그</b><div class="muted">순환 지표(재방문·교환) 공개 선택</div>
-          </div></div>
-          <div class="li"><span class="dot"></span><div>
-            <b>팀 협업</b><div class="muted">역할/권한, 에셋 CDN</div>
-          </div></div>
-        </div>
-
-        <!-- 철학 자세히 -->
-        <div class="col-12">
-          <details>
-            <summary>왜 ‘구멍을 막지 않고’ 설계하나요?</summary>
-            <p style="margin:8px 0 0">
-              구멍을 막으면 일시적으로는 고이지만 오래가면 썩습니다. 반대로, 순환 가능한 구멍을
-              설계하면 작은 방문이 저장으로, 저장이 재방문으로 이어져 <i>살아 있는</i> 공간이 됩니다.
-              LocalFlow의 루프는 <b>Attract → Capture → Weave → Surface → Nudge → Loop</b> 6단계로 돌며
-              중앙집중 대신 <b>분배와 회전</b>을 목표로 합니다.
-            </p>
-          </details>
-        </div>
+        </details>
       </div>
+
     </div>
-  </section>
-
-  <!-- Finance -->
-  <section id="finance">
-    <div class="wrap" >
-      <h2 style="font-size:clamp(20px,4vw,28px);margin-bottom:18px;">
-        재정 기반 — 어떻게 운영되나요?
-      </h2>
-
-      <div class="grid cols-4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
-        <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-          <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:.8rem;font-weight:600;">① 유입</span>
-          <h3 style="margin:10px 0 6px;font-size:18px;">전역 광고</h3>
-          <p style="margin:0;color:#6b7280;">많은 사용자의 관심이 재정의 첫 흐름이 됩니다.</p>
-        </div>
-        <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-          <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#fefce8;border:1px solid #fef08a;color:#854d0e;font-size:.8rem;font-weight:600;">② 펀딩</span>
-          <h3 style="margin:10px 0 6px;font-size:18px;">펀딩의 흐름</h3>
-          <p style="margin:0;color:#6b7280;">짧게는 한 주, 길게는 한 해.<br>작은 참여들이 모여 지역의 순환을 이어갑니다.</p>
-        </div>
-        <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-          <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;font-size:.8rem;font-weight:600;">③ 판매</span>
-          <h3 style="margin:10px 0 6px;font-size:18px;">제품 판매</h3>
-          <p style="margin:0;color:#6b7280;">로컬플로우만의 굿즈를 직접 제작하고<br>수익 일부를 순환 구조로 환원합니다.</p>
-        </div>
-
-        <div class="card" style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#fff;">
-          <span class="pill" style="display:inline-block;padding:.3rem .8rem;border-radius:999px;background:#fdf2f8;border:1px solid #fbcfe8;color:#831843;font-size:.8rem;font-weight:600;">④ 순환</span>
-          <h3 style="margin:10px 0 6px;font-size:18px;">로컬 환원</h3>
-          <p style="margin:0;color:#6b7280;">모인 재정은 다시 쿠폰, 이벤트, 지역 지원으로<br>되돌아가며 루프를 완성합니다.</p>
-        </div>
-      </div>
-
-      <div style="margin-top:32px;text-align:center;color:#6b7280;font-size:15px;">
-        이 모든 과정은 다시 지역으로 돌아갑니다.<br>
-        LocalFlow의 재정은 이윤이 아닌 <strong>순환</strong>을 목표로 합니다.
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
   <!-- Footer -->
   <footer>
