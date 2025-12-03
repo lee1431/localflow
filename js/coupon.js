@@ -60,7 +60,7 @@ function initCouponCountdown(){
   function submitCouponEmail(){
 	  const email = document.getElementById("couponEmail").value.trim();
 	  const msg = document.getElementById("couponSuccessMsg");
-	  const couponName = document.getElementById("couponModalTitle").value.trim();
+	  const couponName = document.getElementById("couponModalTitle").textContent.trim();
 	
 	  if (!email){
 	    alert("이메일을 입력해주세요!");
