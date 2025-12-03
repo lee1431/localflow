@@ -58,22 +58,45 @@ function initCouponCountdown(){
   }
 
   function submitCouponEmail(){
-    const email = document.getElementById("couponEmail").value.trim();
-    const msg = document.getElementById("couponSuccessMsg");
-
-    if (!email){
-      alert("이메일을 입력해주세요!");
-      return;
-    }
+	  const email = document.getElementById("couponEmail").value.trim();
+	  const msg = document.getElementById("couponSuccessMsg");
+	  const couponName = document.getElementById("couponName").value.trim();
 	
-    const naverOnly = /^[a-zA-Z0-9._%+-]+@naver\.com$/;
-
-	if (!naverOnly.test(email)) {
-		alert("네이버 메일(@naver.com)만 응모할 수 있습니다.");
-		return;
+	  if (!email){
+	    alert("이메일을 입력해주세요!");
+	    return;
+	  }
+	
+	  const naverOnly = /^[a-zA-Z0-9._%+-]+@naver\.com$/;
+	  if (!naverOnly.test(email)) {
+	    alert("네이버 메일(@naver.com)만 응모할 수 있습니다.");
+	    return;
+	  }
+	
+	  if (!couponName){
+	    alert("쿠폰명이 비어있습니다.");
+	    return;
+	  }
+	
+	  const ts = new Date().toISOString();
+	
+	  const url = `https://mrdindoin.ddns.net/event/join?couponName=${encodeURIComponent(couponName)}&email=${encodeURIComponent(email)}&ts=${encodeURIComponent(ts)}`;
+	
+	  console.log("📡 GET 요청:", url);
+	
+	  fetch(url, {
+	    method: "GET"
+	  })
+	  .then(res => res.text())
+	  .then(data => {
+	    console.log("서버 응답:", data);
+	
+	    msg.textContent = "🎉 응모가 접수되었습니다!";
+	    msg.style.display = "block";
+	  })
+	  .catch(err => {
+	    console.error("Fetch 오류:", err);
+	    msg.textContent = "⚠️ 서버 요청에 실패했습니다.";
+	    msg.style.display = "block";
+	  });
 	}
-
-    // 여기서 서버로 보내면 됨 (fetch API)
-    msg.textContent = "🎉 응모가 접수되었습니다!";
-    msg.style.display = "block";
-  }
