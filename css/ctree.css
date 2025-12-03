@@ -57,7 +57,7 @@
 /* 얼굴 */
 .lf-tree-face {
   position: absolute;
-  top: 32%;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   width: 380px;
