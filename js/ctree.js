@@ -57,7 +57,7 @@ fetch("https://mrdindoin.ddns.net/data/talktree.json")
 function showTreeLine() {
   if (!isLineLoaded || treeLines.length === 0) return;
 
-  const lineEl = document.getElementById("lf-tree-dialog");
+  const lineEl = document.getElementById("lf-treeDialog");
   const randomLine = treeLines[Math.floor(Math.random() * treeLines.length)];
 
   lineEl.textContent = randomLine;
