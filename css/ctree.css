@@ -33,12 +33,13 @@
 .lf-tree-body {
   width: 100%;
   height: 100%;
-  border-radius: 120px 120px 30px 30px;
-  background: radial-gradient(circle at 30% 10%, #a3e635, #4ade80 50%, #15803d 100%);
-  box-shadow: 0 12px 25px rgba(22,163,74,0.35);
+  position: relative;
+  /* 나무 이미지를 배경으로 사용 */
+  background: url("./img/ctree-body.png") center bottom / contain no-repeat;
   transform-origin: bottom center;
   transition: transform 0.08s ease-out;
-  position: relative;
+  /* 필요하면 그림자 조금만 남기기 */
+  box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35);
 }
 
 .lf-tree-trunk {
