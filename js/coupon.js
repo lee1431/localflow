@@ -57,12 +57,15 @@ function initCouponCountdown(){
     document.getElementById("couponEmail").value = "";
   }
 
-  function submitCouponEmail(){
+  function submitCouponEmail() {
 	  const email = document.getElementById("couponEmail").value.trim();
-	  const msg = document.getElementById("couponSuccessMsg");
+	  const msg   = document.getElementById("couponSuccessMsg");
+	  const btn   = document.getElementById("couponSubmitBtn");
+	
+	  // 쿠폰 이름 가져오기 (중요!!)
 	  const couponName = document.getElementById("couponModalTitle").textContent.trim();
 	
-	  if (!email){
+	  if (!email) {
 	    alert("이메일을 입력해주세요!");
 	    return;
 	  }
@@ -73,30 +76,25 @@ function initCouponCountdown(){
 	    return;
 	  }
 	
-	  if (!couponName){
-	    alert("쿠폰명이 비어있습니다.");
-	    return;
-	  }
+	  // 현재 시간
+	  const now = encodeURIComponent(new Date().toISOString());
 	
-	  const ts = new Date().toISOString();
+	  // 서버로 GET 요청 보내기
+	  const url = `https://mrdindoin.ddns.net/event/join?coupon=${encodeURIComponent(couponName)}&email=${encodeURIComponent(email)}&time=${now}`;
 	
-	  const url = `https://mrdindoin.ddns.net/event/join?couponName=${encodeURIComponent(couponName)}&email=${encodeURIComponent(email)}&ts=${encodeURIComponent(ts)}`;
+	  fetch(url)
+	    .then(res => res.text())
+	    .then(data => {
+	      // 성공 메시지 표시
+	      msg.textContent = "🎉 응모가 접수되었습니다!";
+	      msg.style.display = "block";
 	
-	  console.log("📡 GET 요청:", url);
-	
-	  fetch(url, {
-	    method: "GET"
-	  })
-	  .then(res => res.text())
-	  .then(data => {
-	    console.log("서버 응답:", data);
-	
-	    msg.textContent = "🎉 응모가 접수되었습니다!";
-	    msg.style.display = "block";
-	  })
-	  .catch(err => {
-	    console.error("Fetch 오류:", err);
-	    msg.textContent = "⚠️ 서버 요청에 실패했습니다.";
-	    msg.style.display = "block";
-	  });
+	      // 버튼을 닫기 버튼으로 변경
+	      btn.textContent = "닫기";
+	      btn.onclick = closeCouponModal;
+	    })
+	    .catch(err => {
+	      alert("서버 요청 중 오류가 발생했습니다.");
+	      console.error(err);
+	    });
 	}
