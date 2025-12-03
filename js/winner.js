@@ -102,32 +102,7 @@ function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout
 
 fetchApplicants();
 
-  
 
-/* ---------- 2) 상품 종류 및 재고 ---------- */
-const prizeGrid = $("#prizeGrid");
-async function loadPrizes(){
-  prizeGrid.innerHTML = "";
-  try{
-    const r = await fetch(API.prizes, {cache:"no-store"});
-    const j = r.ok ? await r.json() : {items:[]};
-    (j.items||[]).forEach(p=>{
-      const img = p.img ? `<img src="${encodeURI(p.img)}" loading="lazy" alt="${escapeHtml(p.name)}">`
-                        : `<span class="muted">No Image</span>`;
-      prizeGrid.insertAdjacentHTML("beforeend", `
-        <article class="prize">
-          <div class="thumb">${img}</div>
-          <div class="meta">
-            <div><strong>${escapeHtml(p.name)}</strong><div class="stock">재고 <strong>${p.stock??"-"}</strong></div></div>
-            ${p.brand?`<span class="pill">${escapeHtml(p.brand)}</span>`:""}
-          </div>
-        </article>
-      `);
-    });
-  }catch(e){
-    prizeGrid.innerHTML = `<div class="card muted">상품 정보를 불러오지 못했습니다.</div>`;
-  }
-}
 
 /* ---------- 3) 당첨자 후기 ---------- */
 const revGrid = $("#revGrid");
