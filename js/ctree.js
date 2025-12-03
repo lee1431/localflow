@@ -42,28 +42,44 @@ lfTreeHitbox.addEventListener("touchstart", e => {
 });
 
 
-let treeLines = [];
-let isLineLoaded = false;
+const treeLine = document.getElementById("lf-treeDialog");
+let linesDB = null;
+let lastLineTime = 0;
 
-// JSON 로드
+// JSON 불러오기
 fetch("https://mrdindoin.ddns.net/data/talktree.json")
   .then(res => res.json())
-  .then(data => {
-    treeLines = data.lines;
-    isLineLoaded = true;
-  });
+  .then(data => linesDB = data);
 
-// 랜덤 문장 출력
+// 말 한마디 선택 (카테고리 랜덤)
+function pickRandomLine() {
+  if (!linesDB) return null;
+
+  const types = ["wit", "philosophy", "joke"];
+  const pickType = types[Math.floor(Math.random() * types.length)];
+  const arr = linesDB[pickType];
+
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// 대사 출력 (fade-in / fade-out)
 function showTreeLine() {
-  if (!isLineLoaded || treeLines.length === 0) return;
+  // 1) 쿨타임 — 1분에 1번만 허용
+  const now = Date.now();
+  if (now - lastLineTime < 60000) return; 
+  lastLineTime = now;
 
-  const lineEl = document.getElementById("lf-treeDialog");
-  const randomLine = treeLines[Math.floor(Math.random() * treeLines.length)];
+  // 2) 확률 조건 (20%)
+  if (Math.random() > 0.2) return;
 
-  lineEl.textContent = randomLine;
+  const line = pickRandomLine();
+  if (!line) return;
 
-  // fade-in
-  lineEl.classList.remove("show");
-  void lineEl.offsetWidth; 
-  lineEl.classList.add("show");
+  treeLine.textContent = line;
+  treeLine.classList.add("show");
+
+  // 3초 후 fade-out
+  setTimeout(() => {
+    treeLine.classList.remove("show");
+  }, 3000);
 }
