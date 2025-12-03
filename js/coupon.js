@@ -52,10 +52,12 @@ function initCouponCountdown(){
     document.getElementById("couponSuccessMsg").style.display = "none";
   }
 
-  function closeCouponModal(){
-    document.getElementById("couponModal").style.display = "none";
-    document.getElementById("couponEmail").value = "";
-  }
+  function closeCouponModal() {
+	  document.getElementById("couponModal").style.display = "none";
+	  const btn = document.getElementById("couponSubmitBtn");
+	  btn.textContent = "응모완료";
+	  btn.onclick = submitCouponEmail;
+	}
 
   function submitCouponEmail() {
 	  const email = document.getElementById("couponEmail").value.trim();
