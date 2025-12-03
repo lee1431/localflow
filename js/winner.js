@@ -105,7 +105,7 @@ function renderApplicants(j){
 
 function toKST(dateStr){
     try {
-        const d = new Date(utcString);   // UTC → Date 객체
+        const d = new Date(dateStr);   // UTC → Date 객체
         const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000); // +9시간
       
         const yyyy = kst.getFullYear();
