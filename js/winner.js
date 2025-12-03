@@ -66,7 +66,7 @@ function renderApplicants(j){
     return `
       <tr>
         <td>${escapeHtml(a.email || "")}</td>
-        <td>${escapeHtml(a.date || "-")}</td>
+        <td>${escapeHtml(toKST(a.date) || "-")}</td>
         <td>${st}</td>
       </tr>
     `;
@@ -103,6 +103,26 @@ function renderApplicants(j){
 }
 
 
+function toKST(dateStr){
+    try {
+        const d = new Date(dateStr.replace(/-/g,"/"));
+        if (isNaN(d)) return dateStr;
+
+        const kst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+
+        const yyyy = kst.getFullYear();
+        const mm = String(kst.getMonth()+1).padStart(2,"0");
+        const dd = String(kst.getDate()).padStart(2,"0");
+        const hh = String(kst.getHours()).padStart(2,"0");
+        const min = String(kst.getMinutes()).padStart(2,"0");
+
+        return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+    } catch(e){
+        return dateStr;
+    }
+}
+
+
 if (listSearch) listSearch.addEventListener("input", debounce(()=>{
   applState.q = (listSearch.value||"").trim();
   applState.page = 1;
@@ -126,7 +146,6 @@ function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<"
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 fetchApplicants();
-
 
 
 /* ---------- 3) 당첨자 후기 ---------- */
