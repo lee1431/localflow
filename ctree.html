@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>LocalFlow · 쿠폰나무</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      color: #222;
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #ddd;
+      background: #fff;
+    }
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    header p {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 1rem;
+      padding: 1rem 1.5rem 1.5rem;
+    }
+
+    /* 쿠폰 그리드 */
+    .coupon-panel {
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.8rem;
+      border: 1px solid #e4e4e7;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      overflow: hidden;
+    }
+
+    .coupon-panel h2 {
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .coupon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .coupon-card {
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+      padding: 0.5rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .coupon-card strong {
+      font-size: 0.85rem;
+    }
+    .coupon-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    /* 중앙 나무 영역 */
+    .tree-panel {
+      position: relative;
+      background: linear-gradient(to bottom, #d7f3ff 0%, #fefae0 60%, #f5f5f5 100%);
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 0.8rem 0.8rem 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tree-top-text {
+      font-size: 0.8rem;
+      color: #555;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .tree-area {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .tree-hitbox {
+      width: 180px;
+      height: 260px;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .tree-body {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px 999px 30px 30px;
+      background: radial-gradient(circle at 30% 10%, #a3e635, #4ade80 50%, #15803d 100%);
+      position: relative;
+      box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35);
+      transform-origin: bottom center;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* 나무 줄기 */
+    .tree-trunk {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 70px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, #92400e, #451a03);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 얼굴 블러 영역 */
+    .face-blur {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      filter: blur(4px);
+      opacity: 0.8;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .face-blur img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 나무 흔들림 */
+    .tree-body.shake {
+      animation: tree-shake 0.15s ease-in-out 1;
+    }
+    @keyframes tree-shake {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(-3deg); }
+      50%  { transform: rotate(3deg); }
+      75%  { transform: rotate(-2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* 떨어지는 쿠폰 */
+    .falling-coupon {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      padding: 0.4rem 0.5rem;
+      background: #fbbf24;
+      color: #111827;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+      animation: fall-down 0.9s ease-in forwards;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+    }
+
+    .falling-coupon small {
+      font-size: 0.65rem;
+      opacity: 0.8;
+    }
+
+    @keyframes fall-down {
+      0%   { transform: translate(-50%, -20px); opacity: 0; }
+      40%  { opacity: 1; }
+      100% { transform: translate(-50%, 120px); opacity: 0; }
+    }
+
+    .tree-bottom {
+      margin-top: 0.4rem;
+      width: 100%;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .tree-stats {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      color: #444;
+    }
+
+    .tree-hint {
+      color: #888;
+      font-size: 0.7rem;
+    }
+
+    /* 간단 모달 */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      background: #fff;
+      padding: 1rem 1.2rem;
+      border-radius: 14px;
+      max-width: 280px;
+      width: 80%;
+      text-align: center;
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.35);
+      font-size: 0.85rem;
+    }
+
+    .modal h3 {
+      margin-bottom: 0.4rem;
+      font-size: 1rem;
+    }
+    .modal p {
+      margin-bottom: 0.7rem;
+      color: #444;
+    }
+    .modal button {
+      border: none;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    /* 반응형 */
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .coupon-panel:nth-child(1),
+      .coupon-panel:nth-child(3) {
+        order: 2;
+      }
+      .tree-panel {
+        order: 1;
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>LocalFlow 쿠폰나무</h1>
+      <p>가운데 나무를 털어보세요. 가끔, 아주 가끔… 쿠폰이 하나 툭 떨어집니다.</p>
+    </header>
+
+    <main class="layout">
+      <!-- 좌측 쿠폰 리스트 -->
+      <section class="coupon-panel">
+        <h2>오늘의 쿠폰</h2>
+        <div class="coupon-grid">
+          <article class="coupon-card">
+            <strong>BHC 치킨 한 마리</strong>
+            <div class="coupon-meta">
+              <span>50% 할인</span>
+              <span>잔량 5</span>
+            </div>
+          </article>
+          <article class="coupon-card">
+            <strong>성수농원 체리 2kg</strong>
+            <div class="coupon-meta">
+              <span>5,000원 할인</span>
+              <span>잔량 5</span>
+            </div>
+          </article>
+          <article class="coupon-card">
+            <strong>로컬 카페 아메리카노</strong>
+            <div class="coupon-meta">
+              <span>1+1</span>
+              <span>잔량 20</span>
+            </div>
+          </article>
+          <!-- 필요하면 계속 추가 -->
+        </div>
+      </section>
+
+      <!-- 중앙 쿠폰나무 -->
+      <section class="tree-panel">
+        <div class="tree-top-text">
+          마우스 또는 손가락으로<br />
+          <strong>쿠폰나무를 마구 털어보세요!</strong>
+        </div>
+        <div class="tree-area">
+          <div class="tree-hitbox" id="treeHitbox" aria-label="쿠폰나무 흔들기" role="button">
+            <div class="tree-body" id="treeBody">
+              <div class="face-blur">
+                <!-- 여기에 네 얼굴 살짝 블러 된 이미지 넣으면 됨 -->
+                <img src="tree-face.png" alt="나무 얼굴" />
+              </div>
+              <div class="tree-trunk"></div>
+            </div>
+          </div>
+          <!-- 떨어지는 쿠폰은 JS로 생성 -->
+        </div>
+        <div class="tree-bottom">
+          <div class="tree-stats">
+            <span>오늘 클릭: <span id="clickCount">0</span>회</span>
+            <span>획득 쿠폰: <span id="dropCount">0</span>개</span>
+          </div>
+          <div class="tree-hint">
+            ※ 너무 빠르게 연타하면 나무가 화낼 수 있어요 😈 (쿨타임 살짝 있음)
+          </div>
+        </div>
+      </section>
+
+      <!-- 우측 쿠폰 리스트 (예비 / 광고 영역 등) -->
+      <section class="coupon-panel">
+        <h2>이달의 스페셜</h2>
+        <div class="coupon-grid">
+          <article class="coupon-card">
+            <strong>충주 시내 4인 가족 식사권</strong>
+            <div class="coupon-meta">
+              <span>15만원권</span>
+              <span>월간룹</span>
+            </div>
+          </article>
+          <article class="coupon-card">
+            <strong>충주사랑상품권</strong>
+            <div class="coupon-meta">
+              <span>1만원권</span>
+              <span>잔량 5</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 모달 -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h3>쿠폰이 떨어졌습니다! 🎉</h3>
+      <p id="modalCouponText">예시 쿠폰 텍스트</p>
+      <button type="button" id="modalCloseBtn">확인</button>
+    </div>
+  </div>
+
+  <script>
+    const treeHitbox = document.getElementById("treeHitbox");
+    const treeBody = document.getElementById("treeBody");
+    const clickCountEl = document.getElementById("clickCount");
+    const dropCountEl = document.getElementById("dropCount");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalCouponText = document.getElementById("modalCouponText");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+    // 쿠폰 풀 (나중에 실제 JSON으로 교체 가능)
+    const couponPool = [
+      "BHC 치킨 한 마리 50% 할인 쿠폰",
+      "성수농원 체리 2kg · 5,000원 할인",
+      "로컬 카페 아메리카노 1+1 쿠폰",
+      "충주사랑상품권 1만원권"
+    ];
+
+    let clickCount = 0;
+    let dropCount = 0;
+    let isCooling = false;
+
+    function randomCoupon() {
+      const idx = Math.floor(Math.random() * couponPool.length);
+      return couponPool[idx];
+    }
+
+    function showFallingCoupon(text) {
+      const falling = document.createElement("div");
+      falling.className = "falling-coupon";
+      falling.innerHTML = `
+        <small>쿠폰나무에서 떨어진 열매</small>
+        <strong>${text}</strong>
+      `;
+      const treeArea = document.querySelector(".tree-area");
+      treeArea.appendChild(falling);
+      setTimeout(() => {
+        falling.remove();
+      }, 900);
+    }
+
+    function openModal(text) {
+      modalCouponText.textContent = text;
+      modalBackdrop.style.display = "flex";
+    }
+
+    function closeModal() {
+      modalBackdrop.style.display = "none";
+    }
+
+    function handleShake() {
+      // 너무 빠른 연타 방지용 쿨타임
+      if (isCooling) return;
+      isCooling = true;
+      setTimeout(() => (isCooling = false), 120);
+
+      clickCount++;
+      clickCountEl.textContent = clickCount;
+
+      // 나무 흔들기 애니메이션
+      treeBody.classList.remove("shake");
+      void treeBody.offsetWidth; // reflow trick
+      treeBody.classList.add("shake");
+
+      // 확률 (2% 정도)
+      const chance = 0.02;
+      if (Math.random() < chance) {
+        dropCount++;
+        dropCountEl.textContent = dropCount;
+
+        const couponText = randomCoupon();
+        showFallingCoupon(couponText);
+        openModal(couponText);
+      }
+    }
+
+    treeHitbox.addEventListener("click", handleShake);
+    treeHitbox.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      handleShake();
+    });
+
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+  </script>
+</body>
+</html>
