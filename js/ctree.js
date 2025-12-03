@@ -26,6 +26,8 @@ function lfShake() {
   void lfTreeBody.offsetWidth;
   lfTreeBody.classList.add("shake");
 
+  showTreeLine();
+
   if (Math.random() < 0.02) {
     dropCount++;
     lfDropCount.textContent = dropCount;
@@ -38,3 +40,30 @@ lfTreeHitbox.addEventListener("touchstart", e => {
   e.preventDefault();
   lfShake();
 });
+
+
+let treeLines = [];
+let isLineLoaded = false;
+
+// JSON 로드
+fetch("https://mrdindoin.ddns.net/data/talktree.json")
+  .then(res => res.json())
+  .then(data => {
+    treeLines = data.lines;
+    isLineLoaded = true;
+  });
+
+// 랜덤 문장 출력
+function showTreeLine() {
+  if (!isLineLoaded || treeLines.length === 0) return;
+
+  const lineEl = document.getElementById("treeLine");
+  const randomLine = treeLines[Math.floor(Math.random() * treeLines.length)];
+
+  lineEl.textContent = randomLine;
+
+  // fade-in
+  lineEl.classList.remove("show");
+  void lineEl.offsetWidth; 
+  lineEl.classList.add("show");
+}
