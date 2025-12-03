@@ -80,6 +80,15 @@
   animation: lfTreeShake 0.15s ease-in-out 1;
 }
 
+.lf-tree-body.shake::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('./img/tree.png') center/contain no-repeat;
+    opacity: 0.05;
+    transform: translateX(5px);
+}
+
 @keyframes lfTreeShake {
   0%   { transform: rotate(0deg); }
   25%  { transform: rotate(-3deg); }
