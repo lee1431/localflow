@@ -59,24 +59,49 @@ async function fetchApplicants(){
 function renderApplicants(j){
   // rows
   const rows = (j.items||[]).map(a=>{
-    const st = a.win ? `<span class="status-pill win">당첨</span>`
-                     : `<span class="status-pill ok">응모</span>`;
-    return `<tr>
-      <td>${escapeHtml(a.email||"")}</td>
-      <td>${escapeHtml(a.date||"-")}</td>
-      <td>${st}</td>
-    </tr>`;
+    const st = a.win 
+      ? `<span class="status-pill win">당첨</span>`
+      : `<span class="status-pill ok">응모</span>`;
+
+    return `
+      <tr>
+        <td>${escapeHtml(a.email || "")}</td>
+        <td>${escapeHtml(a.date || "-")}</td>
+        <td>${st}</td>
+      </tr>
+    `;
   }).join("");
 
-  applTbody.innerHTML = rows || `<tr><td colspan="4" class="muted">검색 결과가 없습니다.</td></tr>`;
+  applTbody.innerHTML = rows || `
+    <tr>
+      <td colspan="3" class="muted">검색 결과가 없습니다.</td>
+    </tr>
+  `;
 
   // pager
-  applInfo.textContent = `총 ${j.total?.toLocaleString?.()||0}명 · ${j.page}/${j.pages||1} 페이지`;
+  applInfo.textContent =
+    `총 ${j.total?.toLocaleString?.() || 0}명 · ${j.page}/${j.pages || 1} 페이지`;
+
   btnPrev.disabled = (j.page <= 1);
   btnNext.disabled = !j.has_next;
-  btnPrev.onclick  = ()=>{ if(j.page>1){ applState.page = j.page-1; fetchApplicants(); window.scrollTo({top:0,behavior:"smooth"});} };
-  btnNext.onclick  = ()=>{ if(j.has_next){ applState.page = j.page+1; fetchApplicants(); window.scrollTo({top:0,behavior:"smooth"});} };
+
+  btnPrev.onclick = ()=>{
+    if(j.page > 1){
+      applState.page = j.page - 1;
+      fetchApplicants();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+  };
+
+  btnNext.onclick = ()=>{
+    if(j.has_next){
+      applState.page = j.page + 1;
+      fetchApplicants();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+  };
 }
+
 
 if (listSearch) listSearch.addEventListener("input", debounce(()=>{
   applState.q = (listSearch.value||"").trim();
@@ -153,6 +178,4 @@ function escapeHtmlJS(s){ return escapeHtml(s).replace(/\n/g," "); }
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 /* ---------- init ---------- */
-
-loadPrizes();
 loadReviews();
