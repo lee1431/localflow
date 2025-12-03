@@ -147,26 +147,25 @@
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
     }
 
-    /* 얼굴 블러 영역 */
-    .face-blur {
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      overflow: hidden;
-      filter: blur(4px);
-      opacity: 0.8;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .face-blur img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  /* 얼굴 블러 영역 */
+  	.face-blur {
+  	  position: absolute;
+  	  top: 30%;
+  	  left: 50%;
+  	  transform: translateX(-50%);
+  	  width: 80px;
+  	  height: 80px;
+  	  border-radius: 50%;
+  	  overflow: hidden;
+  	  /* 이 두 줄이 흐릿하게 만드는 주범 */
+  	  /* filter: blur(4px); */
+  	  /* opacity: 0.8; */
+  
+  	  /* 선명하게 보이도록 이렇게 변경 */
+  	  filter: none;
+  	  opacity: 1;
+  	  border: 2px solid rgba(255, 255, 255, 0.3);
+  	}
 
     /* 나무 흔들림 */
     .tree-body.shake {
