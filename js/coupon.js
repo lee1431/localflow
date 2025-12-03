@@ -62,7 +62,7 @@ function initCouponCountdown(){
   function submitCouponEmail() {
 	  const email = document.getElementById("couponEmail").value.trim();
 	  const msg   = document.getElementById("couponSuccessMsg");
-	  const btn   = document.getElementById("couponSubmitBtn");
+	  const btn   = document.getElementById("coupon-submit-btn");
 	
 	  // 쿠폰 이름 가져오기 (중요!!)
 	  const couponName = document.getElementById("couponModalTitle").textContent.trim();
