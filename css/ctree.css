@@ -34,12 +34,13 @@
   width: 100%;
   height: 100%;
   position: relative;
-  /* 나무 이미지를 배경으로 사용 */
-  background: url("./img/ctree-body.png") center bottom / contain no-repeat;
+  background: url("./img/tree.png") center center / contain no-repeat;
   transform-origin: bottom center;
   transition: transform 0.08s ease-out;
-  /* 필요하면 그림자 조금만 남기기 */
-  box-shadow: 0 12px 25px rgba(22, 163, 74, 0.35);
+
+  /* 아이스크림 모양 제거 */
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .lf-tree-trunk {
