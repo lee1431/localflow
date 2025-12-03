@@ -63,7 +63,6 @@ function renderApplicants(j){
                      : `<span class="status-pill ok">응모</span>`;
     return `<tr>
       <td>${escapeHtml(a.email||"")}</td>
-      <td>${escapeHtml(a.nick||"-")}</td>
       <td>${escapeHtml(a.date||"-")}</td>
       <td>${st}</td>
     </tr>`;
