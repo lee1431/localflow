@@ -24,9 +24,7 @@ function lfShake() {
 
   lfTreeBody.classList.remove("shake");
   void lfTreeBody.offsetWidth;
-  lfTreeBody.classList.add("shake");
-
-  showTreeLine();
+  lfTreeBody.classList.add("shake
 
   if (Math.random() < 0.02) {
     dropCount++;
@@ -51,7 +49,7 @@ fetch("https://mrdindoin.ddns.net/data/talktree.json")
   .then(res => res.json())
   .then(data => linesDB = data);
 
-// 말 한마디 선택 (카테고리 랜덤)
+// 랜덤 문구 선택
 function pickRandomLine() {
   if (!linesDB) return null;
 
@@ -62,24 +60,29 @@ function pickRandomLine() {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// 대사 출력 (fade-in / fade-out)
+// 자동 대사 출력
 function showTreeLine() {
-  // 1) 쿨타임 — 1분에 1번만 허용
   const now = Date.now();
-  if (now - lastLineTime < 6000) return; 
+
+  // 쿨타임 5초
+  if (now - lastLineTime < 5000) return;
   lastLineTime = now;
 
-  // 2) 확률 조건 (20%)
+  // 확률 20%
   if (Math.random() > 0.2) return;
 
   const line = pickRandomLine();
   if (!line) return;
 
+  // 표시
   treeLine.textContent = line;
   treeLine.classList.add("show");
 
-  // 3초 후 fade-out
+  // 3초 후 사라짐
   setTimeout(() => {
     treeLine.classList.remove("show");
   }, 3000);
 }
+
+// 자동 반복 — 매초 체크
+setInterval(showTreeLine, 1000);
