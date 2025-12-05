@@ -68,9 +68,6 @@ function showTreeLine() {
   if (now - lastLineTime < 5000) return;
   lastLineTime = now;
 
-  // 확률 20%
-  if (Math.random() > 0.2) return;
-
   const line = pickRandomLine();
   if (!line) return;
 
