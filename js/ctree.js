@@ -66,7 +66,7 @@ function pickRandomLine() {
 function showTreeLine() {
   // 1) 쿨타임 — 1분에 1번만 허용
   const now = Date.now();
-  if (now - lastLineTime < 60000) return; 
+  if (now - lastLineTime < 6000) return; 
   lastLineTime = now;
 
   // 2) 확률 조건 (20%)
