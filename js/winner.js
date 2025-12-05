@@ -66,6 +66,7 @@ function renderApplicants(j){
     return `
       <tr>
         <td>${escapeHtml(a.email || "")}</td>
+        <td>${escapeHtml(a.coupon || "")}</td>
         <td>${escapeHtml(toKST(a.date) || "-")}</td>
         <td>${st}</td>
       </tr>
