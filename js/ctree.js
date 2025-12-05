@@ -24,7 +24,7 @@ function lfShake() {
 
   lfTreeBody.classList.remove("shake");
   void lfTreeBody.offsetWidth;
-  lfTreeBody.classList.add("shake
+  lfTreeBody.classList.add("shake");
 
   if (Math.random() < 0.02) {
     dropCount++;
