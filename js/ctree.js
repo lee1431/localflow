@@ -42,12 +42,21 @@ lfTreeHitbox.addEventListener("touchstart", e => {
 
 const treeLine = document.getElementById("lf-treeDialog");
 let linesDB = null;
-let lastLineTime = 0;
 
 // JSON 불러오기
 fetch("https://mrdindoin.ddns.net/data/talktree.json")
   .then(res => res.json())
-  .then(data => linesDB = data);
+  .then(data => {
+    linesDB = data;
+    // 로딩 끝나면 바로 한 번 말하게
+    showTreeLine();
+
+    // 이후 5초마다 자동 대사
+    setInterval(showTreeLine, 5000);
+  })
+  .catch(err => {
+    console.error("talktree.json 로드 오류:", err);
+  });
 
 // 랜덤 문구 선택
 function pickRandomLine() {
@@ -57,21 +66,15 @@ function pickRandomLine() {
   const pickType = types[Math.floor(Math.random() * types.length)];
   const arr = linesDB[pickType];
 
+  if (!arr || !arr.length) return null;
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// 자동 대사 출력
+// 대사 출력 (확률/쿨타임 없이 무조건 실행)
 function showTreeLine() {
-  const now = Date.now();
-
-  // 쿨타임 5초
-  if (now - lastLineTime < 5000) return;
-  lastLineTime = now;
-
   const line = pickRandomLine();
   if (!line) return;
 
-  // 표시
   treeLine.textContent = line;
   treeLine.classList.add("show");
 
