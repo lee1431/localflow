@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>LocalFlow 쿠폰나무</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* ============ LocalFlow Coupon Tree ============ */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+    }
+
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .lf-tree-panel {
+      margin: 0 auto;
+      max-width: 460px;
+      background: linear-gradient(to bottom, #d7f3ff, #fff9db, #fafafa);
+      border-radius: 20px;
+      padding: 1.5rem 1rem 1.75rem;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    }
+
+    .lf-tree-top-text {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .lf-tree-top-text strong {
+      color: #e11d48;
+    }
+
+    .lf-tree-area {
+      position: relative; /* 말풍선/트리 기준 */
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lf-tree-hitbox {
+      width: 280px;
+      height: 380px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .lf-tree-body {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: url("./img/ctree.png") center center / contain no-repeat;
+      transform-origin: bottom center;
+      transition: transform 0.08s ease-out;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .lf-tree-trunk {
+      position: absolute;
+      width: 40px;
+      height: 70px;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 40px;
+      background: linear-gradient(to bottom, #a16207, #451a03);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 얼굴 오버레이 */
+    .lf-tree-face {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 380px;
+      height: 380px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.12);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .lf-tree-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 흔들림 애니메이션 */
+    .lf-tree-body.shake {
+      animation: lfTreeShake 0.15s ease-in-out 1;
+    }
+
+    .lf-tree-body.shake::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("./img/ctree.png") center/contain no-repeat;
+      opacity: 0.05;
+      transform: translateX(5px);
+    }
+
+    @keyframes lfTreeShake {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(-3deg); }
+      50%  { transform: rotate(3deg); }
+      75%  { transform: rotate(-2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* 말풍선 */
+    .lf-tree-dialog {
+      position: absolute;
+      bottom: -4px;          /* 트리 아래쪽 살짝 위 */
+      left: 50%;
+      transform: translate(-50%, 100%);
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.78);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lf-tree-dialog.show {
+      opacity: 1;
+    }
+
+    .lf-tree-bottom {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #444;
+    }
+
+    .lf-tree-stats {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .lf-tree-stats span span {
+      font-weight: 600;
+      color: #1d4ed8;
+    }
+
+    .lf-tree-hint {
+      color: #777;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      .lf-tree-panel {
+        padding: 1.25rem 0.75rem 1.5rem;
+      }
+      .lf-tree-area {
+        height: 360px;
+      }
+      .lf-tree-hitbox {
+        width: 230px;
+        height: 320px;
+      }
+      .lf-tree-face {
+        width: 320px;
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <section class="lf-tree-panel">
+
+      <div class="lf-tree-top-text">
+        마우스 또는 손가락으로<br />
+        <strong>쿠폰나무를 마구 털어보세요!</strong>
+      </div>
+
+      <div class="lf-tree-area">
+        <div class="lf-tree-hitbox" id="lfTreeHitbox" role="button" aria-label="쿠폰나무 흔들기">
+          <div class="lf-tree-body" id="lfTreeBody">
+            <div class="lf-tree-face">
+              <!-- 여기 얼굴 사진 넣기 -->
+              <!-- <img src="./img/face_blur.jpg" alt="나무 얼굴" /> -->
+            </div>
+            <div class="lf-tree-trunk"></div>
+          </div>
+        </div>
+
+        <!-- 나무 대사 말풍선 -->
+        <div class="lf-tree-dialog" id="lf-treeDialog"></div>
+      </div>
+
+      <div class="lf-tree-bottom">
+        <div class="lf-tree-stats">
+          <span>오늘 클릭: <span id="lfClickCount">0</span>회</span>
+          <span>획득 쿠폰: <span id="lfDropCount">0</span>개</span>
+        </div>
+        <div class="lf-tree-hint">
+          ※ 너무 빠르게 연타하면 나무가 화낼 수 있어요 😈
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    // ====== 쿠폰나무 클릭/터치 로직 ======
+    const lfTreeHitbox = document.getElementById("lfTreeHitbox");
+    const lfTreeBody = document.getElementById("lfTreeBody");
+    const lfClickCountEl = document.getElementById("lfClickCount");
+    const lfDropCountEl = document.getElementById("lfDropCount");
+
+    let clickCount = 0;
+    let dropCount = 0;
+    let isCooling = false;
+
+    const lfCouponPool = [
+      "BHC 치킨 50% 할인쿠폰",
+      "성수농원 체리 2kg · 5,000원 할인",
+      "로컬 카페 아메리카노 1+1",
+      "충주사랑상품권 1만원권"
+    ];
+
+    function lfShake() {
+      if (isCooling) return;
+      isCooling = true;
+      setTimeout(() => (isCooling = false), 120);
+
+      clickCount++;
+      lfClickCountEl.textContent = clickCount;
+
+      lfTreeBody.classList.remove("shake");
+      void lfTreeBody.offsetWidth; // reflow로 애니메이션 재시작
+      lfTreeBody.classList.add("shake");
+
+      // 2% 확률로 쿠폰 드랍
+      if (Math.random() < 0.02) {
+        dropCount++;
+        lfDropCountEl.textContent = dropCount;
+        const prize = lfCouponPool[Math.floor(Math.random() * lfCouponPool.length)];
+        alert("쿠폰 획득!\n" + prize);
+      }
+    }
+
+    lfTreeHitbox.addEventListener("click", lfShake);
+    lfTreeHitbox.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      lfShake();
+    });
+
+    // ====== 나무 자동 대사 로직 ======
+    const treeLineEl = document.getElementById("lf-treeDialog");
+    let linesDB = null;
+
+    // 랜덤 문구 선택
+    function pickRandomLine() {
+      if (!linesDB) return null;
+
+      const types = ["wit", "philosophy", "joke"];
+      const pickType = types[Math.floor(Math.random() * types.length)];
+      const arr = linesDB[pickType];
+
+      if (!arr || !arr.length) return null;
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // 말풍선 출력 (무조건 실행 버전: 확률/쿨타임 없음)
+    function showTreeLine() {
+      const line = pickRandomLine();
+      if (!line) return;
+
+      treeLineEl.textContent = line;
+      treeLineEl.classList.add("show");
+
+      // 3초 후 페이드아웃
+      setTimeout(() => {
+        treeLineEl.classList.remove("show");
+      }, 3000);
+    }
+
+    // JSON 불러오고, 로딩 후 주기적으로 대사 출력
+    fetch("https://mrdindoin.ddns.net/data/talktree.json")
+      .then(res => res.json())
+      .then(data => {
+        linesDB = data;
+        // 로딩 끝나면 1번 말하기
+        showTreeLine();
+        // 이후 5초마다 자동 대사
+        setInterval(showTreeLine, 5000);
+      })
+      .catch(err => {
+        console.error("talktree.json 로드 오류:", err);
+      });
+  </script>
+</body>
+</html>
