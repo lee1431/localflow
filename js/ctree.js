@@ -80,6 +80,3 @@ function showTreeLine() {
     treeLine.classList.remove("show");
   }, 3000);
 }
-
-// 자동 반복 — 매초 체크
-setInterval(showTreeLine, 1000);
