@@ -1,7 +1,7 @@
 const lfTreeHitbox = document.getElementById("lfTreeHitbox");
 const lfTreeBody = document.getElementById("lfTreeBody");
-const lfClickCount = document.getElementById("lfClickCount");
-const lfDropCount = document.getElementById("lfDropCount");
+const lfClickCountEl = document.getElementById("lfClickCount");
+const lfDropCountEl = document.getElementById("lfDropCount");
 
 let clickCount = 0;
 let dropCount = 0;
@@ -20,7 +20,7 @@ function lfShake() {
   setTimeout(() => (isCooling = false), 120);
 
   clickCount++;
-  lfClickCount.textContent = clickCount;
+  lfClickCountEl.textContent = clickCount;
 
   lfTreeBody.classList.remove("shake");
   void lfTreeBody.offsetWidth;
@@ -28,58 +28,49 @@ function lfShake() {
 
   if (Math.random() < 0.02) {
     dropCount++;
-    lfDropCount.textContent = dropCount;
-    alert("쿠폰 획득!\n" + lfCouponPool[Math.floor(Math.random() * lfCouponPool.length)]);
+    lfDropCountEl.textContent = dropCount;
+    const prize = lfCouponPool[Math.floor(Math.random() * lfCouponPool.length)];
+    alert("쿠폰 획득!\n" + prize);
   }
 }
 
 lfTreeHitbox.addEventListener("click", lfShake);
-lfTreeHitbox.addEventListener("touchstart", e => {
+lfTreeHitbox.addEventListener("touchstart", (e) => {
   e.preventDefault();
   lfShake();
 });
 
+const treeLineEl = document.getElementById("lf-treeDialog");
+let linesDB = [];
 
-const treeLine = document.getElementById("lf-treeDialog");
-let linesDB = null;
-
-// JSON 불러오기
-fetch("https://mrdindoin.ddns.net/data/talktree.json")
-  .then(res => res.json())
-  .then(data => {
-    linesDB = data;
-    // 로딩 끝나면 바로 한 번 말하게
-    showTreeLine();
-
-    // 이후 5초마다 자동 대사
-    setInterval(showTreeLine, 5000);
-  })
-  .catch(err => {
-    console.error("talktree.json 로드 오류:", err);
-  });
-
-// 랜덤 문구 선택
 function pickRandomLine() {
-  if (!linesDB) return null;
-
-  const types = ["wit", "philosophy", "joke"];
-  const pickType = types[Math.floor(Math.random() * types.length)];
-  const arr = linesDB[pickType];
-
-  if (!arr || !arr.length) return null;
-  return arr[Math.floor(Math.random() * arr.length)];
+  if (!linesDB || !linesDB.length) return null;
+  const idx = Math.floor(Math.random() * linesDB.length);
+  return linesDB[idx];
 }
 
-// 대사 출력 (확률/쿨타임 없이 무조건 실행)
 function showTreeLine() {
   const line = pickRandomLine();
   if (!line) return;
 
-  treeLine.textContent = line;
-  treeLine.classList.add("show");
+  treeLineEl.textContent = line;
+  treeLineEl.classList.add("show");
 
-  // 3초 후 사라짐
   setTimeout(() => {
-    treeLine.classList.remove("show");
+    treeLineEl.classList.remove("show");
   }, 3000);
 }
+
+fetch("https://mrdindoin.ddns.net/data/talktree.json")
+  .then(res => res.json())
+  .then(data => {
+    linesDB = data.lines || [];
+    if (!linesDB.length) return;
+
+    showTreeLine();
+
+    setInterval(showTreeLine, 10000);
+  })
+  .catch(err => {
+    console.error("talktree.json 로드 오류:", err);
+  });
