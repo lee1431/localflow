@@ -103,24 +103,15 @@ function renderApplicants(j){
   };
 }
 
-
 function toKST(dateStr){
-    try {
-        const d = new Date(dateStr);   // UTC → Date 객체
-        const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000); // +9시간
-      
-        const yyyy = kst.getFullYear();
-        const mm = String(kst.getMonth() + 1).padStart(2, "0");
-        const dd = String(kst.getDate()).padStart(2, "0");
-        const hh = String(kst.getHours()).padStart(2, "0");
-        const mi = String(kst.getMinutes()).padStart(2, "0");
-      
-        return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-    } catch(e){
-        return dateStr;
-    }
+  try{
+    return new Date(dateStr).toLocaleString("ko-KR", {
+      timeZone: "Asia/Seoul"
+    });
+  } catch(e){
+    return dateStr;
+  }
 }
-
 
 if (listSearch) listSearch.addEventListener("input", debounce(()=>{
   applState.q = (listSearch.value||"").trim();
