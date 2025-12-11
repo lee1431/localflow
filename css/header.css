@@ -80,10 +80,20 @@
     }
     .mobile-nav a:hover{ background:#f6f7f9; }
 
-    /* Footer */
-    footer{padding:40px 0; border-top:1px solid var(--line); background:#fff}
-    .footline{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between}
-    .muted{color:var(--muted)}
+	/* Footer */
+	footer {
+	  padding:40px 0;
+	  border-top:1px solid var(--line);
+	  background:#fff;
+	}
+	.footline {
+	  display:flex;
+	  flex-wrap:wrap;
+	  gap:10px;
+	  align-items:center;
+	  justify-content:space-between;
+	}
+	.muted {color:var(--muted);}
 
 	/* To Top */
     .to-top{
