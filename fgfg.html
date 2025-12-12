@@ -277,7 +277,7 @@
     // ====== Stats Polling ======
     async function refreshCouponStats(){
       try{
-        const res = await fetch(API_STATS + "?ts=" + Date.now(), { cache: "no-store" });
+        const res = await fetch(API_COUPONS + "?ts=" + Date.now(), { cache: "no-store" });
         const txt = await res.text();
         
         console.log("stats raw:", txt);
