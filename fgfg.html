@@ -278,7 +278,8 @@
     async function refreshCouponStats(){
       try{
         const res = await fetch(API_STATS + "?ts=" + Date.now(), { cache: "no-store" });
-        const j = await res.json();
+        const txt = await res.json();
+        const j = JSON.parse(txt);
         const map = j?.coupons || {};
 
         document.querySelectorAll(".coupon-card").forEach(card => {
