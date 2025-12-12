@@ -278,13 +278,17 @@
     async function refreshCouponStats(){
       try{
         const res = await fetch(API_STATS + "?ts=" + Date.now(), { cache: "no-store" });
-        const txt = await res.json();
-
-        console.log("stats raw:", txt.slice(0, 200));
-
+        const txt = await res.text();
+        
+        console.log("stats raw:", txt);
+        
+        if (!txt.trim().startsWith("{")) {
+          console.warn("stats is not json, skip");
+          return;
+        }
         
         const j = JSON.parse(txt);
-        const map = j?.coupons || {};
+        const map = j.coupons || {};
 
         document.querySelectorAll(".coupon-card").forEach(card => {
           const id = card.dataset.couponId;
