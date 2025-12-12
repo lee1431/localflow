@@ -60,6 +60,59 @@ async function loadCoupons() {
 }
 
 
+
+function ensureProgressUI(card){
+	  let wrap = card.querySelector(".coupon-progress-wrap");
+	  if (wrap) return wrap;
+	
+	  wrap = document.createElement("div");
+	  wrap.className = "coupon-progress-wrap";
+	  wrap.innerHTML = `
+	    <div class="coupon-progress-top">
+	      <span class="appl-count">응모 <b class="appl-now">0</b>/<b class="appl-cap">0</b></span>
+	      <span class="appl-percent">0%</span>
+	    </div>
+	    <div class="coupon-progress-bar">
+	      <div class="coupon-progress-fill" style="width:0%"></div>
+	    </div>
+	  `;
+	
+	  // 버튼 바로 위에 꽂기 (coupon-bottom 앞에 삽입)
+	  const bottom = card.querySelector(".coupon-bottom");
+	  if (bottom) bottom.parentNode.insertBefore(wrap, bottom);
+	  else card.appendChild(wrap);
+	
+	  return wrap;
+	}
+	
+	function applyProgressToCard(card, info){
+	  const wrap = ensureProgressUI(card);
+	
+	  const nowEl = wrap.querySelector(".appl-now");
+	  const capEl = wrap.querySelector(".appl-cap");
+	  const pctEl = wrap.querySelector(".appl-percent");
+	  const fill  = wrap.querySelector(".coupon-progress-fill");
+	
+	  const now = Number(info?.applicants ?? 0);
+	  const cap = Number(info?.capacity ?? 0);
+	  const pct = cap > 0 ? Math.max(0, Math.min(100, Math.round((now / cap) * 100))) : 0;
+	
+	  nowEl.textContent = now.toLocaleString();
+	  capEl.textContent = cap.toLocaleString();
+	  pctEl.textContent = pct + "%";
+	  fill.style.width = pct + "%";
+	
+	  // 꽉 찼으면 카드에 클래스(버튼 disable 같은거)
+	  if (cap > 0 && now >= cap){
+	    card.classList.add("coupon-full");
+	  } else {
+	    card.classList.remove("coupon-full");
+	  }
+	}
+
+
+
+
 function bindCouponButtons() {
   document.querySelectorAll('.coupon-apply-btn').forEach(btn => {
     btn.addEventListener('click', () => {
