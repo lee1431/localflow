@@ -28,3 +28,9 @@
 .coupon-submit-btn{width:100%;padding:12px 14px;border:none;border-radius:12px;background:var(--mint);font-size:15px;font-weight:700;color:#083a36;cursor:pointer;}
 .coupon-submit-btn:active{transform:translateY(1px);}
 .coupon-success-msg{margin-top:12px;font-size:14px;color:#2E8B57;font-weight:600;display:none;}
+
+.coupon-progress-wrap{ margin: 10px 14px 10px; }
+.coupon-progress-top{display:flex; justify-content:space-between; align-items:center;font-size:12px; opacity:.85; margin-bottom:6px;}
+.coupon-progress-bar{height:8px; border-radius:999px; background:rgba(0,0,0,.08);overflow:hidden;}
+.coupon-progress-fill{height:100%; border-radius:999px; background:#35d0b5;transition: width .4s ease;}
+.coupon-card.coupon-full .coupon-apply-btn{opacity:.5; pointer-events:none;}
