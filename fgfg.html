@@ -223,7 +223,7 @@
       const fill  = wrap.querySelector(".coupon-progress-fill");
 
       const now = Number(info?.applicants ?? 0);
-      const cap = Number(info?.capacity ?? 0);
+      const cap = info.capacity ?? Number(card.dataset.capacity ?? 0);
       const pct = cap > 0 ? Math.max(0, Math.min(100, Math.round((now / cap) * 100))) : 0;
 
       nowEl.textContent = now.toLocaleString();
@@ -401,6 +401,7 @@
           article.dataset.deadline = coupon.deadline || "";
           article.dataset.couponId = coupon.id || "";
           article.dataset.couponTitle = coupon.title || "";
+          article.dataset.capacity = coupon.capacity || 0;
 
           article.innerHTML = `
             <div class="coupon-media">
