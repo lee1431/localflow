@@ -279,6 +279,10 @@
       try{
         const res = await fetch(API_STATS + "?ts=" + Date.now(), { cache: "no-store" });
         const txt = await res.json();
+
+        console.log("stats raw:", txt.slice(0, 200));
+
+        
         const j = JSON.parse(txt);
         const map = j?.coupons || {};
 
