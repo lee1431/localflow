@@ -278,23 +278,26 @@
     async function refreshCouponStats(){
       try{
         const res = await fetch(API_COUPONS + "?ts=" + Date.now(), { cache: "no-store" });
-        const txt = await res.text();
-        
-        console.log("stats raw:", txt);
-        
-        if (!txt.trim().startsWith("{")) {
-          console.warn("stats is not json, skip");
-          return;
-        }
-        
-        const j = JSON.parse(txt);
-        const map = j.coupons || {};
-
+        const j = await res.json();               // ✅ text+JSON.parse 필요 없음
+    
+        const list = j.coupons || [];
+    
+        // id -> coupon 맵으로 변환
+        const byId = Object.create(null);
+        list.forEach(c => { if (c && c.id) byId[c.id] = c; });
+    
         document.querySelectorAll(".coupon-card").forEach(card => {
           const id = card.dataset.couponId;
           if (!id) return;
-          const info = map[id] || { applicants: 0, capacity: 0 };
-          applyProgressToCard(card, info);
+    
+          const coupon = byId[id];
+          if (!coupon) return;                    // ✅ 못 찾으면 덮어쓰지 말기
+    
+          // ✅ capacity는 coupon.capacity, applicants는 coupon.applicants (없으면 0)
+          applyProgressToCard(card, {
+            applicants: coupon.applicants ?? 0,
+            capacity: coupon.capacity ?? Number(card.dataset.capacity ?? 0)
+          });
         });
       }catch(e){
         console.error("stats fetch failed", e);
