@@ -4,19 +4,6 @@
   background: #fafafa;
 }
 
-/* 상단 인트로 */
-.partner-hero {
-  padding: 40px 0 24px;
-}
-.partner-hero h1 {
-  font-size: 1.8rem;
-  margin-bottom: 8px;
-}
-.partner-hero p {
-  color: var(--muted);
-  line-height: 1.6;
-}
-
 /* 카드 리스트 섹션 */
 .partner-list {
   padding: 16px 0 40px;
