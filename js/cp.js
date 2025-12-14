@@ -64,6 +64,31 @@ function applyProgressToCard(card, info){
   }
 }
 
+
+function disableCard(card, text){
+  card.classList.add("is-disabled");
+  card.setAttribute("data-disabled-text", text || "마감");
+
+  const btn = card.querySelector(".coupon-apply-btn");
+  if (btn){
+    btn.disabled = true;
+    btn.textContent = text || "마감";
+  }
+}
+
+function enableCard(card){
+  card.classList.remove("is-disabled");
+  card.removeAttribute("data-disabled-text");
+
+  const btn = card.querySelector(".coupon-apply-btn");
+  if (btn){
+    btn.disabled = false;
+    btn.textContent = "쿠폰 응모하기";
+  }
+}
+
+
+
 // ====== Countdown ======
 function startCountdowns() {
   if (countdownTimer) clearInterval(countdownTimer);
@@ -174,6 +199,12 @@ function submitCouponEmail(){
     return;
   }
 
+  const card = document.querySelector(`.coupon-card[data-coupon-id="${CSS.escape(couponId)}"]`);
+  if (card?.classList.contains("is-disabled")){
+    alert("현재 마감/품절된 쿠폰입니다.");
+    return;
+  }
+
   const now = encodeURIComponent(new Date().toISOString());
 
   // ====== (1) 응모 접수 ======
@@ -209,15 +240,16 @@ function submitCouponEmail(){
 function bindCouponButtons(){
   document.querySelectorAll(".coupon-apply-btn").forEach(btn => {
     btn.addEventListener("click", () => {
+      const card = btn.closest(".coupon-card");
+      if (card?.classList.contains("is-disabled")) return;
+
       const title = btn.dataset.couponTitle || "";
       const id = btn.dataset.couponId || "";
       openCouponModal(title, id);
-
-      // (옵션) 모달 열릴 때도 로그 남기고 싶으면 여기서도 가능
-      // fetch(`${PROXY_LOG}?coupon_id=${encodeURIComponent(id)}&action=open`, { cache:"no-store" }).catch(()=>{});
     });
   });
 }
+
 
 // ====== Load Coupons ======
 async function loadCoupons(){
@@ -264,6 +296,21 @@ async function loadCoupons(){
         </div>
       `;
 
+
+      // coupon.status: "open" | "close"
+      const st = String(coupon.status || "open").toLowerCase();
+
+      if (st !== "open") {
+        disableCard(article, "마감");
+      } else if (Number(coupon.stock_remaining) <= 0) {
+        // open이지만 재고 없으면 품절 처리
+        disableCard(article, "품절");
+      } else {
+        enableCard(article);
+      }
+
+      
+      
       grid.appendChild(article);
       ensureProgressUI(article); // UI 미리 꽂아두기
     });
