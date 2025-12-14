@@ -107,3 +107,8 @@
     }
     .to-top.show{ opacity:1; pointer-events:auto; }
     .to-top:active{ transform:translateY(1px); }
+
+
+.partner-hero { padding: 40px 0 24px; }
+.partner-hero h1 {  font-size: 1.8rem;  margin-bottom: 8px;}
+.partner-hero p {  color: var(--muted);  line-height: 1.6;}
