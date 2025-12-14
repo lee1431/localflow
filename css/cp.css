@@ -1,0 +1,133 @@
+/* ====== Layout ====== */
+body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,"Noto Sans KR",sans-serif; color:#111; background:#fff; }
+.coupon-list{ padding:32px 16px 60px; }
+.wrap{ max-width:1100px; margin:0 auto; }
+h2{ margin:0 0 18px; font-size:26px; letter-spacing:-0.5px; }
+
+/* ====== Grid / Card ====== */
+.coupon-grid{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:20px; }
+@media (max-width: 840px){ .coupon-grid{ grid-template-columns:1fr; } }
+
+.coupon-card{
+  border-radius:18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  overflow:hidden;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
+  position:relative;
+}
+.coupon-media{ position:relative; }
+.coupon-media img{ width:100%; height:290px; object-fit:cover; display:block; }
+
+.coupon-store-tag, .coupon-stock-tag{
+  position:absolute; top:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  backdrop-filter: blur(3px);
+}
+.coupon-store-tag{ left:12px; }
+.coupon-stock-tag{ right:12px; }
+.coupon-stock-tag span{ font-weight:700; }
+
+.coupon-title-wrap{
+  position:absolute; left:0; right:0; bottom:44px;
+  padding:0 16px;
+  text-align:center;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.55);
+}
+.coupon-title-wrap h3{ margin:0; font-size:26px; letter-spacing:-0.5px; }
+
+.coupon-countdown{
+  position:absolute; right:14px; bottom:12px;
+  font-size:12px; color:#fff;
+  background:rgba(0,0,0,.55);
+  border-radius:999px;
+  padding:6px 10px;
+  backdrop-filter: blur(3px);
+}
+
+.coupon-bottom{ padding:14px; }
+.coupon-apply-btn{
+  width:100%;
+  border:none;
+  border-radius:999px;
+  padding:14px 14px;
+  font-size:14px;
+  font-weight:700;
+  background:#35d0b5;
+  color:#042a24;
+  cursor:pointer;
+  transition: transform .08s ease, opacity .2s ease;
+}
+.coupon-apply-btn:active{ transform: scale(.99); }
+
+.coupon-card.coupon-expired .coupon-apply-btn,
+.coupon-card.coupon-full .coupon-apply-btn{
+  opacity:.5; pointer-events:none;
+}
+
+/* ====== Progress UI (버튼 위) ====== */
+.coupon-progress-wrap{ margin: 10px 14px 6px; }
+.coupon-progress-top{
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; opacity:.85; margin-bottom:6px;
+}
+.coupon-progress-bar{
+  height:8px; border-radius:999px; background:rgba(0,0,0,.08);
+  overflow:hidden;
+}
+.coupon-progress-fill{
+  height:100%; border-radius:999px; background:#35d0b5;
+  transition: width .4s ease;
+}
+
+.coupon-error{ padding:14px; color:#b00020; }
+
+/* ====== Modal ====== */
+.modal{
+  display:none;
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+  z-index:999;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.modal-card{
+  width:min(520px, 100%);
+  background:#fff;
+  border-radius:18px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.22);
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.06);
+}
+.modal-head{ padding:18px 18px 8px; }
+.modal-title{ margin:0; font-size:18px; letter-spacing:-0.3px; }
+.modal-body{ padding:10px 18px 18px; }
+.modal-body label{ display:block; font-size:13px; opacity:.8; margin-bottom:8px; }
+.modal-body input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px 12px;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.14);
+  outline:none;
+  font-size:14px;
+}
+.modal-actions{ display:flex; gap:10px; padding:0 18px 18px; }
+.btn{
+  flex:1;
+  border:none;
+  border-radius:12px;
+  padding:12px 12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn-primary{ background:#35d0b5; color:#042a24; }
+.btn-ghost{ background:rgba(0,0,0,.06); color:#111; }
+#couponSuccessMsg{ margin-top:12px; font-size:13px; display:none; }
