@@ -131,3 +131,24 @@ h2{ margin:0 0 18px; font-size:26px; letter-spacing:-0.5px; }
 .btn-primary{ background:#35d0b5; color:#042a24; }
 .btn-ghost{ background:rgba(0,0,0,.06); color:#111; }
 #couponSuccessMsg{ margin-top:12px; font-size:13px; display:none; }
+
+.coupon-card.is-disabled{
+  opacity:.45;
+  filter:grayscale(1);
+}
+.coupon-card.is-disabled .coupon-apply-btn{
+  opacity:.7;
+  cursor:not-allowed;
+}
+.coupon-card.is-disabled::after{
+  content: attr(data-disabled-text);
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:18px;
+  background:rgba(255,255,255,.72);
+  border-radius:18px; /* 카드 라운드에 맞춰 */
+}
+
