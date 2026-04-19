@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalFlow | 로컬 공간 기획전</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/Pretendard-Regular.woff">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --card: #16161a;
+            --accent: #10b981;
+            --text: #f0f0f0;
+            --dim: #888;
+            --radius: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        .container { width: min(650px, calc(100% - 32px)); margin: 0 auto; padding: 60px 0; }
+
+        /* [1] 상단: 공간 히스토리 */
+        .project-header { margin-bottom: 40px; text-align: center; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 99px; background: rgba(16, 185, 129, 0.1); color: var(--accent); font-size: 13px; font-weight: 700; margin-bottom: 16px; border: 1px solid rgba(16,185,129,0.2); }
+        h1 { font-size: 32px; letter-spacing: -0.04em; margin-bottom: 16px; }
+        .space-story { color: var(--dim); font-size: 16px; margin-bottom: 30px; word-break: keep-all; }
+
+        /* 공간 갤러리 (가상 이미지) */
+        .space-visual { width: 100%; height: 300px; background: #222; border-radius: var(--radius); margin-bottom: 40px; display: grid; place-items: center; color: #444; overflow: hidden; position: relative; }
+        .space-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .overlay-info { position: absolute; bottom: 20px; left: 20px; text-align: left; }
+
+        /* [2] 호스트의 마음 (사장님 태그) */
+        .host-pref { background: var(--card); padding: 24px; border-radius: var(--radius); margin-bottom: 50px; border: 1px solid #222; }
+        .host-pref h3 { font-size: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .tag-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tag { padding: 6px 14px; border-radius: 10px; background: #222; font-size: 14px; color: var(--text); }
+
+        /* [3] 피칭 리스트 (댓글형) */
+        .pitch-section-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .count { font-size: 14px; color: var(--accent); }
+
+        .pitch-card { background: var(--card); padding: 24px; border-radius: var(--radius); margin-bottom: 16px; border: 1px solid #222; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pitch-user { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #333; display: grid; place-items: center; font-size: 14px; }
+        .user-name { font-weight: 700; font-size: 15px; }
+        
+        .pitch-content { font-size: 16px; color: #ccc; margin-bottom: 20px; white-space: pre-wrap; }
+        
+        .pitch-footer { display: flex; gap: 16px; }
+        .btn-cheer { background: none; border: 1px solid #333; color: var(--dim); padding: 6px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: 0.2s; }
+        .btn-cheer:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-cheer.active { background: rgba(16, 185, 129, 0.1); border-color: var(--accent); color: var(--accent); }
+
+        /* [4] 참여 폼 (소심한 제비용) */
+        .input-area { margin-top: 60px; padding-top: 40px; border-top: 1px solid #222; }
+        textarea { width: 100%; background: var(--card); border: 1px solid #333; border-radius: 16px; padding: 20px; color: #fff; font-family: inherit; font-size: 16px; resize: none; margin-bottom: 16px; outline: none; }
+        textarea:focus { border-color: var(--accent); }
+        .btn-submit { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--accent); color: #000; font-weight: 800; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="project-header">
+        <div class="badge">기획전 #01</div>
+        <h1>연수동 옛 사진관</h1>
+        <p class="space-story">
+            20년간 동네 아이들의 입학식과 어르신들의 회갑 사진을 찍던 공간입니다.<br>
+            이제 사장님은 은퇴하셨고, 이 공간을 빛내줄 새로운 젊은 의지를 찾습니다.
+        </p>
+    </header>
+
+    <div class="space-visual">
+        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80" alt="Space View">
+        <div class="overlay-info">
+            <span class="tag">인천 연수동 연수상가 2F</span>
+            <span class="tag">약 25평</span>
+        </div>
+    </div>
+
+    <section class="host-pref">
+        <h3>🏠 사장님의 바람</h3>
+        <div class="tag-group">
+            <span class="tag">#조용한 업종</span>
+            <span class="tag">#오래 함께하실 분</span>
+            <span class="tag">#동네 어르신께 친절한 분</span>
+        </div>
+    </section>
+
+    <section>
+        <div class="pitch-section-title">
+            이 공간에 도전하는 제비들 <span class="count" id="pitch-count">3</span>
+        </div>
+
+        <div id="pitch-container">
+            <div class="pitch-card">
+                <div class="pitch-user">
+                    <div class="user-info">
+                        <div class="avatar">🎣</div>
+                        <div class="user-name">낚시광 김청년</div>
+                    </div>
+                </div>
+                <p class="pitch-content">충주호 낚시 포인트와 연계된 '프리미엄 낚시용품 렌탈샵'을 해보고 싶습니다. 단순 판매가 아니라 낚시 초보자들에게 장비를 빌려주고 강습도 하는 동네 아지트로 만들고 싶어요!</p>
+                <div class="pitch-footer">
+                    <button class="btn-cheer" onclick="toggleLike(this)">👍 응원해요 12</button>
+                </div>
+            </div>
+
+            <div class="pitch-card">
+                <div class="pitch-user">
+                    <div class="user-info">
+                        <div class="avatar">🧵</div>
+                        <div class="user-name">꼼꼼한 박작가</div>
+                    </div>
+                </div>
+                <p class="pitch-content">옛 사진관의 아늑한 분위기를 살려 '업사이클링 자수 공방'을 운영하고 싶습니다. 어르신들께는 무료로 바느질 수선도 해드리는 정이 넘치는 공간으로 꾸며보겠습니다.</p>
+                <div class="pitch-footer">
+                    <button class="btn-cheer" onclick="toggleLike(this)">👍 응원해요 45</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="input-area">
+        <h3 style="margin-bottom:16px;">당신의 박씨(아이디어)를 남겨주세요</h3>
+        <input type="text" id="user-nickname" placeholder="닉네임 (예: 열정제비)" style="width:100%; background:var(--card); border:1px solid #333; padding:12px; border-radius:10px; color:#fff; margin-bottom:10px; outline:none;">
+        <textarea id="pitch-text" rows="4" placeholder="이 공간에서 무엇을 하고 싶으신가요? 사장님께 당신의 진심을 들려주세요."></textarea>
+        <button class="btn-submit" onclick="addPitch()">피칭 등록하기 (의지 보여주기)</button>
+        <p style="font-size:12px; color:var(--dim); text-align:center; margin-top:16px;">* 등록된 아이디어는 공개되며, LocalFlow가 직접 검토 후 사장님께 전달합니다.</p>
+    </section>
+</div>
+
+<script>
+    // 좋아요(응원) 기능
+    function toggleLike(btn) {
+        btn.classList.toggle('active');
+        let countText = btn.innerText.match(/\d+/);
+        let count = parseInt(countText);
+        
+        if (btn.classList.contains('active')) {
+            btn.innerText = `👍 응원해요 ${count + 1}`;
+        } else {
+            btn.innerText = `👍 응원해요 ${count - 1}`;
+        }
+    }
+
+    // 새 피칭 등록 기능 (시뮬레이션)
+    function addPitch() {
+        const nickname = document.getElementById('user-nickname').value;
+        const text = document.getElementById('pitch-text').value;
+        const container = document.getElementById('pitch-container');
+        const countDisplay = document.getElementById('pitch-count');
+
+        if (!nickname || !text) return alert('닉네임과 아이디어를 모두 적어주세요 응애!');
+
+        const newCard = document.createElement('div');
+        newCard.className = 'pitch-card';
+        newCard.innerHTML = `
+            <div class="pitch-user">
+                <div class="user-info">
+                    <div class="avatar">🐤</div>
+                    <div class="user-name">${nickname}</div>
+                </div>
+            </div>
+            <p class="pitch-content">${text}</p>
+            <div class="pitch-footer">
+                <button class="btn-cheer" onclick="toggleLike(this)">👍 응원해요 0</button>
+            </div>
+        `;
+
+        container.prepend(newCard); // 최상단에 추가
+        countDisplay.innerText = parseInt(countDisplay.innerText) + 1;
+
+        // 초기화
+        document.getElementById('user-nickname').value = '';
+        document.getElementById('pitch-text').value = '';
+        
+        alert('당신의 의지가 등록되었습니다! 이제 LocalFlow가 검토하겠습니다.');
+    }
+</script>
+
+</body>
+</html>
